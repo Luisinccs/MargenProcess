@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iconografía Funcional (SSOT) - Gestor de Trámites y Dependencias</title>
+  <style>
+    :root {
+      --bg-page: #080d19;
+      --bg-panel: #0e1628;
+      --bg-card: #131e36;
+      --bg-header: #182644;
+      --bg-hover: rgba(96, 165, 250, 0.06);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --border-subtle: #1e2d4a;
+      --accent-primary: #38bdf8;
+      --accent-primary-bg: rgba(56, 189, 248, 0.14);
+      --accent-success: #34d399;
+      --accent-warning: #fbbf24;
+      --accent-danger: #f87171;
+      --code-bg: #1a2844;
+      --code-text: #7dd3fc;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+      /* Filtros CSS para colorear SVGs monocromáticos de Lucide en modo oscuro */
+      --filter-default: invert(93%) sepia(8%) saturate(290%) hue-rotate(179deg) brightness(102%) contrast(95%);
+      --filter-primary: invert(69%) sepia(56%) saturate(1558%) hue-rotate(171deg) brightness(103%) contrast(96%);
+      --filter-success: invert(70%) sepia(44%) saturate(657%) hue-rotate(106deg) brightness(96%) contrast(89%);
+      --filter-warning: invert(81%) sepia(56%) saturate(994%) hue-rotate(350deg) brightness(102%) contrast(98%);
+      --filter-danger: invert(56%) sepia(56%) saturate(2016%) hue-rotate(322deg) brightness(101%) contrast(96%);
+    }
+
+    body[data-theme="light"] {
+      --bg-page: #f1f5f9;
+      --bg-panel: #ffffff;
+      --bg-card: #ffffff;
+      --bg-header: #f8fafc;
+      --bg-hover: rgba(2, 132, 199, 0.05);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --border-subtle: #cbd5e1;
+      --accent-primary: #0284c7;
+      --accent-primary-bg: rgba(2, 132, 199, 0.1);
+      --accent-success: #059669;
+      --accent-warning: #d97706;
+      --accent-danger: #dc2626;
+      --code-bg: #e0f2fe;
+      --code-text: #0369a1;
+
+      --filter-default: invert(11%) sepia(24%) saturate(1373%) hue-rotate(183deg) brightness(93%) contrast(96%);
+      --filter-primary: invert(32%) sepia(93%) saturate(1474%) hue-rotate(178deg) brightness(93%) contrast(98%);
+      --filter-success: invert(36%) sepia(87%) saturate(476%) hue-rotate(116deg) brightness(92%) contrast(94%);
+      --filter-warning: invert(48%) sepia(88%) saturate(1335%) hue-rotate(12deg) brightness(94%) contrast(92%);
+      --filter-danger: invert(23%) sepia(86%) saturate(3825%) hue-rotate(349deg) brightness(88%) contrast(95%);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 16px 48px;
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Cabecera */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .header-subtitle {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-theme {
+      appearance: none;
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-theme:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .badge-ssot {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background-color: var(--accent-primary-bg);
+      color: var(--accent-primary);
+    }
+
+    /* Tarjetas de Contexto y Resumen */
+    .context-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .context-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .context-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+    }
+
+    .context-value {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .context-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Buscador */
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      filter: var(--filter-default);
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--text-main);
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-primary);
+    }
+
+    /* Tablas */
+    .table-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .table-caption-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background-color: var(--bg-header);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .table-caption-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .table-caption-meta {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 720px;
+    }
+
+    th, td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: var(--bg-header);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-hover);
+    }
+
+    .col-icon {
+      width: 68px;
+      text-align: center;
+    }
+
+    .icon-box {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .icon-img {
+      width: 20px;
+      height: 20px;
+      display: block;
+      filter: var(--filter-default);
+    }
+
+    .icon-img.primary { filter: var(--filter-primary); }
+    .icon-img.success { filter: var(--filter-success); }
+    .icon-img.warning { filter: var(--filter-warning); }
+    .icon-img.danger  { filter: var(--filter-danger); }
+
+    .icon-name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background-color: var(--code-bg);
+      color: var(--code-text);
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    .view-tag {
+      display: inline-block;
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      padding-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- Cabecera -->
+    <header class="header">
+      <div>
+        <h1 class="header-title">Iconografía Funcional — Gestor de Trámites y Dependencias</h1>
+        <p class="header-subtitle">
+          Especificación de íconos vectoriales (Lucide Icons • trazo uniforme, alta legibilidad) alineada con P01–P07 y M01–M06
+        </p>
+      </div>
+      <div class="header-controls">
+        <button type="button" id="themeToggle" class="btn-theme" aria-label="Cambiar tema">
+          <span id="themeIcon">☀️</span>
+          <span id="themeText">Modo Claro</span>
+        </button>
+        <span class="badge-ssot">Design System • SSOT</span>
+      </div>
+    </header>
+
+    <!-- Síntesis de Insumos del Proyecto -->
+    <section class="context-grid" aria-label="Contexto de diseño">
+      <div class="context-card">
+        <span class="context-label">Íconos Seleccionados</span>
+        <span class="context-value" id="visibleCounter">26</span>
+        <span class="context-desc">Acciones nucleares, estados críticos, documentos y navegación</span>
+      </div>
+      <div class="context-card">
+        <span class="context-label">Ergonomía y Uso (Buyer Persona)</span>
+        <span class="context-value">1 Mano • 30–50 cm</span>
+        <span class="context-desc">Uso de pie o en taquilla/oficina con luz variable y prisa</span>
+      </div>
+      <div class="context-card">
+        <span class="context-label">Tono y Promesa de Valor</span>
+        <span class="context-value">Calma y Precisión</span>
+        <span class="context-desc">Ruta crítica inversa, cero improvisación y bóveda lista</span>
+      </div>
+      <div class="context-card">
+        <span class="context-label">Superficies de la App</span>
+        <span class="context-value">7 Vistas + 6 Modales</span>
+        <span class="context-desc">Panel, detalle, recaudos, visor offline y taquilla rápida</span>
+      </div>
+    </section>
+
+    <!-- Filtro en vivo -->
+    <div class="search-box">
+      <img class="search-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/search.svg" alt="" aria-hidden="true">
+      <input type="search" id="iconFilter" class="search-input" placeholder="Filtrar por acción funcional, nombre de ícono (ej. calendar-clock, file-check, shield) o justificación UX...">
+    </div>
+
+    <!-- Grupo 1: Gestión de Trámites, Ruta Crítica y Dependencias -->
+    <section class="table-card">
+      <div class="table-caption-bar">
+        <h2 class="table-caption-title">1. Gestión de Trámites, Ruta Crítica y Cadena de Dependencias</h2>
+        <span class="table-caption-meta">P01 • P02 • M01 • M02 • M03</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Acción Funcional</th>
+              <th class="col-icon">Icono</th>
+              <th>Nombre</th>
+              <th>Justificación de Usabilidad (UX)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Crear nuevo trámite</strong>
+                <span class="view-tag">P01 • M01</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/plus.svg" alt="plus">
+                </span>
+              </td>
+              <td><span class="icon-name">plus</span></td>
+              <td>Trazo limpio y universal para iniciar un trámite sin saturar el botón principal inferior cuando el usuario opera con una sola mano.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Instanciar desde plantilla base</strong>
+                <span class="view-tag">P01 • P06 • M05</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy-plus.svg" alt="copy-plus">
+                </span>
+              </td>
+              <td><span class="icon-name">copy-plus</span></td>
+              <td>Combina plantilla/duplicación y creación: comunica que se genera una estructura base de pasos y recaudos a partir de una fecha objetivo.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Alerta de ventana de acción / riesgo</strong>
+                <span class="view-tag">P01 • P02</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img warning" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/alert-triangle.svg" alt="alert-triangle">
+                </span>
+              </td>
+              <td><span class="icon-name">alert-triangle</span></td>
+              <td>Silueta triangular de alto contraste legible a 30–50 cm bajo luz cambiante para distinguir ventanas de acción o riesgos de anticipación sin pánico.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Trámite / recaudo completado</strong>
+                <span class="view-tag">P01 • P02 • P03 • P05</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img success" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/check-circle-2.svg" alt="check-circle-2">
+                </span>
+              </td>
+              <td><span class="icon-name">check-circle-2</span></td>
+              <td>Cierre visual inequívoco para reducir fatiga cognitiva y ansiedad: confirma de un vistazo qué hitos o recaudos ya están resueltos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Trámite en espera / latente</strong>
+                <span class="view-tag">P01 • P02</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/hourglass.svg" alt="hourglass">
+                </span>
+              </td>
+              <td><span class="icon-name">hourglass</span></td>
+              <td>Refleja la espera hasta que se abre la ventana de acción inversa, reforzando que el ítem está programado y no olvidado.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Cuenta regresiva / fecha límite inversa</strong>
+                <span class="view-tag">P01 • P02 • M03</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/calendar-clock.svg" alt="calendar-clock">
+                </span>
+              </td>
+              <td><span class="icon-name">calendar-clock</span></td>
+              <td>Une calendario y tiempo de anticipación: representa el núcleo de la propuesta de valor (fechas calculadas hacia atrás, no solo vencimiento final).</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Agregar paso previo / dependencia</strong>
+                <span class="view-tag">P02 • M03</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/list-plus.svg" alt="list-plus">
+                </span>
+              </td>
+              <td><span class="icon-name">list-plus</span></td>
+              <td>Asocia directamente la adición de un nuevo eslabón a una secuencia ordenada de pasos previos y prerequisitos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Secuencia / orden de dependencias</strong>
+                <span class="view-tag">P02 • M03</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/git-commit-vertical.svg" alt="git-commit-vertical">
+                </span>
+              </td>
+              <td><span class="icon-name">git-commit-vertical</span></td>
+              <td>Visualiza encadenamiento secuencial vertical (paso A antes de paso B) de forma sobria, sin recargar pantallas estrechas de móvil.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Subir / bajar orden de paso</strong>
+                <span class="view-tag">M03</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-up-down.svg" alt="arrow-up-down">
+                </span>
+              </td>
+              <td><span class="icon-name">arrow-up-down</span></td>
+              <td>Permite ajustar la prioridad o secuencia de pasos con toques precisos, evitando gestos complejos de arrastre en movimiento.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Editar trámite o paso</strong>
+                <span class="view-tag">P02 • M01 • M03</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/pencil.svg" alt="pencil">
+                </span>
+              </td>
+              <td><span class="icon-name">pencil</span></td>
+              <td>Señal estándar de edición rápida para ajustar fechas límite, notas o anticipaciones cuando cambian los plazos oficiales.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Eliminar trámite</strong>
+                <span class="view-tag">P02 • M02</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img danger" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/trash-2.svg" alt="trash-2">
+                </span>
+              </td>
+              <td><span class="icon-name">trash-2</span></td>
+              <td>Identifica una acción destructiva irreversible (borra pasos, recaudos, adjuntos locales y alertas), justificando su tono de precaución.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Grupo 2: Recaudos, Bóveda Documental y Vista de Taquilla -->
+    <section class="table-card">
+      <div class="table-caption-bar">
+        <h2 class="table-caption-title">2. Recaudos, Documentos Adjuntos y Vista Rápida de Taquilla</h2>
+        <span class="table-caption-meta">P02 • P03 • M04 • P04 • P05</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Acción Funcional</th>
+              <th class="col-icon">Icono</th>
+              <th>Nombre</th>
+              <th>Justificación de Usabilidad (UX)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Abrir Vista Rápida de Taquilla</strong>
+                <span class="view-tag">P02 • P05</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/briefcase.svg" alt="briefcase">
+                </span>
+              </td>
+              <td><span class="icon-name">briefcase</span></td>
+              <td>Evoca el portafolio o carpeta de diligencia/cita lista para presentar frente a una taquilla u oficina sin buscar papeles dispersos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Marcar / desmarcar recaudo</strong>
+                <span class="view-tag">P03</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img success" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/check.svg" alt="check">
+                </span>
+              </td>
+              <td><span class="icon-name">check</span></td>
+              <td>Confirmación inmediata al alternar un recaudo entre "Pendiente" y "Listo", dando certeza operativa al reunir requisitos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Adjuntar archivo a recaudo o paso</strong>
+                <span class="view-tag">P03 • M04</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/paperclip.svg" alt="paperclip">
+                </span>
+              </td>
+              <td><span class="icon-name">paperclip</span></td>
+              <td>Metáfora directa de vincular un comprobante o documento al requisito correspondiente dentro de la bóveda del trámite.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Capturar documento con cámara</strong>
+                <span class="view-tag">M04</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/camera.svg" alt="camera">
+                </span>
+              </td>
+              <td><span class="icon-name">camera</span></td>
+              <td>Permite fotografiar al instante cédulas, planillas o recibos en sitio con un solo toque desde el selector de origen.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Seleccionar imagen o PDF de archivos</strong>
+                <span class="view-tag">M04</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/file-text.svg" alt="file-text">
+                </span>
+              </td>
+              <td><span class="icon-name">file-text</span></td>
+              <td>Representa documentos digitales y PDFs almacenados previamente en la galería o sistema de archivos del dispositivo.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Visualizar documento adjunto</strong>
+                <span class="view-tag">P03 • P04 • P05</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/eye.svg" alt="eye">
+                </span>
+              </td>
+              <td><span class="icon-name">eye</span></td>
+              <td>Facilita abrir el visor integrado con rapidez durante una cita o revisión cuando se necesita mostrar un recaudo sin demoras.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Disponibilidad local / sin conexión (Offline)</strong>
+                <span class="view-tag">P04 • P05</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img success" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/wifi-off.svg" alt="wifi-off">
+                </span>
+              </td>
+              <td><span class="icon-name">wifi-off</span></td>
+              <td>Brinda tranquilidad en oficinas, consulados o zonas con mala señal al confirmar que los recaudos cifrados están listos sin internet.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Controles de zoom en visor documental</strong>
+                <span class="view-tag">P04</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/zoom-in.svg" alt="zoom-in">
+                </span>
+              </td>
+              <td><span class="icon-name">zoom-in</span></td>
+              <td>Indispensable para inspeccionar texto pequeño, sellos o folios en PDFs y fotografías a 30–50 cm sin forzar la vista.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Grupo 3: Navegación, Configuración, Respaldo y Plan Pro -->
+    <section class="table-card">
+      <div class="table-caption-bar">
+        <h2 class="table-caption-title">3. Navegación, Respaldo Cifrado y Gestión de Plan Pro</h2>
+        <span class="table-caption-meta">P01 • P02 • P03 • P04 • P05 • P06 • P07 • M06</span>
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Acción Funcional</th>
+              <th class="col-icon">Icono</th>
+              <th>Nombre</th>
+              <th>Justificación de Usabilidad (UX)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Volver a la vista anterior</strong>
+                <span class="view-tag">P02 • P03 • P05 • P06 • P07</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-left.svg" alt="arrow-left">
+                </span>
+              </td>
+              <td><span class="icon-name">arrow-left</span></td>
+              <td>Retroceso claro y accesible en la barra superior para moverse entre jerarquías sin perder el contexto del trámite.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Cerrar modal o visor</strong>
+                <span class="view-tag">M01 • M03 • M04 • P04 • M05 • M06</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/x.svg" alt="x">
+                </span>
+              </td>
+              <td><span class="icon-name">x</span></td>
+              <td>Salida directa y predecible de hojas inferiores, diálogos o visores cuando el usuario desea descartar o regresar.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Configuración y respaldo</strong>
+                <span class="view-tag">P01 • P07</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/settings.svg" alt="settings">
+                </span>
+              </td>
+              <td><span class="icon-name">settings</span></td>
+              <td>Punto de acceso inequívoco a preferencias, estado de licencia, restauración de compras y respaldo de datos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Exportar respaldo de datos y adjuntos</strong>
+                <span class="view-tag">P01 • P07 • M06</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img primary" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/download.svg" alt="download">
+                </span>
+              </td>
+              <td><span class="icon-name">download</span></td>
+              <td>Comunica de forma clara la extracción/generación del paquete de respaldo con datos y documentos adjuntos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Restaurar compras de plan</strong>
+                <span class="view-tag">P07 • M06</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/rotate-ccw.svg" alt="rotate-ccw">
+                </span>
+              </td>
+              <td><span class="icon-name">rotate-ccw</span></td>
+              <td>Refleja la recuperación o sincronización del estado de compra previo desde la tienda nativa al cambiar o reinstalar dispositivo.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Plan Pro / función bloqueada en plan gratuito</strong>
+                <span class="view-tag">P06 • P07 • M06</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img warning" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/crown.svg" alt="crown">
+                </span>
+              </td>
+              <td><span class="icon-name">crown</span></td>
+              <td>Distingue con claridad las capacidades ampliadas o plantillas de Personal Pro frente al plan gratuito sin recurrir a mensajes agresivos.</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Privacidad y cifrado local de documentos</strong>
+                <span class="view-tag">P04 • P05 • P07</span>
+              </td>
+              <td class="col-icon">
+                <span class="icon-box">
+                  <img class="icon-img success" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/shield-check.svg" alt="shield-check">
+                </span>
+              </td>
+              <td><span class="icon-name">shield-check</span></td>
+              <td>Refuerza la confianza del usuario al manejar documentos sensibles (identidad, licencias, comprobantes) resguardados cifrados en el equipo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Iconografía Funcional (SSOT) • Basada en Lucide Icons (<code>cdn.jsdelivr.net/npm/lucide-static</code>) • 2026-11-20
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeText = document.getElementById("themeText");
+      const filterInput = document.getElementById("iconFilter");
+      const visibleCounter = document.getElementById("visibleCounter");
+      const rows = Array.from(document.querySelectorAll("tbody tr"));
+
+      let isLight = false;
+
+      themeToggle.addEventListener("click", () => {
+        isLight = !isLight;
+        document.body.setAttribute("data-theme", isLight ? "light" : "dark");
+        themeIcon.textContent = isLight ? "🌙" : "☀️";
+        themeText.textContent = isLight ? "Modo Oscuro" : "Modo Claro";
+      });
+
+      filterInput.addEventListener("input", (event) => {
+        const query = event.target.value.trim().toLowerCase();
+        let count = 0;
+
+        rows.forEach((row) => {
+          const matches = !query || row.textContent.toLowerCase().includes(query);
+          row.style.display = matches ? "" : "none";
+          if (matches) count++;
+        });
+
+        visibleCounter.textContent = String(count);
+      });
+    })();
+  </script>
+</body>
+
+</html>

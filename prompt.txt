@@ -1,0 +1,8 @@
+Puedes proceder con el plan.
+- que el prompt genere .csv por cada enum de dominio + Transiciones.csv
+- Prompts independientes
+- Dos prompts separados para algoritmos
+- Documentos de soporte (un prompt independiente):
+    - Estructura_Archivos.txt
+    - Site_Map.md
+    - Modelo_Arquitectura.md

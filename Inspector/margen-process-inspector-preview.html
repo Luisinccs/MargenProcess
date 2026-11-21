@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Margin Process Journey</title>
+    <script type="module" src="../../SodaStudio/runtime/soda-runtime.js"></script>
+    <script type="module" src="../../SodaStudio/runtime/soda-scene-shields.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #0d1117;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <soda-scene-shield device="phone" orientation="portrait" title="Login Móvil" width="375" height="680">
+
+        
+        <!-- <panel-principal src="../.specify/Contratos/UI/margen-process.soda"></panel-principal> -->
+        <!-- <panel-principal-preview src="../.specify/Contratos/UI/margen-process-ui.soda"></panel-principal-preview> -->
+        <!-- <detalle-tramite src="margen-process-ui.soda"></detalle-tramite>     -->
+         <journey-cu01-crear-consultar-editar-mobile-portrait src="margen-process-inspector.soda"></journey-cu01-crear-consultar-editar-mobile-portrait>    
+    </soda-scene-shield>
+</body>
+</html>

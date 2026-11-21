@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<!-- C05_Paleta_Colores.html - 2026-11-20 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta Canónica de Paleta de Colores (SSOT) - RutaLegal / Gestor de Trámites con Dependencias</title>
+  <style>
+    /* ==========================================================================
+       1. VARIABLES BIMODAL (LIGHT / DARK) - SSOT
+       ========================================================================== */
+    :root {
+      /* Marca, Dominio y Semántica (Modo Claro Certificado WCAG 2.1) */
+      --clr-brand-primary: #0F766E;          /* Teal Profundo / Esmeralda Operativa (Hex: #0F766E) */
+      --clr-brand-primary-hover: #115E59;    /* Hover primario */
+      --clr-brand-primary-soft: #CCFBF1;     /* Tinte suave de marca */
+      --clr-brand-accent: #1D4ED8;           /* Azul Cobalto Confianza / Ruta Crítica */
+      --clr-brand-accent-soft: #DBEAFE;
+
+      --clr-status-urgent: #B91C1C;          /* Rojo Crítico / En Riesgo (>= 5.8:1 sobre blanco) */
+      --clr-status-urgent-bg: #FEE2E2;
+      --clr-status-warning: #B45309;         /* Ámbar Ventana de Acción / Pendiente */
+      --clr-status-warning-bg: #FEF3C7;
+      --clr-status-ok: #15803D;              /* Verde Completado / Listo */
+      --clr-status-ok-bg: #DCFCE7;
+      --clr-status-latent: #475569;          /* Pizarra Latente / En Espera */
+      --clr-status-latent-bg: #E2E8F0;
+      --clr-pro-accent: #6D28D9;             /* Púrpura Personal Pro / Cifrado */
+      --clr-pro-accent-bg: #EDE9FE;
+
+      /* Superficies y Jerarquía de Texto - Modo Claro */
+      --bg-page: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-surface-elevated: #FFFFFF;
+      --bg-surface-subtle: #F1F5F9;
+      --bg-latent-card: #F8FAFC;
+      --border-subtle: #CBD5E1;
+      --border-strong: #64748B;
+      --text-main: #0F172A;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --text-inverse: #FFFFFF;
+
+      --shadow-card: 0 4px 10px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-modal: 0 20px 25px -5px rgba(15, 23, 42, 0.14), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-pill: 999px;
+    }
+
+    [data-theme="dark"] {
+      /* Superficies y Jerarquía de Texto - Modo Oscuro (Sin deslumbramiento, alta legibilidad) */
+      --bg-page: #0B1120;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1E293B;
+      --bg-surface-subtle: #172033;
+      --bg-latent-card: #0F172A;
+      --border-subtle: #283548;
+      --border-strong: #475569;
+      --text-main: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+      --text-inverse: #0B1120;
+
+      /* Ajustes Semánticos en Modo Oscuro para evitar vibración cromática */
+      --clr-brand-primary: #2DD4BF;
+      --clr-brand-primary-hover: #14B8A6;
+      --clr-brand-primary-soft: rgba(45, 212, 191, 0.14);
+      --clr-brand-accent: #60A5FA;
+      --clr-brand-accent-soft: rgba(96, 165, 250, 0.14);
+
+      --clr-status-urgent: #FCA5A5;
+      --clr-status-urgent-bg: rgba(239, 68, 68, 0.18);
+      --clr-status-warning: #FCD34D;
+      --clr-status-warning-bg: rgba(245, 158, 11, 0.18);
+      --clr-status-ok: #86EFAC;
+      --clr-status-ok-bg: rgba(34, 197, 94, 0.16);
+      --clr-status-latent: #94A3B8;
+      --clr-status-latent-bg: rgba(148, 163, 184, 0.14);
+      --clr-pro-accent: #C4B5FD;
+      --clr-pro-accent-bg: rgba(139, 92, 246, 0.18);
+
+      --shadow-card: 0 6px 14px -2px rgba(0, 0, 0, 0.45), 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+      --shadow-modal: 0 24px 36px -6px rgba(0, 0, 0, 0.65);
+    }
+
+    /* ==========================================================================
+       2. RESET Y REGLAS BASE
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 24px 16px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* Header & Metadata */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px 24px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-title {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+    }
+
+    .header-subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .meta-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background-color: var(--bg-surface-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .meta-pill.canonical {
+      background-color: var(--clr-brand-primary-soft);
+      color: var(--clr-brand-primary);
+      border-color: transparent;
+    }
+
+    .btn-toggle {
+      background-color: var(--bg-surface-elevated);
+      border: 1.5px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .btn-toggle:hover {
+      border-color: var(--clr-brand-primary);
+    }
+
+    /* Secciones */
+    .section-block {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      border-left: 4px solid var(--clr-brand-primary);
+      padding-left: 12px;
+      color: var(--text-main);
+    }
+
+    .section-lead {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 860px;
+    }
+
+    /* Sección 1: Cards de Fundamentación */
+    .grid-foundation {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .info-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .info-card p, .info-card li {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .info-card ul {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .harmony-diagram {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background-color: var(--bg-surface-subtle);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    .harmony-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--bg-surface);
+      box-shadow: 0 0 0 1px var(--border-strong);
+      flex-shrink: 0;
+    }
+
+    /* Sección 2: Swatches */
+    .grid-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    .swatch-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .swatch-preview {
+      height: 92px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 10px;
+    }
+
+    .swatch-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      background: rgba(15, 23, 42, 0.72);
+      color: #FFFFFF;
+    }
+
+    .swatch-btn-copy {
+      background: rgba(15, 23, 42, 0.78);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 9px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .swatch-btn-copy:hover {
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .swatch-info {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .swatch-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .swatch-role {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .swatch-meta {
+      font-family: SFMono-Regular, Consolas, Monaco, monospace;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .swatch-hex {
+      font-family: SFMono-Regular, Consolas, Monaco, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Tablas */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-surface);
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background-color: var(--bg-surface-subtle);
+      color: var(--text-secondary);
+      font-weight: 700;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mono {
+      font-family: SFMono-Regular, Consolas, Monaco, monospace;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+
+    .chip-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: SFMono-Regular, Consolas, Monaco, monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .chip-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border-strong);
+      flex-shrink: 0;
+    }
+
+    /* Badges WCAG */
+    .badge-wcag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-aaa {
+      background-color: var(--clr-status-ok-bg);
+      color: var(--clr-status-ok);
+    }
+
+    .badge-aa {
+      background-color: var(--clr-brand-primary-soft);
+      color: var(--clr-brand-primary);
+    }
+
+    .badge-ui {
+      background-color: var(--clr-brand-accent-soft);
+      color: var(--clr-brand-accent);
+    }
+
+    /* ==========================================================================
+       3. SECCIÓN 5: CANVAS DE MOCKUPS MÓVILES EN VIVO
+       ========================================================================== */
+    .mockup-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-pill {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-surface);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background-color: var(--clr-brand-primary);
+      color: var(--text-inverse);
+      border-color: var(--clr-brand-primary);
+    }
+
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    .phone-mockup {
+      background-color: var(--bg-page);
+      border: 2px solid var(--border-subtle);
+      border-radius: 28px;
+      padding: 18px;
+      box-shadow: var(--shadow-modal);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .phone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .phone-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .phone-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface-subtle);
+      color: var(--text-muted);
+    }
+
+    .critical-banner {
+      background-color: var(--bg-surface);
+      border: 1.5px solid var(--clr-status-urgent);
+      border-left: 5px solid var(--clr-status-urgent);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      width: fit-content;
+    }
+
+    .st-urgent {
+      background-color: var(--clr-status-urgent-bg);
+      color: var(--clr-status-urgent);
+    }
+
+    .st-warning {
+      background-color: var(--clr-status-warning-bg);
+      color: var(--clr-status-warning);
+    }
+
+    .st-ok {
+      background-color: var(--clr-status-ok-bg);
+      color: var(--clr-status-ok);
+    }
+
+    .st-latent {
+      background-color: var(--clr-status-latent-bg);
+      color: var(--clr-status-latent);
+    }
+
+    .st-pro {
+      background-color: var(--clr-pro-accent-bg);
+      color: var(--clr-pro-accent);
+    }
+
+    .ui-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ui-card.latent {
+      background-color: var(--bg-latent-card);
+      opacity: 0.78;
+      border-style: dashed;
+    }
+
+    .ui-input, .ui-select {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-strong);
+      background-color: var(--bg-surface-elevated);
+      color: var(--text-main);
+      font-size: 13px;
+    }
+
+    .ui-input:focus, .ui-select:focus {
+      outline: 2px solid var(--clr-brand-primary);
+      outline-offset: 1px;
+    }
+
+    .ui-btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      background-color: var(--clr-brand-primary);
+      color: var(--text-inverse);
+      border: none;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--clr-brand-primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-surface-subtle);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+
+    .btn-pro {
+      background-color: var(--clr-pro-accent);
+      color: var(--text-inverse);
+      border: none;
+      padding: 9px 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 12.5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .recaudo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 10px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-surface-subtle);
+      border: 1px solid var(--border-subtle);
+      font-size: 12.5px;
+      gap: 8px;
+    }
+
+    .recaudo-toggle {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .live-feedback {
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background-color: var(--clr-brand-primary-soft);
+      color: var(--clr-brand-primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- CABECERA Y SELECTOR BIMODAL -->
+    <header class="header-bar">
+      <div>
+        <h1 class="header-title">Propuesta Canónica de Paleta de Colores</h1>
+        <p class="header-subtitle">Gestor de Trámites y Vencimientos Burocráticos con Dependencias (MVP) • Fuente Única de la Verdad (SSOT)</p>
+        <div class="meta-pills">
+          <span class="meta-pill">Fecha: 2026-11-20</span>
+          <span class="meta-pill">Proyecto: RutaLegal / Trámites &amp; Dependencias</span>
+          <span class="meta-pill">Estándar: WCAG 2.1 AA/AAA + Mobile-First</span>
+          <span class="meta-pill canonical">Estado: Canónico Oficial v1.0</span>
+        </div>
+      </div>
+      <button id="themeToggle" class="btn-toggle" aria-label="Alternar entre Modo Claro y Modo Oscuro">
+        <span id="themeIcon">☀️</span>
+        <span id="themeLabel">Modo Claro</span>
+      </button>
+    </header>
+
+    <!-- SECCIÓN 1: FUNDAMENTACIÓN PSICOLÓGICA Y ESQUEMA ARMÓNICO -->
+    <section class="section-block" id="sec-1">
+      <h2 class="section-title">1. Fundamentación Psicológica y Esquema Armónico</h2>
+      <p class="section-lead">
+        El usuario arquetípico (Mateo, 34 años, operaciones y movilidad) gestiona trámites críticos con dependencias encadenadas en entornos de alta presión y movilidad (oficinas, taquillas, traslados)[cite: 1, 2]. La paleta elimina la "falsa calma" y el ruido visual de listas genéricas mediante una jerarquía cromática de calma operativa, urgencia medible y atenuación de elementos latentes[cite: 1, 2, 4].
+      </p>
+      <div class="grid-foundation">
+        <article class="info-card">
+          <h3>Diagnóstico Emocional y Ergonomía en Movilidad</h3>
+          <ul>
+            <li><strong>Reducción de ansiedad y culpa:</strong> El usuario teme llegar tarde por subestimar tiempos previos o perder recaudos en taquilla[cite: 1, 2]. Los neutros limpios y el verde azulado operativo transmiten control y previsibilidad.</li>
+            <li><strong>Combate a la fatiga cognitiva:</strong> Los trámites en espera/latentes se presentan en superficie atenuada (<code>--bg-latent-card</code>) y estado pizarra para que el ojo priorice de inmediato el <em>Próximo Paso Crítico</em>[cite: 1, 4].</li>
+            <li><strong>Lectura rápida en exteriores y taquilla:</strong> Alto contraste en textos y badges semánticos para consultar PDFs o comprobantes <em>offline</em> bajo luz variable[cite: 4].</li>
+          </ul>
+        </article>
+
+        <article class="info-card">
+          <h3>Esquema Armónico: Análogo-Complementario Equilibrado</h3>
+          <p>
+            Se estructura sobre un eje <strong>Teal / Esmeralda Operativa (~175° HSL)</strong> como ancla de marca, apoyado en un <strong>Azul Cobalto (~224° HSL)</strong> análogo para ruta crítica y dependencias, un <strong>Ámbar (~32° HSL)</strong> y <strong>Rojo (~0° HSL)</strong> en el cuadrante cálido-opuesto para ventanas de acción y riesgo real, y <strong>Púrpura (~262° HSL)</strong> reservado para el plan <em>Personal Pro</em> y cifrado.
+          </p>
+          <div class="harmony-diagram" aria-label="Esquema de colores armónicos">
+            <span class="harmony-dot" style="background:#0F766E;" title="Primario Marca"></span>
+            <span class="harmony-dot" style="background:#1D4ED8;" title="Ruta Crítica / Dependencias"></span>
+            <span class="harmony-dot" style="background:#B45309;" title="Ventana de Acción"></span>
+            <span class="harmony-dot" style="background:#B91C1C;" title="En Riesgo / Crítico"></span>
+            <span class="harmony-dot" style="background:#6D28D9;" title="Personal Pro"></span>
+            <span style="font-size:12px; font-weight:700; color:var(--text-main);">1 Primario + 4 Acentos Semánticos</span>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <h3>Semántica de Dominio y Jerarquía de Superficies</h3>
+          <ul>
+            <li><strong>En riesgo / Urgente:</strong> Ventana crítica próxima a vencer o prerequisito atrasado (<code>P01</code> bloque crítico).</li>
+            <li><strong>En ventana de acción:</strong> Momento real de iniciar pasos previos o reunir recaudos[cite: 1, 4].</li>
+            <li><strong>En espera / Latente:</strong> Futuro lejano; se atenúa visualmente para no saturar el panel principal[cite: 1, 4].</li>
+            <li><strong>Completado / Listo:</strong> Paso, recaudo o trámite verificado con respaldo disponible[cite: 3, 4].</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: DEFINICIÓN CANÓNICA DE COLORES DE MARCA Y DOMINIO -->
+    <section class="section-block" id="sec-2">
+      <h2 class="section-title">2. Definición Canónica de Colores de Marca y Dominio</h2>
+      <p class="section-lead">
+        Muestrarios interactivos con valores canónicos (Modo Claro base) y tabla SSOT de referencia con equivalencias RGB y HSL. Haz clic en <strong>Copiar HEX</strong> para copiar al portapapeles.
+      </p>
+
+      <div class="grid-swatches">
+        <!-- Swatch 1 -->
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background-color: #0F766E;">
+            <span class="swatch-tag">Primario Marca</span>
+            <button class="swatch-btn-copy" onclick="copyHex('#0F766E', this)">Copiar HEX</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">Teal Operativo</div>
+            <div class="swatch-role">Acciones principales, CTA "Guardar" / "Crear trámite" y foco activo</div>
+            <div class="swatch-hex">#0F766E</div>
+            <div class="swatch-meta">RGB(15, 118, 110) • HSL(175°, 77%, 26%)</div>
+          </div>
+        </div>
+
+        <!-- Swatch 2 -->
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background-color: #1D4ED8;">
+            <span class="swatch-tag">Ruta Crítica</span>
+            <button class="swatch-btn-copy" onclick="copyHex('#1D4ED8', this)">Copiar HEX</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">Azul Cobalto Dependencia</div>
+            <div class="swatch-role">Secuencia de pasos previos, cuenta regresiva inversa y taquilla offline</div>
+            <div class="swatch-hex">#1D4ED8</div>
+            <div class="swatch-meta">RGB(29, 78, 216) • HSL(224°, 76%, 48%)</div>
+          </div>
+        </div>
+
+        <!-- Swatch 3 -->
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background-color: #B91C1C;">
+            <span class="swatch-tag">En Riesgo</span>
+            <button class="swatch-btn-copy" onclick="copyHex('#B91C1C', this)">Copiar HEX</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">Rojo Riesgo Burocrático</div>
+            <div class="swatch-role">Próximo paso crítico vencido/inminente y acción destructiva ("Eliminar")</div>
+            <div class="swatch-hex">#B91C1C</div>
+            <div class="swatch-meta">RGB(185, 28, 28) • HSL(0°, 74%, 42%)</div>
+          </div>
+        </div>
+
+        <!-- Swatch 4 -->
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background-color: #B45309;">
+            <span class="swatch-tag">Ventana de Acción</span>
+            <button class="swatch-btn-copy" onclick="copyHex('#B45309', this)">Copiar HEX</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">Ámbar Ventana Activa</div>
+            <div class="swatch-role">Trámites en ventana de acción y recaudos en estado "Pendiente"</div>
+            <div class="swatch-hex">#B45309</div>
+            <div class="swatch-meta">RGB(180, 83, 9) • HSL(26°, 91%, 37%)</div>
+          </div>
+        </div>
+
+        <!-- Swatch 5 -->
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background-color: #15803D;">
+            <span class="swatch-tag">Completado / Listo</span>
+            <button class="swatch-btn-copy" onclick="copyHex('#15803D', this)">Copiar HEX</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">Verde Cumplimiento</div>
+            <div class="swatch-role">Recaudos "Listo", trámites "Completados" y verificación offline</div>
+            <div class="swatch-hex">#15803D</div>
+            <div class="swatch-meta">RGB(21, 128, 61) • HSL(142°, 72%, 29%)</div>
+          </div>
+        </div>
+
+        <!-- Swatch 6 -->
+        <div class="swatch-card">
+          <div class="swatch-preview" style="background-color: #6D28D9;">
+            <span class="swatch-tag">Personal Pro</span>
+            <button class="swatch-btn-copy" onclick="copyHex('#6D28D9', this)">Copiar HEX</button>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-name">Púrpura Pro &amp; Respaldo</div>
+            <div class="swatch-role">Paywall contextual (M06), plantillas Pro y respaldo cifrado (P07)</div>
+            <div class="swatch-hex">#6D28D9</div>
+            <div class="swatch-meta">RGB(109, 40, 217) • HSL(263°, 69%, 50%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla Exhaustiva SSOT -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Token Semántico</th>
+              <th>Rol de Dominio</th>
+              <th>HEX (Light)</th>
+              <th>RGB (Light)</th>
+              <th>HSL (Light)</th>
+              <th>HEX (Dark)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">--clr-brand-primary</td>
+              <td>CTA primario, foco y navegación activa</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#0F766E;"></span>#0F766E</span></td>
+              <td class="mono">15, 118, 110</td>
+              <td class="mono">175°, 77%, 26%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#2DD4BF;"></span>#2DD4BF</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--clr-brand-accent</td>
+              <td>Ruta crítica, dependencias y vista taquilla</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#1D4ED8;"></span>#1D4ED8</span></td>
+              <td class="mono">29, 78, 216</td>
+              <td class="mono">224°, 76%, 48%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#60A5FA;"></span>#60A5FA</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--clr-status-urgent</td>
+              <td>Estado "En riesgo" / alerta crítica / borrar</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#B91C1C;"></span>#B91C1C</span></td>
+              <td class="mono">185, 28, 28</td>
+              <td class="mono">0°, 74%, 42%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#FCA5A5;"></span>#FCA5A5</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--clr-status-warning</td>
+              <td>Estado "En ventana de acción" / "Pendiente"</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#B45309;"></span>#B45309</span></td>
+              <td class="mono">180, 83, 9</td>
+              <td class="mono">26°, 91%, 37%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#FCD34D;"></span>#FCD34D</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--clr-status-ok</td>
+              <td>Estado "Completado" / recaudo "Listo"</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#15803D;"></span>#15803D</span></td>
+              <td class="mono">21, 128, 61</td>
+              <td class="mono">142°, 72%, 29%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#86EFAC;"></span>#86EFAC</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--clr-status-latent</td>
+              <td>Estado "En espera / latente" sin ruido</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#475569;"></span>#475569</span></td>
+              <td class="mono">71, 85, 105</td>
+              <td class="mono">215°, 19%, 35%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#94A3B8;"></span>#94A3B8</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--clr-pro-accent</td>
+              <td>Plan Personal Pro, plantillas bloqueadas y respaldo</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#6D28D9;"></span>#6D28D9</span></td>
+              <td class="mono">109, 40, 217</td>
+              <td class="mono">263°, 69%, 50%</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#C4B5FD;"></span>#C4B5FD</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: MATRIZ BIMODAL (LIGHT VS DARK MODE) -->
+    <section class="section-block" id="sec-3">
+      <h2 class="section-title">3. Matriz Bimodal: Modo Claro vs. Modo Oscuro</h2>
+      <p class="section-lead">
+        En Modo Oscuro se emplean superficies gris-azulado profundos (<code>#0B1120</code> a <code>#1E293B</code>) en lugar de negro puro para evitar el <em>halting/smearing</em> en pantallas OLED/LCD y se eleva la luminancia de los acentos para conservar contraste sin saturación estridente.
+      </p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Token de Superficie / Texto</th>
+              <th>Jerarquía en la Aplicación</th>
+              <th>Modo Claro (Light)</th>
+              <th>Modo Oscuro (Dark)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">--bg-page</td>
+              <td>Lienzo base de pantallas completas (P01–P07)</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#F8FAFC;"></span>#F8FAFC</span></td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#0B1120;"></span>#0B1120</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--bg-surface</td>
+              <td>Tarjetas de trámites, pasos previos y bloques de taquilla</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#FFFFFF;"></span>#FFFFFF</span></td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#111827;"></span>#111827</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--bg-surface-elevated</td>
+              <td>Modales / Bottom Sheets (M01–M06) e inputs activos</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#FFFFFF;"></span>#FFFFFF</span></td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#1E293B;"></span>#1E293B</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--bg-surface-subtle</td>
+              <td>Cabeceras de tabla, filas de recaudos y botones secundarios</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#F1F5F9;"></span>#F1F5F9</span></td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#172033;"></span>#172033</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--bg-latent-card</td>
+              <td>Trámites en espera / latentes (baja prioridad visual)</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#F8FAFC;"></span>#F8FAFC</span></td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#0F172A;"></span>#0F172A</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--border-subtle / --border-strong</td>
+              <td>Divisores de tarjetas, bordes de campos y contornos</td>
+              <td class="mono">#CBD5E1 / #64748B</td>
+              <td class="mono">#283548 / #475569</td>
+            </tr>
+            <tr>
+              <td class="mono">--text-main</td>
+              <td>Títulos de trámite, fechas críticas y datos principales</td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#0F172A;"></span>#0F172A</span></td>
+              <td><span class="chip-swatch"><span class="chip-dot" style="background:#F8FAFC;"></span>#F8FAFC</span></td>
+            </tr>
+            <tr>
+              <td class="mono">--text-secondary / --text-muted</td>
+              <td>Descripciones, notas, contadores de recaudos y metadatos</td>
+              <td class="mono">#334155 / #475569</td>
+              <td class="mono">#CBD5E1 / #94A3B8</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: AUDITORÍA DE ACCESIBILIDAD Y RATIOS DE CONTRASTE (WCAG 2.1) -->
+    <section class="section-block" id="sec-4">
+      <h2 class="section-title">4. Auditoría de Accesibilidad y Ratios de Contraste (WCAG 2.1)</h2>
+      <p class="section-lead">
+        Todas las combinaciones críticas cumplen con <strong>WCAG 2.1 AA</strong> (&ge; 4.5:1 para texto normal, &ge; 3.0:1 para UI/texto grande) o <strong>AAA</strong> (&ge; 7.0:1).
+      </p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Combinación (Primer Plano / Fondo)</th>
+              <th>Contexto de Uso</th>
+              <th>Ratio Light</th>
+              <th>Ratio Dark</th>
+              <th>Certificación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mono">#0F172A</span> sobre <span class="mono">#FFFFFF</span> (Light)<br><span class="mono">#F8FAFC</span> sobre <span class="mono">#111827</span> (Dark)</td>
+              <td>Texto principal en tarjetas y vistas</td>
+              <td class="mono">17.4:1</td>
+              <td class="mono">16.6:1</td>
+              <td><span class="badge-wcag badge-aaa">Pass AAA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#334155</span> sobre <span class="mono">#FFFFFF</span> (Light)<br><span class="mono">#CBD5E1</span> sobre <span class="mono">#111827</span> (Dark)</td>
+              <td>Texto secundario y notas de trámite</td>
+              <td class="mono">10.5:1</td>
+              <td class="mono">11.2:1</td>
+              <td><span class="badge-wcag badge-aaa">Pass AAA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#475569</span> sobre <span class="mono">#F8FAFC</span> (Light)<br><span class="mono">#94A3B8</span> sobre <span class="mono">#0B1120</span> (Dark)</td>
+              <td>Etiquetas muted y fechas secundarias</td>
+              <td class="mono">6.9:1</td>
+              <td class="mono">6.4:1</td>
+              <td><span class="badge-wcag badge-aa">Pass AA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#FFFFFF</span> sobre <span class="mono">#0F766E</span> (Light)<br><span class="mono">#0B1120</span> sobre <span class="mono">#2DD4BF</span> (Dark)</td>
+              <td>Botón primario ("Guardar" / "Crear trámite")</td>
+              <td class="mono">5.5:1</td>
+              <td class="mono">11.4:1</td>
+              <td><span class="badge-wcag badge-aa">Pass AA / AAA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#B91C1C</span> sobre <span class="mono">#FEE2E2</span> (Light)<br><span class="mono">#FCA5A5</span> sobre <span class="mono">#111827</span> (Dark)</td>
+              <td>Badge y alerta de estado "En riesgo"</td>
+              <td class="mono">5.8:1</td>
+              <td class="mono">10.9:1</td>
+              <td><span class="badge-wcag badge-aa">Pass AA / AAA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#B45309</span> sobre <span class="mono">#FEF3C7</span> (Light)<br><span class="mono">#FCD34D</span> sobre <span class="mono">#111827</span> (Dark)</td>
+              <td>Badge "En ventana de acción" / "Pendiente"</td>
+              <td class="mono">4.8:1</td>
+              <td class="mono">12.1:1</td>
+              <td><span class="badge-wcag badge-aa">Pass AA / AAA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#15803D</span> sobre <span class="mono">#DCFCE7</span> (Light)<br><span class="mono">#86EFAC</span> sobre <span class="mono">#111827</span> (Dark)</td>
+              <td>Badge "Completado" / recaudo "Listo"</td>
+              <td class="mono">5.1:1</td>
+              <td class="mono">11.8:1</td>
+              <td><span class="badge-wcag badge-aa">Pass AA / AAA</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">#6D28D9</span> sobre <span class="mono">#EDE9FE</span> (Light)<br><span class="mono">#C4B5FD</span> sobre <span class="mono">#1E293B</span> (Dark)</td>
+              <td>Etiquetas y acciones de Personal Pro (M06 / P07)</td>
+              <td class="mono">6.2:1</td>
+              <td class="mono">8.4:1</td>
+              <td><span class="badge-wcag badge-aa">Pass AA / AAA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: CANVAS DE COMPONENTES DE UI EN VIVO (MOCKUPS INTERACTIVOS) -->
+    <section class="section-block" id="sec-5">
+      <h2 class="section-title">5. Canvas de Demostración en Vivo (Mockups Interactivos)</h2>
+      <p class="section-lead">
+        Maquetas móviles representativas del flujo real del producto (<strong>P01 Panel Principal</strong>, <strong>P03/P05 Recaudos &amp; Vista Rápida de Taquilla</strong> y <strong>M01/M06 Formulario &amp; Paywall Pro</strong>). Interactúa con los estados y alterna el tema para validar la convivencia cromática.
+      </p>
+
+      <div class="mockup-controls">
+        <span style="font-size:12px; font-weight:700; color:var(--text-muted);">Filtrar vista en P01:</span>
+        <button class="filter-pill active" onclick="filterMockup('all', this)">Todos</button>
+        <button class="filter-pill" onclick="filterMockup('urgent', this)">En riesgo</button>
+        <button class="filter-pill" onclick="filterMockup('warning', this)">En ventana</button>
+        <button class="filter-pill" onclick="filterMockup('latent', this)">Latentes</button>
+      </div>
+
+      <div class="mockup-grid">
+        <!-- MOCKUP 1: P01 Panel Principal -->
+        <article class="phone-mockup" aria-label="Mockup Panel Principal P01">
+          <div class="phone-header">
+            <span class="phone-title">Mis Trámites (P01)</span>
+            <span class="phone-tag">Ruta Crítica</span>
+          </div>
+
+          <div class="critical-banner" data-status="urgent">
+            <span class="status-badge st-urgent">● En riesgo • Vence paso en 4 días</span>
+            <strong style="font-size:13.5px;">Renovar Pasaporte → Solicitar cita consular</strong>
+            <span style="font-size:12px; color:var(--text-secondary);">Límite final: 15/05/2027 • 2/3 recaudos listos</span>
+          </div>
+
+          <div class="ui-card" data-status="warning">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+              <strong style="font-size:13px;">Seguro Vehicular</strong>
+              <span class="status-badge st-warning">En ventana de acción</span>
+            </div>
+            <span style="font-size:12px; color:var(--text-secondary);">Próx. paso: Reunir póliza y cédula (en 9 días)</span>
+          </div>
+
+          <div class="ui-card" data-status="ok">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+              <strong style="font-size:13px;">Permiso Municipal</strong>
+              <span class="status-badge st-ok">✓ Completado</span>
+            </div>
+            <span style="font-size:12px; color:var(--text-muted);">Documentación archivada y verificada</span>
+          </div>
+
+          <div class="ui-card latent" data-status="latent">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+              <strong style="font-size:13px; color:var(--text-muted);">Licencia de Conducir</strong>
+              <span class="status-badge st-latent">En espera / latente</span>
+            </div>
+            <span style="font-size:11.5px; color:var(--text-muted);">Abre ventana en 4 meses • Sin ruido hoy</span>
+          </div>
+
+          <div class="ui-btn-row">
+            <button class="btn-secondary" onclick="showFeedback('Catálogo de Plantillas Base (P06) abierto.')">Plantillas</button>
+            <button class="btn-primary" onclick="showFeedback('Nuevo Trámite (M01) listo para configurar.')">+ Nuevo Trámite</button>
+          </div>
+        </article>
+
+        <!-- MOCKUP 2: P03 / P05 Recaudos y Vista Rápida de Taquilla -->
+        <article class="phone-mockup" aria-label="Mockup Recaudos y Vista Rápida Taquilla">
+          <div class="phone-header">
+            <span class="phone-title">Taquilla / Recaudos (P05)</span>
+            <span class="status-badge st-ok" style="padding:2px 8px;">Offline Listo</span>
+          </div>
+
+          <p style="font-size:12px; color:var(--text-secondary);">
+            Trámite: <strong style="color:var(--text-main);">Renovar Pasaporte</strong> • Paso 1: Reunir recaudos base
+          </p>
+
+          <div class="recaudo-item">
+            <div>
+              <div style="font-weight:700; color:var(--text-main);">Copia de cédula de identidad</div>
+              <div style="font-size:11px; color:var(--clr-brand-accent); font-weight:600;">Adjunto: cedula_frente.jpg</div>
+            </div>
+            <button class="recaudo-toggle st-ok" onclick="toggleRecaudo(this)">Listo</button>
+          </div>
+
+          <div class="recaudo-item">
+            <div>
+              <div style="font-weight:700; color:var(--text-main);">Planilla de solicitud firmada</div>
+              <div style="font-size:11px; color:var(--clr-brand-accent); font-weight:600;">Adjunto: planilla_2027.pdf</div>
+            </div>
+            <button class="recaudo-toggle st-ok" onclick="toggleRecaudo(this)">Listo</button>
+          </div>
+
+          <div class="recaudo-item">
+            <div>
+              <div style="font-weight:700; color:var(--text-main);">Comprobante de pago de arancel</div>
+              <div style="font-size:11px; color:var(--text-muted);">Sin archivo adjunto aún</div>
+            </div>
+            <button class="recaudo-toggle st-warning" onclick="toggleRecaudo(this)">Pendiente</button>
+          </div>
+
+          <div class="ui-btn-row">
+            <button class="btn-secondary" onclick="showFeedback('Visor Integrado (P04) abierto sin conexión.')">Abrir Visor PDF</button>
+            <button class="btn-primary" onclick="showFeedback('Archivo vinculado al recaudo en almacenamiento local.')">+ Adjuntar</button>
+          </div>
+        </article>
+
+        <!-- MOCKUP 3: M01 / M06 Formulario y Paywall Contextual Personal Pro -->
+        <article class="phone-mockup" aria-label="Mockup Formulario y Paywall Personal Pro">
+          <div class="phone-header">
+            <span class="phone-title">Formulario &amp; Plan Pro (M06)</span>
+            <span class="status-badge st-pro">Personal Pro</span>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <label style="font-size:12px; font-weight:700;">Título del trámite</label>
+            <input class="ui-input" type="text" value="Renovación Visa de Trabajo" aria-label="Título del trámite">
+
+            <label style="font-size:12px; font-weight:700;">Categoría y anticipación</label>
+            <select class="ui-select" aria-label="Categoría">
+              <option>Migración y Residencia (8 semanas antes)</option>
+              <option>Seguros y Vehículos (3 semanas antes)</option>
+              <option>Licencias y Permisos (4 semanas antes)</option>
+            </select>
+          </div>
+
+          <div class="ui-card" style="border-color: var(--clr-pro-accent);">
+            <span class="status-badge st-pro">Respaldo &amp; Plantillas Ilimitadas</span>
+            <p style="font-size:12px; color:var(--text-secondary);">
+              Desbloquea todas las plantillas base, adjuntos ampliados y exportación de respaldo cifrado (Pago único Lifetime o Anual).
+            </p>
+            <button class="btn-pro" onclick="showFeedback('Modal Personal Pro (M06): opción Lifetime / Anual activa.')">
+              Desbloquear Personal Pro
+            </button>
+          </div>
+
+          <div id="mockupFeedback" class="live-feedback" role="status">
+            Listo: alterna el tema superior o toca cualquier control del canvas.
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Conmutador de tema Bimodal Light / Dark
+    const themeBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const nextTheme = isDark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      themeIcon.textContent = nextTheme === 'dark' ? '🌙' : '☀️';
+      themeLabel.textContent = nextTheme === 'dark' ? 'Modo Oscuro' : 'Modo Claro';
+    });
+
+    // Copiar código HEX al portapapeles
+    function copyHex(hex, btn) {
+      navigator.clipboard?.writeText(hex).catch(() => {});
+      const original = btn.textContent;
+      btn.textContent = '¡Copiado!';
+      showFeedback(`Código ${hex} copiado al portapapeles.`);
+      setTimeout(() => {
+        btn.textContent = original;
+      }, 1600);
+    }
+
+    // Filtrar tarjetas en Mockup P01
+    function filterMockup(status, pillEl) {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pillEl.classList.add('active');
+
+      const items = document.querySelectorAll('.phone-mockup [data-status]');
+      items.forEach(el => {
+        const match = status === 'all' || el.getAttribute('data-status') === status;
+        el.style.display = match ? '' : 'none';
+      });
+    }
+
+    // Alternar estado de recaudo en Mockup P05
+    function toggleRecaudo(btn) {
+      const isListo = btn.textContent.trim() === 'Listo';
+      btn.textContent = isListo ? 'Pendiente' : 'Listo';
+      btn.classList.toggle('st-ok', !isListo);
+      btn.classList.toggle('st-warning', isListo);
+      showFeedback(`Estado de recaudo actualizado a "${btn.textContent}".`);
+    }
+
+    // Mensaje de retroalimentación en el canvas
+    function showFeedback(msg) {
+      const box = document.getElementById('mockupFeedback');
+      if (box) box.textContent = msg;
+    }
+  </script>
+</body>
+</html>

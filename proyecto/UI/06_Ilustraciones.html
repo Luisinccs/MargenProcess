@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<!-- C06_Ilustraciones.html - 2026-11-20 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Canónico de Ilustraciones y App Icons (SSOT) - ExpireAlert</title>
+  <style>
+    /* ==========================================================================
+       1. VARIABLES BIMODAL (LIGHT / DARK) - SSOT EXPIRESALERT
+       Alineado con Paleta Canónica y Ergonomía Emocional del Proyecto
+       ========================================================================== */
+    :root {
+      /* Modo Oscuro por Defecto (Sin deslumbramiento, alta legibilidad) */
+      --ill-bg: #0B1120;
+      --ill-surface: #111827;
+      --ill-card-bg: #131E36;
+      --ill-surface-subtle: #172033;
+      --ill-surface-elevated: #1E293B;
+      --ill-border: #283548;
+      --ill-border-strong: #475569;
+      --ill-text: #F8FAFC;
+      --ill-text-secondary: #CBD5E1;
+      --ill-text-muted: #94A3B8;
+      --ill-text-inverse: #0B1120;
+
+      /* Tokens Semánticos de Marca y Estado (Dark) */
+      --ill-primary: #2DD4BF;
+      --ill-primary-hover: #14B8A6;
+      --ill-primary-soft: rgba(45, 212, 191, 0.14);
+      --ill-accent: #60A5FA;
+      --ill-accent-soft: rgba(96, 165, 250, 0.15);
+      --ill-urgent: #FCA5A5;
+      --ill-urgent-bg: rgba(239, 68, 68, 0.18);
+      --ill-warning: #FCD34D;
+      --ill-warning-bg: rgba(245, 158, 11, 0.18);
+      --ill-success: #86EFAC;
+      --ill-success-bg: rgba(34, 197, 94, 0.16);
+      --ill-pro: #C4B5FD;
+      --ill-pro-bg: rgba(139, 92, 246, 0.18);
+
+      /* Tokens Internos de Ilustración SVG (Dark) */
+      --svg-bg-pill: #172033;
+      --svg-stroke: #E2E8F0;
+      --svg-stroke-muted: #64748B;
+      --svg-fill-base: #1E293B;
+      --svg-fill-soft: #283548;
+      --svg-doc-paper: #F8FAFC;
+      --svg-doc-line: #94A3B8;
+      --svg-brand-teal: #2DD4BF;
+      --svg-brand-teal-deep: #0F766E;
+      --svg-route-blue: #60A5FA;
+      --svg-route-blue-deep: #1D4ED8;
+      --svg-ok-green: #86EFAC;
+      --svg-ok-green-deep: #15803D;
+      --svg-warn-amber: #FCD34D;
+      --svg-warn-amber-deep: #B45309;
+      --svg-pro-purple: #C4B5FD;
+      --svg-pro-purple-deep: #6D28D9;
+      --svg-urgent-red: #FCA5A5;
+
+      --shadow-card: 0 6px 16px -4px rgba(0, 0, 0, 0.45), 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+      --shadow-preview: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-pill: 999px;
+    }
+
+    body[data-theme="light"] {
+      --ill-bg: #F8FAFC;
+      --ill-surface: #FFFFFF;
+      --ill-card-bg: #FFFFFF;
+      --ill-surface-subtle: #F1F5F9;
+      --ill-surface-elevated: #FFFFFF;
+      --ill-border: #CBD5E1;
+      --ill-border-strong: #64748B;
+      --ill-text: #0F172A;
+      --ill-text-secondary: #334155;
+      --ill-text-muted: #475569;
+      --ill-text-inverse: #FFFFFF;
+
+      /* Tokens Semánticos de Marca y Estado (Light - Certificado WCAG 2.1) */
+      --ill-primary: #0F766E;
+      --ill-primary-hover: #115E59;
+      --ill-primary-soft: #CCFBF1;
+      --ill-accent: #1D4ED8;
+      --ill-accent-soft: #DBEAFE;
+      --ill-urgent: #B91C1C;
+      --ill-urgent-bg: #FEE2E2;
+      --ill-warning: #B45309;
+      --ill-warning-bg: #FEF3C7;
+      --ill-success: #15803D;
+      --ill-success-bg: #DCFCE7;
+      --ill-pro: #6D28D9;
+      --ill-pro-bg: #EDE9FE;
+
+      /* Tokens Internos de Ilustración SVG (Light) */
+      --svg-bg-pill: #F1F5F9;
+      --svg-stroke: #0F172A;
+      --svg-stroke-muted: #64748B;
+      --svg-fill-base: #E2E8F0;
+      --svg-fill-soft: #F1F5F9;
+      --svg-doc-paper: #FFFFFF;
+      --svg-doc-line: #64748B;
+      --svg-brand-teal: #0F766E;
+      --svg-brand-teal-deep: #115E59;
+      --svg-route-blue: #1D4ED8;
+      --svg-route-blue-deep: #1E40AF;
+      --svg-ok-green: #15803D;
+      --svg-ok-green-deep: #166534;
+      --svg-warn-amber: #B45309;
+      --svg-warn-amber-deep: #92400E;
+      --svg-pro-purple: #6D28D9;
+      --svg-pro-purple-deep: #5B21B6;
+      --svg-urgent-red: #B91C1C;
+
+      --shadow-card: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+      --shadow-preview: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    /* ==========================================================================
+       2. RESET Y ESTRUCTURA GENERAL
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--ill-bg);
+      color: var(--ill-text);
+      line-height: 1.55;
+      padding: 24px 16px 72px;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* Cabecera y Selector Bimodal */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding: 22px 24px;
+      background-color: var(--ill-surface);
+      border: 1px solid var(--ill-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .header h1 {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ill-text);
+    }
+
+    .header p {
+      font-size: 13.5px;
+      color: var(--ill-text-muted);
+      margin-top: 4px;
+    }
+
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background-color: var(--ill-surface-subtle);
+      color: var(--ill-text-secondary);
+      border: 1px solid var(--ill-border);
+    }
+
+    .badge.ssot {
+      background-color: var(--ill-primary-soft);
+      color: var(--ill-primary);
+      border-color: transparent;
+    }
+
+    .btn-toggle {
+      background-color: var(--ill-surface-elevated);
+      color: var(--ill-text);
+      border: 1.5px solid var(--ill-border-strong);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.2s ease, transform 0.12s ease;
+    }
+
+    .btn-toggle:hover {
+      border-color: var(--ill-primary);
+    }
+
+    .btn-toggle:active {
+      transform: scale(0.98);
+    }
+
+    /* Secciones */
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      border-left: 4px solid var(--ill-primary);
+      padding-left: 12px;
+      color: var(--ill-text);
+    }
+
+    .section-lead {
+      font-size: 14px;
+      color: var(--ill-text-secondary);
+      max-width: 900px;
+    }
+
+    /* Cards de Síntesis Estratégica */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .pillar-card {
+      background-color: var(--ill-card-bg);
+      border: 1px solid var(--ill-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pillar-card h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ill-primary);
+    }
+
+    .pillar-card p {
+      font-size: 12.5px;
+      color: var(--ill-text-secondary);
+    }
+
+    /* Tabla SSOT */
+    .table-wrap {
+      overflow-x: auto;
+      background-color: var(--ill-card-bg);
+      border: 1px solid var(--ill-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+      min-width: 760px;
+    }
+
+    th {
+      background-color: var(--ill-surface-subtle);
+      color: var(--ill-text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--ill-border);
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--ill-border);
+      color: var(--ill-text-secondary);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .code-pill {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background-color: var(--ill-primary-soft);
+      color: var(--ill-primary);
+      white-space: nowrap;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: var(--ill-text);
+    }
+
+    /* Matriz de Pruebas del App Icon (IL-01) */
+    .icon-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .mask-card {
+      background-color: var(--ill-card-bg);
+      border: 1px solid var(--ill-border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .mask-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ill-text);
+    }
+
+    .mask-spec {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11.5px;
+      color: var(--ill-text-muted);
+    }
+
+    .mask-desc {
+      font-size: 12px;
+      color: var(--ill-text-secondary);
+    }
+
+    .mask-stage {
+      width: 116px;
+      height: 116px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--ill-surface-subtle);
+      border: 1px dashed var(--ill-border-strong);
+      border-radius: var(--radius-md);
+      padding: 8px;
+    }
+
+    .mask-squircle {
+      width: 92px;
+      height: 92px;
+      border-radius: 22%;
+      overflow: hidden;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .mask-circle {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .favicon-pair {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .favicon-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px;
+      background-color: var(--ill-surface);
+      border: 1px solid var(--ill-border);
+      border-radius: var(--radius-sm);
+    }
+
+    .splash-frame {
+      width: 100%;
+      max-width: 340px;
+      background-color: var(--ill-surface);
+      border: 2px solid var(--ill-border-strong);
+      border-radius: 26px;
+      padding: 20px 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 0 auto;
+    }
+
+    .splash-brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ill-text);
+    }
+
+    .splash-tagline {
+      font-size: 11.5px;
+      color: var(--ill-text-muted);
+      text-align: center;
+    }
+
+    /* Galería de Ilustraciones SVG */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 20px;
+    }
+
+    .ill-card {
+      background-color: var(--ill-card-bg);
+      border: 1px solid var(--ill-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ill-card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--ill-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .ill-card-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--ill-text);
+      margin-top: 4px;
+    }
+
+    .ill-view-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ill-text-muted);
+      background-color: var(--ill-surface-subtle);
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .ill-stage {
+      padding: 20px;
+      background-color: var(--ill-surface);
+      box-shadow: var(--shadow-preview);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+    }
+
+    .ill-stage svg {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      display: block;
+    }
+
+    .ill-card-footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--ill-border);
+      background-color: var(--ill-surface-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ill-caption {
+      font-size: 12.5px;
+      color: var(--ill-text-secondary);
+    }
+
+    .btn-copy {
+      align-self: flex-start;
+      background-color: var(--ill-primary);
+      color: var(--ill-text-inverse);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.18s ease, transform 0.12s ease;
+    }
+
+    .btn-copy:hover {
+      background-color: var(--ill-primary-hover);
+    }
+
+    .btn-copy:active {
+      transform: scale(0.97);
+    }
+
+    .status-toast {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ill-primary);
+      min-height: 18px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px 12px 56px;
+      }
+      .header {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="container">
+    <!-- 1. CABECERA Y SELECTOR BIMODAL -->
+    <header class="header">
+      <div>
+        <h1>Sistema Canónico de Ilustraciones y App Icons</h1>
+        <p>ExpireAlert • Gestor de Trámites y Vencimientos con Dependencias — Fuente Única de la Verdad (SSOT)</p>
+        <div class="meta-badges">
+          <span class="badge ssot">C06_Ilustraciones • 2026-11-20</span>
+          <span class="badge">SVG Puro • Bimodal Light/Dark</span>
+          <span class="badge">WCAG 2.1 Gráficos &gt; 3:1</span>
+          <span class="badge">Sin Duplicar Iconografía 24px</span>
+        </div>
+      </div>
+      <button id="themeToggle" class="btn-toggle" type="button" aria-label="Alternar Modo Claro y Modo Oscuro">
+        <span id="themeIcon">☀️</span>
+        <span id="themeLabel">Modo Claro</span>
+      </button>
+    </header>
+
+    <!-- SÍNTESIS DE INSUMOS Y ERGONOMÍA EMOCIONAL -->
+    <section aria-labelledby="sec-enfoque">
+      <h2 id="sec-enfoque" class="section-title">Enfoque Visual, Ergonomía Emocional y Filtro Anti-Duplicación</h2>
+      <p class="section-lead">
+        El usuario de <strong>ExpireAlert</strong> (como Mateo, 34 años, en operaciones/movilidad) experimenta fatiga mental ante trámites con dependencias encadenadas y teme llegar tarde por subestimar fechas previas o perder recaudos en taquilla. Las ilustraciones vectoriales comunican <strong>calma, orden, cuenta regresiva inversa y privacidad local cifrada</strong> sin culpabilizar ni generar alarma estridente, reservándose exclusivamente para estados narrativos o identidad de marca (nunca para acciones ya cubiertas por íconos funcionales de 24x24 px como <code>plus</code>, <code>trash-2</code>, <code>pencil</code> o <code>check</code>).
+      </p>
+      <div class="pillars-grid">
+        <article class="pillar-card">
+          <h3>Calma y Cero Culpa</h3>
+          <p>En lugar de alarmas punitivas ante vencimientos o límites, se emplean metáforas constructivas: ruta inversa, bóveda ordenada y abundancia Pro.</p>
+        </article>
+        <article class="pillar-card">
+          <h3>Propuesta de Valor Visible</h3>
+          <p>Refuerza la anticipación hacia atrás (<em>backward scheduling</em>), recaudos listos <em>offline</em>, almacenamiento cifrado local y pago único Lifetime/Anual.</p>
+        </article>
+        <article class="pillar-card">
+          <h3>Frontera Clara con 24x24 px</h3>
+          <p>Las ilustraciones ocupan escenas contextuales (120–240 px en visor) en <code>P01</code>, <code>P06</code>, <code>M06</code> y <code>D03</code>; las micro-acciones cotidianas mantienen glifos funcionales de 24 px.</p>
+        </article>
+        <article class="pillar-card">
+          <h3>Legibilidad Bimodal</h3>
+          <p>Cada SVG responde a variables CSS del documento activo, conservando contraste gráfico &gt; 3:1 tanto sobre superficies claras (<code>#FFFFFF</code>/<code>#F8FAFC</code>) como oscuras (<code>#111827</code>/<code>#0B1120</code>).</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 2. RESUMEN Y AUDITORÍA UX DE ILUSTRACIONES (TABLA SSOT) -->
+    <section aria-labelledby="sec-auditoria">
+      <h2 id="sec-auditoria" class="section-title">1. Matriz de Auditoría y Justificación UX (SSOT)</h2>
+      <p class="section-lead">
+        Especificación canónica de cada ilustración y paquete de identidad: por qué requiere narrativa vectorial y no un glifo funcional de 24x24 px.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre y Escena</th>
+              <th>Vista Anfitriona</th>
+              <th>Diagnóstico UX (Por qué NO usar ícono de 24 px)</th>
+              <th>Dimensiones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="code-pill">IL-01</span></td>
+              <td><strong>Master App Icon &amp; Variantes de Plataforma</strong><br>Crono-carpeta con hito inverso y escudo</td>
+              <td class="mono">P00 Splash / OS Launcher / Web</td>
+              <td>Requiere identidad de marca multicapa con zona segura del 66% (Android) y 80% (iOS), más simplificación geométrica en 32x32/16x16 px sin perder reconocibilidad.</td>
+              <td class="mono">1024x1024 (512, 192, 180, 32, 16)</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">IL-02</span></td>
+              <td><strong>Estado Vacío Inicial (Despensa / Trámites sin iniciar)</strong><br>Carpeta limpia con línea de tiempo inversa</td>
+              <td class="mono">P01 Panel Principal (Onboarding)</td>
+              <td>Un simple ícono <code>plus</code> (24 px) indica "agregar", pero no explica la promesa central: calcular pasos previos hacia atrás desde una fecha límite.</td>
+              <td class="mono">220x160 px (viewBox 240x180)</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">IL-03</span></td>
+              <td><strong>Estado Vacío de Búsqueda / Filtro sin Coincidencias</strong><br>Lupa suave sobre expediente en pausa</td>
+              <td class="mono">P01 / P06 Filtro o Búsqueda vacía</td>
+              <td>Un ícono <code>search</code> (24 px) no comunica que el filtro actual no arrojó coincidencias ni invita con calma a limpiar o ampliar criterios.</td>
+              <td class="mono">220x160 px (viewBox 240x180)</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">IL-04</span></td>
+              <td><strong>Límite de Capacidad Alcanzado / Paywall</strong><br>Bóveda colmada (15/15) con insignia Pro amable</td>
+              <td class="mono">M06 / D01 Paywall Contextual</td>
+              <td>Un ícono <code>crown</code> o <code>alert-triangle</code> (24 px) resulta insuficiente para transmitir abundancia y valor vitalicio sin sensación de castigo o bloqueo punitivo.</td>
+              <td class="mono">220x160 px (viewBox 240x180)</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">IL-05</span></td>
+              <td><strong>Compra Exitosa / Desbloqueo Vitalicio Pro</strong><br>Bóveda expandida con check de tranquilidad</td>
+              <td class="mono">D03 / M06 Confirmación Pro</td>
+              <td>Requiere una escena celebratoria y serena que valide la decisión de compra y refuerce la protección duradera de documentos y respaldos.</td>
+              <td class="mono">220x160 px (viewBox 240x180)</td>
+            </tr>
+            <tr>
+              <td><span class="code-pill">IL-06</span></td>
+              <td><strong>Hito Zero-Waste / Todo al Día</strong><br>Ruta despejada con recaudos verificados</td>
+              <td class="mono">P01 Panel Principal (Estado sano)</td>
+              <td>Un ícono <code>check-circle-2</code> (24 px) marca un ítem puntual; la ilustración celebra el equilibrio general sin trámites vencidos ni riesgos inmediatos.</td>
+              <td class="mono">220x160 px (viewBox 240x180)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. MATRIZ DE PRUEBAS DEL APP ICON (IL-01) -->
+    <section aria-labelledby="sec-appicon">
+      <h2 id="sec-appicon" class="section-title">2. Identidad de Marca y Matriz de Pruebas del App Icon (IL-01)</h2>
+      <p class="section-lead">
+        El ícono maestro (<code>viewBox="0 0 1024 1024"</code>) integra una carpeta de trámites ordenada, una manecilla de anticipación inversa y un acento de certeza. Debajo se simulan las máscaras nativas de plataforma y el arranque <code>P00</code>.
+      </p>
+
+      <div class="icon-matrix-grid">
+        <!-- iOS Squircle 180x180 -->
+        <article class="mask-card">
+          <div class="mask-title">Apple Touch Icon (iOS)</div>
+          <div class="mask-spec">180x180 px • Zona segura 80%</div>
+          <div class="mask-stage">
+            <div class="mask-squircle" aria-label="Simulación Apple Touch Icon Squircle">
+              <svg viewBox="0 0 1024 1024" width="92" height="92" role="img" aria-label="App Icon iOS Squircle">
+                <rect x="0" y="0" width="1024" height="1024" fill="var(--svg-brand-teal-deep)"/>
+                <circle cx="512" cy="512" r="390" fill="var(--svg-brand-teal)" opacity="0.22"/>
+                <rect x="212" y="252" width="600" height="536" rx="84" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="28"/>
+                <path d="M212 336 C212 288 250 252 298 252 H456 L516 324 H812 V368 H212 Z" fill="var(--svg-route-blue-deep)"/>
+                <circle cx="654" cy="588" r="142" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="28"/>
+                <path d="M654 506 V588 L712 624" fill="none" stroke="var(--svg-brand-teal-deep)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="654" cy="588" r="22" fill="var(--svg-ok-green-deep)"/>
+              </svg>
+            </div>
+          </div>
+          <p class="mask-desc">Esquinas redondeadas aplicadas por el sistema operativo; núcleo central contenido dentro del 80%.</p>
+        </article>
+
+        <!-- Android Adaptive Circle 192/512 -->
+        <article class="mask-card">
+          <div class="mask-title">Android Adaptive / PWA</div>
+          <div class="mask-spec">192x192 &amp; 512x512 px • Seguro 66%</div>
+          <div class="mask-stage">
+            <div class="mask-circle" aria-label="Simulación Android Adaptive Icon Circular">
+              <svg viewBox="0 0 1024 1024" width="92" height="92" role="img" aria-label="App Icon Android Circular">
+                <rect x="0" y="0" width="1024" height="1024" fill="var(--svg-route-blue-deep)"/>
+                <rect x="256" y="288" width="512" height="468" rx="72" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="28"/>
+                <path d="M256 356 C256 314 288 288 328 288 H472 L524 348 H768 V388 H256 Z" fill="var(--svg-brand-teal-deep)"/>
+                <circle cx="640" cy="588" r="124" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="28"/>
+                <path d="M640 518 V588 L688 618" fill="none" stroke="var(--svg-route-blue-deep)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="640" cy="588" r="20" fill="var(--svg-ok-green-deep)"/>
+              </svg>
+            </div>
+          </div>
+          <p class="mask-desc">Elementos esenciales dentro del círculo central del 66% para evitar recortes en máscaras circulares o squircle.</p>
+        </article>
+
+        <!-- Favicon Web 32x32 y 16x16 -->
+        <article class="mask-card">
+          <div class="mask-title">Favicon Web Real</div>
+          <div class="mask-spec">32x32 px y 16x16 px • Alta síntesis</div>
+          <div class="mask-stage" style="width:auto; min-width:136px;">
+            <div class="favicon-pair">
+              <div class="favicon-box">
+                <svg viewBox="0 0 1024 1024" width="32" height="32" role="img" aria-label="Favicon 32x32">
+                  <rect x="0" y="0" width="1024" height="1024" rx="220" fill="var(--svg-brand-teal-deep)"/>
+                  <circle cx="512" cy="528" r="290" fill="var(--svg-doc-paper)"/>
+                  <path d="M512 356 V528 L628 598" fill="none" stroke="var(--svg-stroke)" stroke-width="76" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="512" cy="528" r="46" fill="var(--svg-ok-green-deep)"/>
+                </svg>
+                <span class="mono" style="font-size:10px;">32x32</span>
+              </div>
+              <div class="favicon-box">
+                <svg viewBox="0 0 1024 1024" width="16" height="16" role="img" aria-label="Favicon 16x16">
+                  <rect x="0" y="0" width="1024" height="1024" rx="240" fill="var(--svg-brand-teal-deep)"/>
+                  <circle cx="512" cy="528" r="320" fill="var(--svg-doc-paper)"/>
+                  <path d="M512 340 V528 L645 608" fill="none" stroke="var(--svg-stroke)" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="mono" style="font-size:10px;">16x16</span>
+              </div>
+            </div>
+          </div>
+          <p class="mask-desc">Trazos engrosados y silueta limpia para mantenerse legible en pestañas del navegador.</p>
+        </article>
+
+        <!-- Splash Screen Hero P00 -->
+        <article class="mask-card">
+          <div class="mask-title">Splash Screen Hero (P00)</div>
+          <div class="mask-spec">Arranque rápido • Isotipo + Marca</div>
+          <div class="splash-frame" aria-label="Maqueta Splash Screen P00">
+            <svg viewBox="0 0 1024 1024" width="68" height="68" role="img" aria-label="Isotipo Splash P00">
+              <rect x="64" y="64" width="896" height="896" rx="224" fill="var(--svg-brand-teal-deep)"/>
+              <rect x="232" y="268" width="560" height="500" rx="76" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="28"/>
+              <path d="M232 340 C232 296 266 268 310 268 H464 L516 332 H792 V372 H232 Z" fill="var(--svg-route-blue-deep)"/>
+              <circle cx="648" cy="586" r="132" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="28"/>
+              <path d="M648 510 V586 L702 620" fill="none" stroke="var(--svg-brand-teal-deep)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="648" cy="586" r="20" fill="var(--svg-ok-green-deep)"/>
+            </svg>
+            <div class="splash-brand-name">ExpireAlert</div>
+            <div class="splash-tagline">Ruta crítica inversa y recaudos listos</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. GALERÍA DE ILUSTRACIONES VECTORIALES EN VIVO -->
+    <section aria-labelledby="sec-galeria">
+      <h2 id="sec-galeria" class="section-title">3. Galería de Ilustraciones Vectoriales (SVG Puros)</h2>
+      <p class="section-lead">
+        Cada ilustración se renderiza directamente en SVG vectorial puro y responde al tema activo. Haz clic en <strong>Copiar SVG</strong> para copiar el código completo del vector.
+      </p>
+
+      <div class="gallery-grid">
+        <!-- IL-01: Master App Icon 1024x1024 -->
+        <article class="ill-card">
+          <div>
+            <div class="ill-card-header">
+              <div>
+                <span class="code-pill">IL-01</span>
+                <div class="ill-card-title">Master App Icon (1024x1024)</div>
+              </div>
+              <span class="ill-view-tag">P00 / OS / Web</span>
+            </div>
+            <div class="ill-stage">
+              <svg id="svg-il-01" viewBox="0 0 1024 1024" width="200" height="200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IL-01 Master App Icon de ExpireAlert">
+                <title>IL-01 Master App Icon - ExpireAlert</title>
+                <rect x="48" y="48" width="928" height="928" rx="220" fill="var(--svg-brand-teal-deep)"/>
+                <circle cx="512" cy="512" r="370" fill="var(--svg-brand-teal)" opacity="0.2"/>
+                <!-- Carpeta de trámites -->
+                <rect x="216" y="264" width="592" height="516" rx="76" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="26"/>
+                <path d="M216 340 C216 294 252 264 298 264 H462 L518 332 H808 V376 H216 Z" fill="var(--svg-route-blue-deep)"/>
+                <!-- Líneas de recaudos -->
+                <line x1="286" y1="454" x2="454" y2="454" stroke="var(--svg-doc-line)" stroke-width="24" stroke-linecap="round"/>
+                <line x1="286" y1="528" x2="420" y2="528" stroke="var(--svg-doc-line)" stroke-width="24" stroke-linecap="round"/>
+                <line x1="286" y1="602" x2="440" y2="602" stroke="var(--svg-doc-line)" stroke-width="24" stroke-linecap="round"/>
+                <!-- Reloj de anticipación inversa -->
+                <circle cx="652" cy="586" r="142" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="26"/>
+                <path d="M652 504 V586 L712 622" fill="none" stroke="var(--svg-brand-teal-deep)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="652" cy="586" r="22" fill="var(--svg-ok-green-deep)"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ill-card-footer">
+            <p class="ill-caption">
+              <strong>Metáfora:</strong> Carpeta documental ordenada con reloj de anticipación inversa. Geometría limpia escalable desde 16 px hasta 1024 px.
+            </p>
+            <button type="button" class="btn-copy" onclick="copySvg('svg-il-01', this)">Copiar SVG</button>
+          </div>
+        </article>
+
+        <!-- IL-02: Estado Vacío Inicial (P01) -->
+        <article class="ill-card">
+          <div>
+            <div class="ill-card-header">
+              <div>
+                <span class="code-pill">IL-02</span>
+                <div class="ill-card-title">Estado Vacío Inicial (Despensa / Trámites)</div>
+              </div>
+              <span class="ill-view-tag">P01 Panel Principal</span>
+            </div>
+            <div class="ill-stage">
+              <svg id="svg-il-02" viewBox="0 0 240 180" width="220" height="165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IL-02 Estado Vacío Inicial en P01">
+                <title>IL-02 Estado Vacío Inicial - ExpireAlert</title>
+                <rect x="24" y="22" width="192" height="136" rx="24" fill="var(--svg-bg-pill)"/>
+                <!-- Línea de tiempo inversa suave -->
+                <path d="M52 126 C84 126, 92 64, 128 64 C160 64, 166 96, 192 96" fill="none" stroke="var(--svg-route-blue)" stroke-width="2.5" stroke-dasharray="5 4" stroke-linecap="round"/>
+                <circle cx="52" cy="126" r="5" fill="var(--svg-brand-teal)"/>
+                <circle cx="128" cy="64" r="5" fill="var(--svg-route-blue)"/>
+                <circle cx="192" cy="96" r="6" fill="var(--svg-ok-green)"/>
+                <!-- Contenedor / Estante ordenado -->
+                <rect x="74" y="42" width="92" height="76" rx="12" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="2.5"/>
+                <path d="M74 58 H166" stroke="var(--svg-stroke)" stroke-width="2.5"/>
+                <rect x="92" y="72" width="56" height="6" rx="3" fill="var(--svg-fill-base)"/>
+                <rect x="92" y="86" width="40" height="6" rx="3" fill="var(--svg-brand-teal)" opacity="0.75"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ill-card-footer">
+            <p class="ill-caption">
+              <strong>Metáfora:</strong> Estante limpio y ruta inversa serena. Invita a crear el primer trámite o plantilla sin sensación de vacío o falta.
+            </p>
+            <button type="button" class="btn-copy" onclick="copySvg('svg-il-02', this)">Copiar SVG</button>
+          </div>
+        </article>
+
+        <!-- IL-03: Estado Vacío de Búsqueda / Filtro sin Coincidencias (P01) -->
+        <article class="ill-card">
+          <div>
+            <div class="ill-card-header">
+              <div>
+                <span class="code-pill">IL-03</span>
+                <div class="ill-card-title">Filtro / Búsqueda sin Coincidencias</div>
+              </div>
+              <span class="ill-view-tag">P01 / P06 Búsqueda</span>
+            </div>
+            <div class="ill-stage">
+              <svg id="svg-il-03" viewBox="0 0 240 180" width="220" height="165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IL-03 Búsqueda o Filtro sin Coincidencias">
+                <title>IL-03 Sin Coincidencias de Búsqueda - ExpireAlert</title>
+                <rect x="24" y="22" width="192" height="136" rx="24" fill="var(--svg-bg-pill)"/>
+                <!-- Ficha de trámite tenue -->
+                <rect x="58" y="46" width="94" height="84" rx="10" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke-muted)" stroke-width="2.2"/>
+                <line x1="74" y1="68" x2="128" y2="68" stroke="var(--svg-doc-line)" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="74" y1="84" x2="114" y2="84" stroke="var(--svg-doc-line)" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="74" y1="100" x2="122" y2="100" stroke="var(--svg-doc-line)" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Lupa amable -->
+                <circle cx="148" cy="104" r="24" fill="var(--svg-surface-elevated, #1E293B)" stroke="var(--svg-route-blue)" stroke-width="2.8"/>
+                <line x1="166" y1="122" x2="184" y2="140" stroke="var(--svg-stroke)" stroke-width="3.2" stroke-linecap="round"/>
+                <path d="M142 98 C142 94 154 94 154 99 C154 103 148 105 148 109" fill="none" stroke="var(--svg-route-blue)" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="148" cy="114" r="1.6" fill="var(--svg-route-blue)"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ill-card-footer">
+            <p class="ill-caption">
+              <strong>Metáfora:</strong> Expediente ordenado junto a una lupa con interrogación sutil. Sugiere limpiar el filtro con naturalidad, sin error rojo agresivo.
+            </p>
+            <button type="button" class="btn-copy" onclick="copySvg('svg-il-03', this)">Copiar SVG</button>
+          </div>
+        </article>
+
+        <!-- IL-04: Límite de Capacidad Alcanzado / Paywall (D01 / M06) -->
+        <article class="ill-card">
+          <div>
+            <div class="ill-card-header">
+              <div>
+                <span class="code-pill">IL-04</span>
+                <div class="ill-card-title">Límite de Capacidad (15) / Paywall</div>
+              </div>
+              <span class="ill-view-tag">D01 / M06 Paywall</span>
+            </div>
+            <div class="ill-stage">
+              <svg id="svg-il-04" viewBox="0 0 240 180" width="220" height="165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IL-04 Límite de Capacidad Alcanzado y Paywall">
+                <title>IL-04 Límite de Capacidad / Paywall - ExpireAlert</title>
+                <rect x="24" y="22" width="192" height="136" rx="24" fill="var(--svg-bg-pill)"/>
+                <!-- Despensa / Bóveda colmada (3 filas ordenadas) -->
+                <rect x="56" y="46" width="108" height="88" rx="12" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="2.5"/>
+                <rect x="70" y="60" width="80" height="14" rx="4" fill="var(--svg-brand-teal)" opacity="0.35" stroke="var(--svg-brand-teal)" stroke-width="1.6"/>
+                <rect x="70" y="80" width="80" height="14" rx="4" fill="var(--svg-route-blue)" opacity="0.35" stroke="var(--svg-route-blue)" stroke-width="1.6"/>
+                <rect x="70" y="100" width="80" height="14" rx="4" fill="var(--svg-warn-amber)" opacity="0.35" stroke="var(--svg-warn-amber)" stroke-width="1.6"/>
+                <!-- Insignia Pro de abundancia -->
+                <circle cx="168" cy="54" r="20" fill="var(--svg-pro-purple-deep)" stroke="var(--svg-doc-paper)" stroke-width="2.5"/>
+                <path d="M159 59 L161 48 L168 54 L175 48 L177 59 Z" fill="#FFFFFF"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ill-card-footer">
+            <p class="ill-caption">
+              <strong>Metáfora:</strong> Bóveda completa y ordenada con insignia Pro. Evoca capacidad alcanzada y expansión ilimitada en vez de castigo.
+            </p>
+            <button type="button" class="btn-copy" onclick="copySvg('svg-il-04', this)">Copiar SVG</button>
+          </div>
+        </article>
+
+        <!-- IL-05: Compra Exitosa / Desbloqueo Vitalicio Pro (D03 / M06) -->
+        <article class="ill-card">
+          <div>
+            <div class="ill-card-header">
+              <div>
+                <span class="code-pill">IL-05</span>
+                <div class="ill-card-title">Compra Exitosa / Vitalicio Pro</div>
+              </div>
+              <span class="ill-view-tag">D03 / M06 Éxito Pro</span>
+            </div>
+            <div class="ill-stage">
+              <svg id="svg-il-05" viewBox="0 0 240 180" width="220" height="165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IL-05 Compra Exitosa y Desbloqueo Vitalicio Pro">
+                <title>IL-05 Compra Exitosa Personal Pro - ExpireAlert</title>
+                <rect x="24" y="22" width="192" height="136" rx="24" fill="var(--svg-bg-pill)"/>
+                <!-- Escudo de tranquilidad y respaldo -->
+                <path d="M120 38 L164 54 V92 C164 119 144 137 120 145 C96 137 76 119 76 92 V54 Z" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M120 47 L154 60 V90 C154 111 139 125 120 132 C101 125 86 111 86 90 V60 Z" fill="var(--svg-ok-green)" opacity="0.22"/>
+                <path d="M102 91 L115 104 L139 78" fill="none" stroke="var(--svg-ok-green-deep)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Destellos sutiles de celebración -->
+                <circle cx="58" cy="56" r="3.5" fill="var(--svg-pro-purple)"/>
+                <circle cx="182" cy="56" r="3.5" fill="var(--svg-brand-teal)"/>
+                <circle cx="184" cy="122" r="3" fill="var(--svg-warn-amber)"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ill-card-footer">
+            <p class="ill-caption">
+              <strong>Metáfora:</strong> Escudo sereno con verificación verde y destellos discretos. Celebra el desbloqueo y refuerza la tranquilidad duradera.
+            </p>
+            <button type="button" class="btn-copy" onclick="copySvg('svg-il-05', this)">Copiar SVG</button>
+          </div>
+        </article>
+
+        <!-- IL-06: Hito Zero-Waste / Todo al Día (P01 Opcional Condicional) -->
+        <article class="ill-card">
+          <div>
+            <div class="ill-card-header">
+              <div>
+                <span class="code-pill">IL-06</span>
+                <div class="ill-card-title">Hito Todo al Día / Sin Riesgo</div>
+              </div>
+              <span class="ill-view-tag">P01 Estado Sano</span>
+            </div>
+            <div class="ill-stage">
+              <svg id="svg-il-06" viewBox="0 0 240 180" width="220" height="165" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IL-06 Hito Todo al Día sin Vencimientos en Riesgo">
+                <title>IL-06 Hito Todo al Día - ExpireAlert</title>
+                <rect x="24" y="22" width="192" height="136" rx="24" fill="var(--svg-bg-pill)"/>
+                <!-- Calendario / Ruta en equilibrio -->
+                <rect x="64" y="44" width="112" height="92" rx="14" fill="var(--svg-doc-paper)" stroke="var(--svg-stroke)" stroke-width="2.5"/>
+                <path d="M64 66 H176" stroke="var(--svg-stroke)" stroke-width="2.5"/>
+                <line x1="94" y1="36" x2="94" y2="52" stroke="var(--svg-stroke)" stroke-width="3" stroke-linecap="round"/>
+                <line x1="146" y1="36" x2="146" y2="52" stroke="var(--svg-stroke)" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="120" cy="102" r="20" fill="var(--svg-ok-green)" opacity="0.22"/>
+                <path d="M110 102 L117 109 L131 94" fill="none" stroke="var(--svg-ok-green-deep)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ill-card-footer">
+            <p class="ill-caption">
+              <strong>Metáfora:</strong> Cronograma verificado en equilibrio. Reconoce que no hay pasos atrasados ni ventanas críticas desatendidas hoy.
+            </p>
+            <button type="button" class="btn-copy" onclick="copySvg('svg-il-06', this)">Copiar SVG</button>
+          </div>
+        </article>
+      </div>
+
+      <div id="copyStatus" class="status-toast" role="status" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <script>
+    // Conmutador de tema Light / Dark
+    const toggleBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    toggleBtn.addEventListener('click', () => {
+      const currentTheme = document.body.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', newTheme);
+      themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      themeLabel.textContent = newTheme === 'dark' ? 'Modo Claro' : 'Modo Oscuro';
+    });
+
+    // Función de copia de código SVG al portapapeles con feedback visual
+    function copySvg(svgId, btn) {
+      const svgEl = document.getElementById(svgId);
+      const statusEl = document.getElementById('copyStatus');
+      if (!svgEl) return;
+
+      const svgMarkup = svgEl.outerHTML;
+      const onSuccess = () => {
+        const origText = btn.textContent;
+        btn.textContent = '¡Copiado!';
+        if (statusEl) {
+          statusEl.textContent = `Código SVG de ${svgId.toUpperCase()} copiado al portapapeles.`;
+        }
+        setTimeout(() => {
+          btn.textContent = origText;
+        }, 2000);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(svgMarkup).then(onSuccess).catch(() => {
+          fallbackCopy(svgMarkup, onSuccess);
+        });
+      } else {
+        fallbackCopy(svgMarkup, onSuccess);
+      }
+    }
+
+    function fallbackCopy(text, callback) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        callback();
+      } finally {
+        document.body.removeChild(ta);
+      }
+    }
+  </script>
+</body>
+</html>

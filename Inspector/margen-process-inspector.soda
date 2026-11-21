@@ -1,0 +1,239 @@
+<soda version="2.0" name="journeys-cu01-gestionar-tramites">
+    <!-- SODA-AGENT-HINT: Read <index> first, then read only the target line ranges -->
+    <index>
+        <entry kind="use" src="gestor-tramites-dependencias.soda" lines="9-9" />
+        <entry kind="data-mocks" name="data-mocks" lines="11-43" />
+        <entry kind="journeys" name="journeys" lines="45-238" />
+    </index>
+
+    <use src="gestor-tramites-dependencias.soda" />
+
+    <data-mocks>
+        <cu01_happy_activos_inicial>
+            <item titulo="Renovar Pasaporte" categoria="Migración y Residencia" estado="En riesgo" variante="urgent" detalle="Próx. paso: Solicitar cita consular · Vence en 4 días" progreso="1/3 recaudos listos" />
+            <item titulo="Seguro Vehicular RCV" categoria="Seguros y Vehículos" estado="En ventana de acción" variante="warning" detalle="Próx. paso: Reunir póliza y cédula · En 9 días" progreso="2/3 recaudos listos" />
+        </cu01_happy_activos_inicial>
+        <cu01_happy_latentes>
+            <item titulo="Renovación Licencia Conducir" categoria="Seguros y Vehículos" estado="En espera / Latente" variante="latent" detalle="Ventana abre el 10/08/2027 (Faltan 262 días)" progreso="0/4 recaudos listos" />
+        </cu01_happy_latentes>
+        <cu01_happy_activos_creado>
+            <item titulo="Renovar Pasaporte" categoria="Migración y Residencia" estado="En riesgo" variante="urgent" detalle="Próx. paso: Solicitar cita consular · Vence en 4 días" progreso="1/3 recaudos listos" />
+            <item titulo="Seguro Vehicular RCV" categoria="Seguros y Vehículos" estado="En ventana de acción" variante="warning" detalle="Próx. paso: Reunir póliza y cédula · En 9 días" progreso="2/3 recaudos listos" />
+            <item titulo="Apostilla Título Universitario" categoria="Educación y Legalizaciones" estado="En ventana de acción" variante="warning" detalle="Próx. paso: Solicitar cita GTU · En 18 días" progreso="0/2 recaudos listos" />
+        </cu01_happy_activos_creado>
+        <cu01_happy_pasos_nuevo>
+            <item orden="1" nombre="Solicitar cita electrónica GTU" anticipacion="3 semanas antes" fecha="24/02/2027" resumen="0/2 listos · 0 adjuntos" />
+        </cu01_happy_pasos_nuevo>
+        <cu01_delete_activos_antes>
+            <item titulo="Renovar Pasaporte" categoria="Migración y Residencia" estado="En riesgo" variante="urgent" detalle="Próx. paso: Solicitar cita consular · Vence en 4 días" progreso="1/3 recaudos listos" />
+            <item titulo="Seguro Vehicular RCV" categoria="Seguros y Vehículos" estado="En ventana de acción" variante="warning" detalle="Próx. paso: Reunir póliza y cédula · En 9 días" progreso="2/3 recaudos listos" />
+        </cu01_delete_activos_antes>
+        <cu01_delete_pasos_seguro>
+            <item orden="1" nombre="Reunir póliza vigente y cédula" anticipacion="2 semanas antes" fecha="30/11/2026" resumen="2/2 listos · 2 adjuntos" />
+            <item orden="2" nombre="Confirmar pago de prima anual" anticipacion="5 días antes" fecha="09/12/2026" resumen="0/1 listos · 0 adjuntos" />
+        </cu01_delete_pasos_seguro>
+        <cu01_delete_activos_despues>
+            <item titulo="Renovar Pasaporte" categoria="Migración y Residencia" estado="En riesgo" variante="urgent" detalle="Próx. paso: Solicitar cita consular · Vence en 4 días" progreso="1/3 recaudos listos" />
+        </cu01_delete_activos_despues>
+        <cu01_freemium_activos_tope>
+            <item titulo="Renovar Pasaporte" categoria="Migración y Residencia" estado="En riesgo" variante="urgent" detalle="Próx. paso: Solicitar cita consular · Vence en 4 días" progreso="1/3 recaudos listos" />
+            <item titulo="Seguro Vehicular RCV" categoria="Seguros y Vehículos" estado="En ventana de acción" variante="warning" detalle="Próx. paso: Reunir póliza y cédula · En 9 días" progreso="2/3 recaudos listos" />
+            <item titulo="Declaración ISLR Anual" categoria="Impuestos y Finanzas" estado="En ventana de acción" variante="warning" detalle="Próx. paso: Descargar comprobante AR-I · En 14 días" progreso="1/4 recaudos listos" />
+        </cu01_freemium_activos_tope>
+    </data-mocks>
+
+    <journeys>
+        <journey name="journey-cu01-crear-consultar-editar-mobile-portrait" title="CU-01 (Happy Path): Crear, Consultar y Editar Trámite" initial-preview="p-panel-inicial" width="393" height="852" description="Flujo principal completo de creación de un trámite nuevo desde P01 mediante M01, inspección en P02, edición de fecha límite/notas y retorno actualizado al panel.">
+            <preview id="p-panel-inicial" label="1. Panel Principal (Inicial)" scene="P01-panel-principal-tramites" x="61" y="100" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_happy_activos_inicial}" />
+                <prop name="latentes-contador" value="1" />
+                <prop name="latentes-colapsado" value="false" />
+                <prop name="tramites-latentes" value="${mocks.cu01_happy_latentes}" />
+            </preview>
+            <preview id="p-modal-nuevo" label="2. Nuevo Trámite (M01)" scene="M01-formulario-tramite" role="overlay" overlay="bottom-sheet" x="540" y="141" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-valor" value="Apostilla Título Universitario" />
+                <prop name="categoria-valor" value="Educación y Legalizaciones" />
+                <prop name="fecha-limite-valor" value="17/03/2027" />
+                <prop name="notas-valor" value="Llevar fondo negro autenticado y timbre fiscal." />
+            </preview>
+            <preview id="p-panel-creado" label="3. Panel con Trámite Creado" scene="P01-panel-principal-tramites" x="1030" y="67" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_happy_activos_creado}" />
+                <prop name="latentes-contador" value="1" />
+                <prop name="latentes-colapsado" value="false" />
+                <prop name="tramites-latentes" value="${mocks.cu01_happy_latentes}" />
+            </preview>
+            <preview id="p-detalle-tramite" label="4. Detalle del Trámite (P02)" scene="P02-detalle-tramite" x="1492" y="141" breakpoint="mobile" orientation="portrait">
+                <prop name="tramite-titulo" value="Apostilla Título Universitario" />
+                <prop name="categoria-texto" value="Educación y Legalizaciones" />
+                <prop name="estado-texto" value="En ventana de acción" />
+                <prop name="estado-variante" value="warning" />
+                <prop name="fecha-limite-resumen" value="Fecha límite final: 17/03/2027 (Faltan 116 días)" />
+                <prop name="notas-generales" value="Llevar fondo negro autenticado y timbre fiscal." />
+                <prop name="pasos-previos" value="${mocks.cu01_happy_pasos_nuevo}" />
+            </preview>
+            <preview id="p-modal-editar" label="5. Editar Trámite (M01)" scene="M01-formulario-tramite" role="overlay" overlay="bottom-sheet" x="1980" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Editar Trámite" />
+                <prop name="titulo-valor" value="Apostilla Título Universitario" />
+                <prop name="categoria-valor" value="Educación y Legalizaciones" />
+                <prop name="fecha-limite-valor" value="30/03/2027" />
+                <prop name="notas-valor" value="Llevar fondo negro autenticado, timbre fiscal y copia de cédula." />
+            </preview>
+            <preview id="p-detalle-editado" label="6. Detalle Actualizado (P02)" scene="P02-detalle-tramite" x="1512" y="722" breakpoint="mobile" orientation="portrait">
+                <prop name="tramite-titulo" value="Apostilla Título Universitario" />
+                <prop name="categoria-texto" value="Educación y Legalizaciones" />
+                <prop name="estado-texto" value="En ventana de acción" />
+                <prop name="estado-variante" value="warning" />
+                <prop name="fecha-limite-resumen" value="Fecha límite final: 30/03/2027 (Faltan 129 días)" />
+                <prop name="notas-generales" value="Llevar fondo negro autenticado, timbre fiscal y copia de cédula." />
+                <prop name="pasos-previos" value="${mocks.cu01_happy_pasos_nuevo}" />
+            </preview>
+            <segue from="p-panel-inicial" on="onNewTramite" to="p-modal-nuevo" />
+            <segue from="p-modal-nuevo" on="onClose" action="dismiss" />
+            <segue from="p-modal-nuevo" on="onCancel" action="dismiss" />
+            <segue from="p-modal-nuevo" on="onConfirm" to="p-panel-creado" toast="Trámite creado y cuenta regresiva calculada" />
+            <segue from="p-panel-creado" on="onSelectTramite" to="p-detalle-tramite" />
+            <segue from="p-detalle-tramite" on="onBack" to="p-panel-creado" />
+            <segue from="p-detalle-tramite" on="onSecondaryAction" to="p-modal-editar" />
+            <segue from="p-modal-editar" on="onClose" action="dismiss" />
+            <segue from="p-modal-editar" on="onCancel" action="dismiss" />
+            <segue from="p-modal-editar" on="onConfirm" to="p-detalle-editado" toast="Cambios guardados y fechas recalculadas" />
+            <segue from="p-detalle-editado" on="onBack" to="p-panel-creado" />
+        </journey>
+        <journey name="journey-cu01-eliminar-tramite-mobile-portrait" title="CU-01 (Variante): Eliminar Trámite Existente" initial-preview="p-del-panel" width="393" height="852" description="Consulta de un trámite activo en P02, disparo de eliminación con diálogo destructivo M02 (incluyendo cancelación) y retorno limpio a P01.">
+            <preview id="p-del-panel" label="1. Panel Principal" scene="P01-panel-principal-tramites" x="64" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_delete_activos_antes}" />
+                <prop name="latentes-contador" value="0" />
+                <prop name="latentes-colapsado" value="true" />
+                <prop name="tramites-latentes" value="[]" />
+            </preview>
+            <preview id="p-del-detalle" label="2. Detalle: Seguro Vehicular RCV" scene="P02-detalle-tramite" x="540" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="tramite-titulo" value="Seguro Vehicular RCV" />
+                <prop name="categoria-texto" value="Seguros y Vehículos" />
+                <prop name="estado-texto" value="En ventana de acción" />
+                <prop name="estado-variante" value="warning" />
+                <prop name="fecha-limite-resumen" value="Fecha límite final: 14/12/2026 (Faltan 23 días)" />
+                <prop name="notas-generales" value="Póliza anual cobertura amplia con corredor." />
+                <prop name="pasos-previos" value="${mocks.cu01_delete_pasos_seguro}" />
+            </preview>
+            <preview id="p-del-confirmar" label="3. Confirmar Eliminación (M02)" scene="M02-confirmacion-eliminacion-tramite" role="overlay" overlay="modal" x="1020" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="tramite-nombre" value="Seguro Vehicular RCV" />
+                <prop name="mensaje-advertencia" value="¿Deseas eliminar este trámite? Se borrarán sus 2 pasos previos, 3 recaudos, 2 archivos adjuntos locales y alertas asociadas." />
+            </preview>
+            <preview id="p-del-panel-actualizado" label="4. Panel tras Eliminación" scene="P01-panel-principal-tramites" x="1500" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_delete_activos_despues}" />
+                <prop name="latentes-contador" value="0" />
+                <prop name="latentes-colapsado" value="true" />
+                <prop name="tramites-latentes" value="[]" />
+            </preview>
+            <segue from="p-del-panel" on="onSelectTramite" to="p-del-detalle" />
+            <segue from="p-del-detalle" on="onBack" action="back" />
+            <segue from="p-del-detalle" on="onPrimaryAction" to="p-del-confirmar" />
+            <segue from="p-del-confirmar" on="onCancel" action="dismiss" />
+            <segue from="p-del-confirmar" on="onConfirm" to="p-del-panel-actualizado" toast="Trámite y alertas eliminados permanentemente" />
+        </journey>
+        <journey name="journey-cu01-limite-freemium-paywall-mobile-portrait" title="CU-01 (Límite Plan Gratuito): Paywall Contextual al Crear Trámite" initial-preview="p-free-panel" width="393" height="852" description="Usuario en plan Freemium con tope alcanzado intenta guardar un nuevo trámite en M01, disparando el Paywall Contextual M06 con opción de descartar o actualizar a Personal Pro.">
+            <preview id="p-free-panel" label="1. Panel (Tope Freemium Alcanzado)" scene="P01-panel-principal-tramites" x="64" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_freemium_activos_tope}" />
+                <prop name="latentes-contador" value="0" />
+                <prop name="latentes-colapsado" value="true" />
+                <prop name="tramites-latentes" value="[]" />
+            </preview>
+            <preview id="p-free-modal-nuevo" label="2. Formulario Nuevo Trámite (M01)" scene="M01-formulario-tramite" role="overlay" overlay="bottom-sheet" x="540" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-valor" value="Certificado Antecedentes Penales" />
+                <prop name="categoria-valor" value="Migración y Residencia" />
+                <prop name="fecha-limite-valor" value="10/04/2027" />
+                <prop name="notas-valor" value="Apostilla electrónica para trámite consular." />
+            </preview>
+            <preview id="p-free-paywall" label="3. Paywall Personal Pro (M06)" scene="M06-paywall-contextual-personal-pro" role="overlay" overlay="bottom-sheet" x="1020" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="motivo-titulo" value="Alcanzaste el límite de trámites gratuitos" />
+                <prop name="motivo-subtitulo" value="Actualiza a Personal Pro para gestionar trámites ilimitados, plantillas completas y respaldos cifrados." />
+                <prop name="modalidad-seleccionada" value="lifetime" />
+                <prop name="precio-lifetime" value="$29.00" />
+                <prop name="precio-anual" value="$12.00/a" />
+            </preview>
+            <segue from="p-free-panel" on="onNewTramite" to="p-free-modal-nuevo" />
+            <segue from="p-free-modal-nuevo" on="onClose" action="dismiss" />
+            <segue from="p-free-modal-nuevo" on="onCancel" action="dismiss" />
+            <segue from="p-free-modal-nuevo" on="onConfirm" to="p-free-paywall" />
+            <segue from="p-free-paywall" on="onClose" action="dismiss" />
+            <segue from="p-free-paywall" on="onDismissPaywall" action="dismiss" />
+            <segue from="p-free-paywall" on="onPurchasePro" to="p-free-panel" toast="Personal Pro activado. Trámite creado." />
+        </journey>
+        <journey name="journey-cu01-estado-vacio-mobile-portrait" title="CU-01 (Estado Vacío): Creación del Primer Trámite" initial-preview="p-empty-panel" width="393" height="852" description="Estado inicial sin trámites registrados en P01, apertura de M01 para crear el primer trámite y transición al panel poblado.">
+            <preview id="p-empty-panel" label="1. Panel Vacío (Sin Trámites)" scene="P01-panel-principal-tramites" x="64" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="Sin alertas" />
+                <prop name="critico-variante" value="warning" />
+                <prop name="critico-tramite" value="Aún no tienes trámites registrados" />
+                <prop name="critico-paso" value="Crea tu primer trámite o usa una plantilla" />
+                <prop name="critico-cuenta" value="0 vencimientos próximos" />
+                <prop name="critico-limite" value="Pulsa 'Nuevo Trámite' para comenzar" />
+                <prop name="tramites-activos" value="[]" />
+                <prop name="latentes-contador" value="0" />
+                <prop name="latentes-colapsado" value="true" />
+                <prop name="tramites-latentes" value="[]" />
+            </preview>
+            <preview id="p-empty-modal" label="2. Crear Primer Trámite (M01)" scene="M01-formulario-tramite" role="overlay" overlay="bottom-sheet" x="540" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-valor" />
+                <prop name="categoria-valor" value="Seleccionar categoría" />
+                <prop name="fecha-limite-valor" value="DD/MM/AAAA" />
+                <prop name="notas-valor" />
+            </preview>
+            <preview id="p-empty-creado" label="3. Panel con Primer Trámite" scene="P01-panel-principal-tramites" x="1020" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_delete_activos_despues}" />
+                <prop name="latentes-contador" value="0" />
+                <prop name="latentes-colapsado" value="true" />
+                <prop name="tramites-latentes" value="[]" />
+            </preview>
+            <segue from="p-empty-panel" on="onNewTramite" to="p-empty-modal" />
+            <segue from="p-empty-modal" on="onClose" action="dismiss" />
+            <segue from="p-empty-modal" on="onCancel" action="dismiss" />
+            <segue from="p-empty-modal" on="onConfirm" to="p-empty-creado" toast="Primer trámite creado" />
+        </journey>
+    </journeys>
+</soda>

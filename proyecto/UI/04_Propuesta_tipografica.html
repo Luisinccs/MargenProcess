@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<!-- Propuesta-tipografica.html - 2026-11-20 -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta Tipográfica y Escala Modular - CronoTrámite (Gestor de Trámites con Dependencias)</title>
+
+  <!-- Carga de Fuentes desde Google Fonts con display=swap -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+
+  <style>
+    /* 1. Variables de interfaz bimodal: colores de fondo, texto, bordes y superficies para el visor */
+    :root {
+      --bg-page: #F4F6F9;
+      --bg-surface: #FFFFFF;
+      --bg-elevated: #F8FAFC;
+      --bg-muted: #EEF2F6;
+      --bg-accent-soft: #EBF2FF;
+      --bg-danger-soft: #FEF2F2;
+      --bg-success-soft: #ECFDF5;
+      --bg-warning-soft: #FFFBEB;
+
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --text-accent: #1D4ED8;
+      --text-danger: #B91C1C;
+      --text-success: #047857;
+      --text-warning: #B45309;
+
+      --border-subtle: #E2E8F0;
+      --border-strong: #CBD5E1;
+      --border-accent: #93C5FD;
+
+      --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-device: 0 20px 45px -12px rgba(15, 23, 42, 0.16), 0 4px 12px -4px rgba(15, 23, 42, 0.08);
+    }
+
+    html[data-theme="dark"] {
+      --bg-page: #0B101B;
+      --bg-surface: #131B2E;
+      --bg-elevated: #19243B;
+      --bg-muted: #1E2B45;
+      --bg-accent-soft: rgba(59, 130, 246, 0.16);
+      --bg-danger-soft: rgba(239, 68, 68, 0.15);
+      --bg-success-soft: rgba(16, 185, 129, 0.15);
+      --bg-warning-soft: rgba(245, 158, 11, 0.15);
+
+      --text-primary: #F1F5F9;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+      --text-accent: #60A5FA;
+      --text-danger: #F87171;
+      --text-success: #34D399;
+      --text-warning: #FBBF24;
+
+      --border-subtle: #24324D;
+      --border-strong: #33466B;
+      --border-accent: rgba(96, 165, 250, 0.45);
+
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.35);
+      --shadow-device: 0 24px 50px -12px rgba(0, 0, 0, 0.65);
+    }
+
+    /* 2. Clases de tipografía según las familias seleccionadas con fallbacks del sistema */
+    .font-ui {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .font-mono-tabular {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1;
+    }
+
+    .font-brand {
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* 3. Estilos de layout y componentes */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      transition: background-color 0.22s ease, color 0.22s ease;
+    }
+
+    .container {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 28px 20px 64px;
+    }
+
+    /* Cabecera */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px 28px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 32px;
+    }
+
+    .header-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-accent);
+      background: var(--bg-accent-soft);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .header-title {
+      margin: 0 0 6px;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+    }
+
+    .header-subtitle {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+      max-width: 740px;
+    }
+
+    .header-meta {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--text-accent);
+      background: var(--bg-accent-soft);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.98);
+    }
+
+    /* Secciones */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-header {
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      margin: 0 0 4px;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .section-desc {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+    }
+
+    /* Grids de tarjetas */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-badge {
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .card-text {
+      margin: 0 0 14px;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+    }
+
+    .glyph-lab {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+    }
+
+    .glyph-pair {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+
+    .glyph-pair:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* Familias tipográficas */
+    .family-specimen {
+      margin: 14px 0 16px;
+      padding: 16px;
+      border-radius: 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .family-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .weight-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Tabla de Escala Tipográfica */
+    .table-wrap {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      box-shadow: var(--shadow-card);
+      overflow-x: auto;
+    }
+
+    table.scale-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 920px;
+    }
+
+    table.scale-table th {
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-strong);
+      white-space: nowrap;
+    }
+
+    table.scale-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    table.scale-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .spec-chip {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      background: var(--bg-muted);
+      padding: 2px 7px;
+      border-radius: 5px;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    /* Canvas de Mockups en Uso */
+    .mockups-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .device-frame {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-strong);
+      border-radius: 26px;
+      box-shadow: var(--shadow-device);
+      overflow: hidden;
+    }
+
+    .device-chrome {
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .device-body {
+      padding: 18px;
+    }
+
+    .mockup-caption {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Mockup 1: Capturador de Anticipación / Dependencia */
+    .hero-countdown-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .key-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .unit-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .unit-pill {
+      padding: 7px 6px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-muted);
+      color: var(--text-secondary);
+    }
+
+    .unit-pill.active {
+      background: var(--bg-accent-soft);
+      border-color: var(--border-accent);
+      color: var(--text-accent);
+    }
+
+    /* Mockup 2: Vista Rápida de Taquilla / Recaudos */
+    .taquilla-sticky {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+
+    .recaudo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      background: var(--bg-surface);
+    }
+
+    .badge-status {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .badge-ok {
+      background: var(--bg-success-soft);
+      color: var(--text-success);
+    }
+
+    .badge-warn {
+      background: var(--bg-warning-soft);
+      color: var(--text-warning);
+    }
+
+    .badge-risk {
+      background: var(--bg-danger-soft);
+      color: var(--text-danger);
+    }
+
+    /* Mockup 3: Paywall Contextual Personal Pro */
+    .paywall-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-accent);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .plan-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      margin-bottom: 8px;
+    }
+
+    .plan-option.selected {
+      border-color: var(--text-accent);
+      background: var(--bg-accent-soft);
+    }
+
+    .btn-primary-mock {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: none;
+      background: #1D4ED8;
+      color: #FFFFFF;
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    html[data-theme="dark"] .btn-primary-mock {
+      background: #3B82F6;
+      color: #09101D;
+    }
+
+    /* Pie de página */
+    .footer {
+      margin-top: 48px;
+      padding: 18px 24px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- CABECERA -->
+    <header class="header">
+      <div>
+        <div class="header-kicker">Sistema de Diseño UI/UX · Ergonomía Tipográfica</div>
+        <h1 class="header-title">Propuesta Tipográfica y Escala Modular</h1>
+        <p class="header-subtitle">
+          Especificación canónica para el <strong>Gestor de Trámites y Vencimientos Burocráticos con Dependencias</strong>:
+          optimizada para lectura rápida en movimiento, cuentas regresivas inversas sin saltos visuales y consulta de recaudos en taquilla.
+        </p>
+        <div class="header-meta">
+          <span><strong>Dominio:</strong> Trámites, Dependencias y Taquilla Offline</span>
+          <span>·</span>
+          <span><strong>Distancia visual:</strong> 30–50 cm (Mobile-First)</span>
+          <span>·</span>
+          <span><strong>Fecha:</strong> 2026-11-20</span>
+        </div>
+      </div>
+
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="Alternar entre Modo Claro y Modo Oscuro">
+        <span id="themeIcon" aria-hidden="true">🌙</span>
+        <span id="themeLabel">Modo Oscuro</span>
+      </button>
+    </header>
+
+    <!-- SECCIÓN 1: CRITERIOS DE SELECCIÓN Y ERGONOMÍA DE LECTURA -->
+    <section class="section" aria-labelledby="sec-ergonomia">
+      <div class="section-header">
+        <h2 id="sec-ergonomia" class="section-title">1. Criterios de Selección y Ergonomía de Lectura</h2>
+        <p class="section-desc">
+          Fundamentación derivada del Buyer Persona (operación en tránsito, taquillas consulares o oficinas con luz cambiante y estrés por plazos) y la propuesta de valor de ruta crítica inversa.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <!-- Tarjeta 1: Lectura en movimiento / distancia fluctuante -->
+        <article class="card">
+          <div>
+            <span class="card-badge">Ergonomía · 30–50 cm y Luz Variable</span>
+            <h3 class="card-title">Lectura Ágil en Movimiento y Taquilla</h3>
+            <p class="card-text">
+              El usuario consulta su próximo paso crítico o muestra un recaudo frente a una ventanilla de pie, con una sola mano o bajo reflejos/iluminación fluctuante. Una altura de la x amplia y contadores abiertos evitan confundir palabras cortas o estados críticos.
+            </p>
+          </div>
+          <div class="glyph-lab font-ui">
+            <strong>Verificación de apertura en cuerpo 13px:</strong><br>
+            <span>En ventana de acción · Renovar Pasaporte · 01/05/2027</span>
+          </div>
+        </article>
+
+        <!-- Tarjeta 2: Diferenciación de glifos críticos -->
+        <article class="card">
+          <div>
+            <span class="card-badge">Accesibilidad · Anti-Confusión Visual</span>
+            <h3 class="card-title">Diferenciación Inequívoca de Glifos</h3>
+            <p class="card-text">
+              En folios, códigos de expediente, cédulas, números de planilla y fechas, confundir un carácter provoca rechazos o pérdida de tiempo. Se exige distinción clara entre caracteres históricamente ambiguos.
+            </p>
+          </div>
+          <div class="glyph-lab font-mono-tabular">
+            <div class="glyph-pair">
+              <span>Mayúscula <strong>I</strong> vs. minúscula <strong>l</strong> vs. uno <strong>1</strong></span>
+              <span>I1l · Il1 · 1lI</span>
+            </div>
+            <div class="glyph-pair">
+              <span>Cero <strong>0</strong> vs. letra mayúscula <strong>O</strong></span>
+              <span>0O0 · O0O · 2027</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Tarjeta 3: Tabulación numérica de alta frecuencia -->
+        <article class="card">
+          <div>
+            <span class="card-badge">Precisión · Cuentas Regresivas</span>
+            <h3 class="card-title">Tabulación Numérica Sin Saltos</h3>
+            <p class="card-text">
+              Al ajustar días, semanas o meses de anticipación en un paso previo o revisar días restantes y montos de aranceles, las cifras tabulares mantienen el mismo ancho por dígito evitando desplazamientos horizontales (<em>layout shifts</em>).
+            </p>
+          </div>
+          <div class="glyph-lab font-mono-tabular">
+            <div class="glyph-pair">
+              <span>Anticipación dinámica</span>
+              <span>04 días → 14 días → 90 días</span>
+            </div>
+            <div class="glyph-pair">
+              <span>Arancel / tasa de ejemplo</span>
+              <span>$1,249.50 · 176 días</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: FAMILIAS TIPOGRÁFICAS SELECCIONADAS -->
+    <section class="section" aria-labelledby="sec-familias">
+      <div class="section-header">
+        <h2 id="sec-familias" class="section-title">2. Familias Tipográficas Seleccionadas</h2>
+        <p class="section-desc">
+          Trilogía tipográfica gratuita y de código abierto (SIL Open Font License) servida vía Google Fonts con <code>display=swap</code>.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <!-- Familia 1: UI / Prosa General -->
+        <article class="card">
+          <div>
+            <span class="card-badge">Familia 1 · UI / Prosa General (Sans Serif)</span>
+            <h3 class="card-title">Inter</h3>
+            <div class="family-meta">Clasificación: Neo-grotesca humanista · Licencia: SIL OFL 1.1</div>
+            <div class="family-specimen font-ui">
+              Aa Bb Gg I1l 0O 123<br>
+              <span style="font-size: 15px; font-weight: 500;">Solicitar cita consular · Recaudos listos</span>
+            </div>
+            <p class="card-text">
+              Alta legibilidad en interfaces móviles densas, formularios de trámites, listas de pasos previos, estados y micro-copys de asistencia.
+            </p>
+          </div>
+          <div class="weight-pills">
+            <span class="pill">400 Regular · Cuerpo</span>
+            <span class="pill">500 Medium · Captions / UI</span>
+            <span class="pill">600 SemiBold · H3 / Badges</span>
+            <span class="pill">700 Bold · H1 / H2</span>
+          </div>
+        </article>
+
+        <!-- Familia 2: Numérica / Financiera -->
+        <article class="card">
+          <div>
+            <span class="card-badge">Familia 2 · Numérica / Financiera (Monospace Tabular)</span>
+            <h3 class="card-title">JetBrains Mono</h3>
+            <div class="family-meta">Clasificación: Monospace técnica · Licencia: SIL OFL 1.1</div>
+            <div class="family-specimen font-mono-tabular">
+              176d · 01/05/2027<br>
+              <span style="font-size: 16px; font-weight: 600;">$1,249.50 · I1l 0O</span>
+            </div>
+            <p class="card-text">
+              Ancho fijo por glifo y cero con trazo distintivo para cuentas regresivas, días/semanas de anticipación, fechas límite, folios e importes.
+            </p>
+          </div>
+          <div class="weight-pills">
+            <span class="pill">500 Medium · Etiquetas num.</span>
+            <span class="pill">600 SemiBold · Cifra fila</span>
+            <span class="pill">700 Bold · Cifra media</span>
+            <span class="pill">800 ExtraBold · Display Hero</span>
+          </div>
+        </article>
+
+        <!-- Familia 3: Acento / Marca -->
+        <article class="card">
+          <div>
+            <span class="card-badge">Familia 3 · Acento / Marca (Brand Accents)</span>
+            <h3 class="card-title">Plus Jakarta Sans</h3>
+            <div class="family-meta">Clasificación: Geométrica humanista · Licencia: SIL OFL 1.1</div>
+            <div class="family-specimen font-brand">
+              CronoTrámite<br>
+              <span style="font-size: 15px; font-weight: 600;">Tu ruta crítica inversa, sin prisas</span>
+            </div>
+            <p class="card-text">
+              Aporta personalidad contemporánea, claridad y confianza en el logotipo, titulares de bienvenida y pantallas contextuales de Personal Pro.
+            </p>
+          </div>
+          <div class="weight-pills">
+            <span class="pill">600 SemiBold · Subtitulares</span>
+            <span class="pill">700 Bold · CTAs / Marca</span>
+            <span class="pill">800 ExtraBold · Titulares Hero</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: ESCALA TIPOGRÁFICA CANÓNICA DE LA APLICACIÓN -->
+    <section class="section" aria-labelledby="sec-escala">
+      <div class="section-header">
+        <h2 id="sec-escala" class="section-title">3. Escala Tipográfica Canónica de la Aplicación</h2>
+        <p class="section-desc">
+          Definición de niveles semánticos, métricas y muestras renderizadas en vivo. (Las variables CSS se omiten intencionalmente hasta la etapa de <code>tokens.css</code>).
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="scale-table">
+          <thead>
+            <tr>
+              <th>Nivel Semántico</th>
+              <th>Familia</th>
+              <th>Tamaño</th>
+              <th>Peso</th>
+              <th>Line-Height</th>
+              <th>Caso Canónico de Uso en UI</th>
+              <th>Muestra Visual en Vivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Display Hero</strong></td>
+              <td>JetBrains Mono</td>
+              <td><span class="spec-chip">34px</span></td>
+              <td><span class="spec-chip">800</span></td>
+              <td><span class="spec-chip">1.1</span></td>
+              <td>Contador principal de días restantes o anticipación en capturador</td>
+              <td>
+                <span class="font-mono-tabular" style="font-size: 34px; font-weight: 800; line-height: 1.1;">14d</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Título Pantalla H1</strong></td>
+              <td>Plus Jakarta Sans / Inter</td>
+              <td><span class="spec-chip">21px</span></td>
+              <td><span class="spec-chip">700</span></td>
+              <td><span class="spec-chip">1.25</span></td>
+              <td>Encabezado principal de pantalla (P01 Mis Trámites, P02 Detalle)</td>
+              <td>
+                <span class="font-brand" style="font-size: 21px; font-weight: 700; line-height: 1.25;">Renovar Pasaporte</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Título Modal / Panel H2</strong></td>
+              <td>Inter</td>
+              <td><span class="spec-chip">18px</span></td>
+              <td><span class="spec-chip">700</span></td>
+              <td><span class="spec-chip">1.3</span></td>
+              <td>Encabezado de modales o bottom sheets (M01, M03, M06 Paywall)</td>
+              <td>
+                <span class="font-ui" style="font-size: 18px; font-weight: 700; line-height: 1.3;">Agregar paso previo</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Título Tarjeta H3</strong></td>
+              <td>Inter</td>
+              <td><span class="spec-chip">16px</span></td>
+              <td><span class="spec-chip">600</span></td>
+              <td><span class="spec-chip">1.35</span></td>
+              <td>Nombre de trámite en tarjeta, paso previo o plantilla base</td>
+              <td>
+                <span class="font-ui" style="font-size: 16px; font-weight: 600; line-height: 1.35;">Solicitar cita consular</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Cuerpo Principal Body</strong></td>
+              <td>Inter</td>
+              <td><span class="spec-chip">14px</span></td>
+              <td><span class="spec-chip">400</span></td>
+              <td><span class="spec-chip">1.5</span></td>
+              <td>Denominación de recaudos, notas generales y descripciones de apoyo</td>
+              <td>
+                <span class="font-ui" style="font-size: 14px; font-weight: 400; line-height: 1.5;">Copia de cédula de identidad (I1l · 0O)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Cifra Tabular Media</strong></td>
+              <td>JetBrains Mono</td>
+              <td><span class="spec-chip">15px</span></td>
+              <td><span class="spec-chip">700</span></td>
+              <td><span class="spec-chip">1.25</span></td>
+              <td>Días restantes en ruta crítica, aranceles o totales de respaldo</td>
+              <td>
+                <span class="font-mono-tabular" style="font-size: 15px; font-weight: 700; line-height: 1.25;">$1,249.50 · 04 días</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Cifra Tabular Fila</strong></td>
+              <td>JetBrains Mono</td>
+              <td><span class="spec-chip">13px</span></td>
+              <td><span class="spec-chip">600</span></td>
+              <td><span class="spec-chip">1.3</span></td>
+              <td>Fechas calculadas (DD/MM/AAAA), anticipación en pasos y conteos</td>
+              <td>
+                <span class="font-mono-tabular" style="font-size: 13px; font-weight: 600; line-height: 1.3;">01/05/2027 · 2/3 listos</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Texto Secundario / Caption</strong></td>
+              <td>Inter</td>
+              <td><span class="spec-chip">12px</span></td>
+              <td><span class="spec-chip">500</span></td>
+              <td><span class="spec-chip">1.4</span></td>
+              <td>Metadatos de categoría, nombres de archivo adjunto y ayudas contextuales</td>
+              <td>
+                <span class="font-ui" style="font-size: 12px; font-weight: 500; line-height: 1.4;">Adjunto: planilla_solicitud_01.pdf</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Micro-Badge / Chip</strong></td>
+              <td>Inter</td>
+              <td><span class="spec-chip">11px</span></td>
+              <td><span class="spec-chip">600</span></td>
+              <td><span class="spec-chip">1.2</span></td>
+              <td>Etiquetas de estado (En riesgo, En ventana, Listo, Pendiente, Offline)</td>
+              <td>
+                <span class="font-ui" style="font-size: 11px; font-weight: 600; line-height: 1.2;">EN VENTANA DE ACCIÓN</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: CANVAS DE EJEMPLOS TIPOGRÁFICOS EN USO -->
+    <section class="section" aria-labelledby="sec-canvas">
+      <div class="section-header">
+        <h2 id="sec-canvas" class="section-title">4. Canvas de Ejemplos Tipográficos en Uso</h2>
+        <p class="section-desc">
+          Simulación en vivo de vistas clave del producto con datos reales del dominio: anticipación inversa, vista rápida de taquilla con recaudos y paywall contextual.
+        </p>
+      </div>
+
+      <div class="mockups-grid">
+        <!-- Mockup 1: Capturador de Anticipación / Dependencia -->
+        <div>
+          <div class="device-frame">
+            <div class="device-chrome">
+              <span>M03 · ANTICIPACIÓN DE PASO</span>
+              <span class="font-mono-tabular">09:41</span>
+            </div>
+            <div class="device-body">
+              <div class="font-ui" style="font-size: 12px; font-weight: 600; color: var(--text-accent); margin-bottom: 4px;">
+                TRÁMITE: RENOVAR PASAPORTE
+              </div>
+              <div class="font-ui" style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
+                Solicitar cita consular
+              </div>
+
+              <div class="hero-countdown-box">
+                <div class="font-ui" style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">
+                  Anticipación configurada
+                </div>
+                <div class="font-mono-tabular" style="font-size: 34px; font-weight: 800; line-height: 1.1; margin: 6px 0;">
+                  28 <span style="font-size: 16px; font-weight: 600; color: var(--text-secondary);">días</span>
+                </div>
+                <div class="font-mono-tabular" style="font-size: 12.5px; font-weight: 600; color: var(--text-accent);">
+                  Inicio calculado: 17/04/2027
+                </div>
+              </div>
+
+              <div class="unit-row font-ui">
+                <div class="unit-pill active">Días</div>
+                <div class="unit-pill">Semanas</div>
+                <div class="unit-pill">Meses</div>
+              </div>
+
+              <div class="keypad-grid font-mono-tabular">
+                <button type="button" class="key-btn">1</button>
+                <button type="button" class="key-btn">2</button>
+                <button type="button" class="key-btn">3</button>
+                <button type="button" class="key-btn">4</button>
+                <button type="button" class="key-btn">5</button>
+                <button type="button" class="key-btn">0</button>
+              </div>
+
+              <button type="button" class="btn-primary-mock">Guardar dependencia</button>
+            </div>
+          </div>
+          <div class="mockup-caption">
+            <strong>Mockup 1:</strong> Display hero en <code>JetBrains Mono</code> sin desplazamiento al cambiar cifras.
+          </div>
+        </div>
+
+        <!-- Mockup 2: Vista Rápida de Taquilla / Recaudos -->
+        <div>
+          <div class="device-frame">
+            <div class="device-chrome">
+              <span>P05 · VISTA RÁPIDA TAQUILLA</span>
+              <span class="badge-status badge-ok">OFFLINE LISTO</span>
+            </div>
+            <div class="device-body">
+              <div class="taquilla-sticky">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <span class="font-brand" style="font-size: 17px; font-weight: 700;">Seguro Vehicular</span>
+                  <span class="badge-status badge-risk">EN RIESGO · 4D</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px;">
+                  <span class="font-ui" style="font-size: 12px; color: var(--text-secondary);">Límite: 15/12/2026</span>
+                  <span class="font-mono-tabular" style="font-size: 15px; font-weight: 700;">$185.00 · 2/3</span>
+                </div>
+              </div>
+
+              <div class="recaudo-row">
+                <div>
+                  <div class="font-ui" style="font-size: 14px; font-weight: 500;">Copia de cédula I1l-0O</div>
+                  <div class="font-mono-tabular" style="font-size: 12px; color: var(--text-muted);">cedula_01.jpg</div>
+                </div>
+                <span class="badge-status badge-ok">LISTO</span>
+              </div>
+
+              <div class="recaudo-row">
+                <div>
+                  <div class="font-ui" style="font-size: 14px; font-weight: 500;">Póliza vigente vigente</div>
+                  <div class="font-mono-tabular" style="font-size: 12px; color: var(--text-muted);">poliza_2026.pdf</div>
+                </div>
+                <span class="badge-status badge-ok">LISTO</span>
+              </div>
+
+              <div class="recaudo-row" style="margin-bottom: 0;">
+                <div>
+                  <div class="font-ui" style="font-size: 14px; font-weight: 500;">Comprobante arancel</div>
+                  <div class="font-ui" style="font-size: 12px; color: var(--text-warning);">Sin adjunto local</div>
+                </div>
+                <span class="badge-status badge-warn">PENDIENTE</span>
+              </div>
+            </div>
+          </div>
+          <div class="mockup-caption">
+            <strong>Mockup 2:</strong> Combinación de títulos, recaudos en <code>Inter</code> y fechas/importes tabulares en <code>JetBrains Mono</code>.
+          </div>
+        </div>
+
+        <!-- Mockup 3: Paywall Contextual Personal Pro -->
+        <div>
+          <div class="device-frame">
+            <div class="device-chrome">
+              <span>M06 · PAYWALL CONTEXTUAL</span>
+              <span class="font-mono-tabular">PRO</span>
+            </div>
+            <div class="device-body">
+              <div class="paywall-box">
+                <div class="font-brand" style="font-size: 20px; font-weight: 800; line-height: 1.2; margin-bottom: 6px;">
+                  Desbloquea Personal Pro
+                </div>
+                <p class="font-ui" style="font-size: 13px; color: var(--text-secondary); margin: 0 0 14px;">
+                  Habilita la plantilla <strong>Licencia de Conducir</strong>, adjuntos ilimitados y respaldos cifrados completos.
+                </p>
+
+                <div class="plan-option selected">
+                  <div>
+                    <div class="font-ui" style="font-size: 13.5px; font-weight: 600;">Pago único Lifetime</div>
+                    <div class="font-ui" style="font-size: 11.5px; color: var(--text-secondary);">Sin suscripciones recurrentes</div>
+                  </div>
+                  <span class="font-mono-tabular" style="font-size: 15px; font-weight: 700;">$29.00</span>
+                </div>
+
+                <div class="plan-option">
+                  <div>
+                    <div class="font-ui" style="font-size: 13.5px; font-weight: 600;">Suscripción anual</div>
+                    <div class="font-ui" style="font-size: 11.5px; color: var(--text-secondary);">Renovación anual flexible</div>
+                  </div>
+                  <span class="font-mono-tabular" style="font-size: 15px; font-weight: 700;">$12.00/a</span>
+                </div>
+
+                <button type="button" class="btn-primary-mock">Continuar con Personal Pro</button>
+                <div class="font-ui" style="text-align: center; font-size: 11.5px; color: var(--text-muted); margin-top: 10px;">
+                  Restaurar compras · Cerrar
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mockup-caption">
+            <strong>Mockup 3:</strong> Titular de marca en <code>Plus Jakarta Sans</code> con precios tabulares alineados a la derecha.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 5: CRITERIOS DE ACCESIBILIDAD Y RENDERIZADO MULTIPLATAFORMA -->
+    <section class="section" aria-labelledby="sec-accesibilidad">
+      <div class="section-header">
+        <h2 id="sec-accesibilidad" class="section-title">5. Criterios de Accesibilidad y Renderizado Multiplataforma</h2>
+        <p class="section-desc">
+          Garantías operativas para iOS, Android y previsualización web en entornos con conectividad intermitente.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <div>
+            <span class="card-badge">Rendimiento · FOIT Cero</span>
+            <h3 class="card-title">Carga con <code>font-display: swap</code></h3>
+            <p class="card-text">
+              Todas las hojas de estilo de Google Fonts incluyen <code>&amp;display=swap</code> para que el texto sea visible de inmediato con fuentes del sistema y se intercambie sin bloqueos en cuanto descargue la tipografía web.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <span class="card-badge">Resiliencia · Fallbacks Nativos</span>
+            <h3 class="card-title">Pila de Respaldo del Sistema</h3>
+            <p class="card-text">
+              Las pilas tipográficas incorporan <code>system-ui</code>, <code>-apple-system</code>, <code>ui-monospace</code> y <code>SFMono-Regular</code> como respaldo seguro ante ausencia de red o restricciones de entorno.
+            </p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div>
+            <span class="card-badge">Contraste · Modo Claro y Oscuro</span>
+            <h3 class="card-title">Bimodalidad y Precisión Numérica</h3>
+            <p class="card-text">
+              Ambos temas mantienen alto contraste entre superficies y textos secundarios, y las métricas numéricas aplican <code>tabular-nums</code> para evitar oscilaciones visuales al actualizar cuentas regresivas o importes.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer">
+      <div>
+        <strong>Archivo:</strong> <code>Proyecto/Diseño/UI/Propuesta/Propuesta-tipografica.html</code> · <strong>Versión:</strong> 1.0.0
+      </div>
+      <div>
+        <strong>Familias oficiales:</strong> Inter · JetBrains Mono · Plus Jakarta Sans
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Script vanilla JS para el toggle interactivo de Modo Claro / Modo Oscuro
+    (function () {
+      const root = document.documentElement;
+      const toggleBtn = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeLabel = document.getElementById('themeLabel');
+
+      function updateToggleUI(isDark) {
+        if (isDark) {
+          themeIcon.textContent = '☀️';
+          themeLabel.textContent = 'Modo Claro';
+          toggleBtn.setAttribute('aria-pressed', 'true');
+        } else {
+          themeIcon.textContent = '🌙';
+          themeLabel.textContent = 'Modo Oscuro';
+          toggleBtn.setAttribute('aria-pressed', 'false');
+        }
+      }
+
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      let isDark = prefersDark;
+      if (isDark) {
+        root.setAttribute('data-theme', 'dark');
+      }
+      updateToggleUI(isDark);
+
+      toggleBtn.addEventListener('click', function () {
+        isDark = !isDark;
+        if (isDark) {
+          root.setAttribute('data-theme', 'dark');
+        } else {
+          root.removeAttribute('data-theme');
+        }
+        updateToggleUI(isDark);
+      });
+    })();
+  </script>
+</body>
+</html>

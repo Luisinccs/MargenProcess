@@ -1,620 +1,1327 @@
-<soda version="2.0" name="margen-process">
+<soda version="2.0" name="gestor-tramites-dependencias">
     <!-- SODA-AGENT-HINT: Read <index> first, then read only the target line ranges -->
     <index>
-        <entry kind="styles" name="style-defs" tokens="74" lines="23-98" />
-        <entry kind="icons" name="icon-defs" lines="100-127" />
-        <entry kind="group" name="Elementos" lines="129-325">
-            <entry kind="component" name="fila-tramite" role="element" design="360x96" lines="130-180" props="titulo,categoria,estado,proximo-paso,tiempo-restante,es-latente" events="onSelect" />
-            <entry kind="component" name="campo-entrada" role="element" design="360x76" lines="182-214" props="etiqueta,valor,placeholder,requerido,estado-campo,texto-error" events="onChange" />
-            <entry kind="component" name="card-recaudo" role="element" design="360x92" lines="216-261" props="nombre,estado,archivo-nombre,tiene-adjunto" events="onToggleEstado,onAdjuntar,onVerArchivo" />
-            <entry kind="component" name="barra-superior" role="element" design="393x56" lines="263-300" props="titulo,subtitulo,mostrar-volver,mostrar-cerrar,mostrar-config,mostrar-offline" events="onVolver,onCerrar,onConfig" />
-            <entry kind="component" name="tab-estado-recaudo" role="element" design="120x36" lines="302-324" props="etiqueta,activo,variante" events="onSelect" />
+        <entry kind="styles" name="style-defs" tokens="77" lines="44-122" />
+        <entry kind="icons" name="icon-defs" lines="124-269" />
+        <entry kind="group" name="Elementos" lines="271-675">
+            <entry kind="component" name="barra-superior-navegacion" role="element" design="600x200" lines="272-322" props="titulo,mostrar-volver,icono-accion-primaria,etiqueta-accion-primaria,mostrar-accion-secundaria,icono-accion-secundaria,badge-texto" events="onBack,onPrimaryAction,onSecondaryAction" />
+            <entry kind="component" name="encabezado-modal" role="element" design="600x200" lines="324-346" props="titulo,subtitulo" events="onClose" />
+            <entry kind="component" name="badge-estado" role="element" design="600x200" lines="348-390" props="etiqueta,variante,icono" />
+            <entry kind="component" name="bloque-ruta-critica" role="element" design="600x200" lines="392-436" props="estado-etiqueta,variante-estado,tramite-titulo,paso-critico,cuenta-paso,fecha-limite,etiqueta-accion" events="onOpenCritical" uses="badge-estado" />
+            <entry kind="component" name="tarjeta-tramite" role="element" design="600x200" lines="438-472" props="titulo,categoria,estado-texto,variante-estado,detalle-secundario,progreso-texto,latente" events="onSelect" uses="badge-estado" />
+            <entry kind="component" name="item-paso-previo" role="element" design="600x200" lines="474-512" props="orden,nombre,anticipacion,fecha-calculada,resumen-recaudos" events="onEditStep,onOpenStep" />
+            <entry kind="component" name="item-recaudo" role="element" design="600x200" lines="514-560" props="denominacion,listo,estado-texto,archivo-nombre" events="onToggleReady,onAttachFile,onOpenViewer" uses="badge-estado" />
+            <entry kind="component" name="tarjeta-plantilla" role="element" design="600x200" lines="562-596" props="nombre,categoria,resumen,bloqueada,etiqueta-plan,etiqueta-cta" events="onSelectTemplate" uses="badge-estado" />
+            <entry kind="component" name="campo-formulario" role="element" design="600x200" lines="598-646" props="etiqueta,obligatorio,valor,ayuda,tipo-control,estado-campo" events="onFieldPress" />
+            <entry kind="component" name="barra-acciones-pie" role="element" design="600x200" lines="648-674" props="texto-cancelar,texto-confirmar,variante-confirmar" events="onCancel,onConfirm" />
         </entry>
-        <entry kind="group" name="Bloques" lines="327-407">
-            <entry kind="component" name="formulario-tramite" role="block" design="360x360" lines="328-377" props="titulo-modal,titulo-tramite,categoria,fecha-limite,notas" events="onGuardar,onCancelar" />
-            <entry kind="component" name="coleccion-recaudos" role="block" design="360x280" lines="379-406" props="recaudos,avance-texto" events="onToggleRecaudo,onAdjuntarRecaudo,onVerAdjunto" />
+        <entry kind="group" name="Bloques" lines="677-782">
+            <entry kind="component" name="lista-tramites-activos" role="block" design="600x200" lines="678-692" props="titulo-seccion,tramites" events="onSelectTramite" uses="tarjeta-tramite" />
+            <entry kind="component" name="seccion-tramites-latentes" role="block" design="600x200" lines="694-727" props="contador,colapsado,tramites-latentes" events="onToggleLatentes,onSelectLatente" uses="tarjeta-tramite" />
+            <entry kind="component" name="lista-pasos-previos" role="block" design="600x200" lines="729-753" props="pasos" events="onAddStep,onEditStep,onOpenStep" uses="item-paso-previo" />
+            <entry kind="component" name="lista-recaudos-paso" role="block" design="600x200" lines="755-781" props="nuevo-recaudo-texto,recaudos" events="onAddRecaudo,onToggleRecaudo,onAttachRecaudo,onOpenViewer" uses="item-recaudo" />
         </entry>
-        <entry kind="scene" name="panel-principal" target="window" lines="409-482" props="ruta-critica-titulo,ruta-critica-paso,ruta-critica-plazo,tramites-activos,tramites-latentes,latentes-visibles" uses="barra-superior" />
-        <entry kind="scene" name="detalle-tramite" target="window" lines="484-552" props="titulo,categoria,estado,fecha-limite,dias-restantes,notas,pasos" uses="barra-superior" />
-        <entry kind="scene" name="modal-formulario-tramite" target="window" lines="554-571" props="titulo-modal,titulo-tramite,categoria,fecha-limite,notas" uses="barra-superior,formulario-tramite" />
-        <entry kind="scene" name="modal-paywall-pro" target="window" lines="573-619" props="motivo,plan-seleccionado,procesando" uses="barra-superior,tab-estado-recaudo" />
+        <entry kind="group" name="Pantallas" lines="784-1048">
+            <entry kind="scene" name="P01-panel-principal-tramites" target="window" lines="785-817" props="titulo-pantalla,critico-estado,critico-variante,critico-tramite,critico-paso,critico-cuenta,critico-limite,tramites-activos,latentes-contador,latentes-colapsado,tramites-latentes" uses="barra-superior-navegacion,bloque-ruta-critica,lista-tramites-activos,seccion-tramites-latentes" />
+            <entry kind="scene" name="P02-detalle-tramite" target="window" lines="819-855" props="tramite-titulo,categoria-texto,estado-texto,estado-variante,fecha-limite-resumen,notas-generales,pasos-previos" uses="barra-superior-navegacion,badge-estado,lista-pasos-previos" />
+            <entry kind="scene" name="P03-detalle-paso-recaudos" target="window" lines="857-904" props="paso-selector-texto,paso-nombre,paso-meta,avance-texto,nuevo-recaudo,recaudos,adjunto-paso-nombre" uses="barra-superior-navegacion,lista-recaudos-paso" />
+            <entry kind="scene" name="P04-visor-integrado-documentos" target="window" lines="906-950" props="archivo-nombre,contexto-recaudo,estado-offline,pagina-texto,zoom-texto" uses="badge-estado" />
+            <entry kind="scene" name="P05-vista-rapida-taquilla" target="window" lines="952-976" props="tramite-titulo,estado-offline,recaudos-consolidados" uses="barra-superior-navegacion,item-recaudo" />
+            <entry kind="scene" name="P06-catalogo-plantillas-base" target="window" lines="978-994" props="introduccion-texto,plantillas" uses="barra-superior-navegacion,tarjeta-plantilla" />
+            <entry kind="scene" name="P07-configuracion-respaldo-datos" target="window" lines="996-1047" props="plan-estado,es-pro,alcance-respaldo,estado-operacion,nota-cifrado" uses="barra-superior-navegacion,badge-estado,campo-formulario" />
+        </entry>
+        <entry kind="group" name="Modales" lines="1050-1252">
+            <entry kind="scene" name="M01-formulario-tramite" target="window" lines="1051-1071" props="titulo-modal,titulo-valor,categoria-valor,fecha-limite-valor,notas-valor" uses="encabezado-modal,campo-formulario,barra-acciones-pie" />
+            <entry kind="scene" name="M02-confirmacion-eliminacion-tramite" target="window" lines="1073-1089" props="tramite-nombre,mensaje-advertencia" uses="barra-acciones-pie" />
+            <entry kind="scene" name="M03-configuracion-paso-previo" target="window" lines="1091-1135" props="titulo-modal,nombre-paso,orden-texto,cantidad-anticipacion,unidad-anticipacion,fecha-calculada" uses="encabezado-modal,campo-formulario,barra-acciones-pie" />
+            <entry kind="scene" name="M04-selector-origen-archivo" target="window" lines="1137-1165" props="destino-nombre" uses="encabezado-modal" />
+            <entry kind="scene" name="M05-instanciar-tramite-plantilla" target="window" lines="1167-1186" props="plantilla-nombre,resumen-estructura,fecha-objetivo" uses="encabezado-modal,campo-formulario,barra-acciones-pie" />
+            <entry kind="scene" name="M06-paywall-contextual-personal-pro" target="window" lines="1188-1251" props="motivo-titulo,motivo-subtitulo,modalidad-seleccionada,precio-lifetime,precio-anual" uses="encabezado-modal" />
+        </entry>
+        <entry kind="journeys" name="journeys" lines="1254-1326" />
     </index>
 
     <style-defs>
-        <color name="brand-primary" light="#0F766E" dark="#2DD4BF" />
-        <color name="brand-primary-hover" light="#115E59" dark="#14B8A6" />
-        <color name="brand-primary-soft" light="#CCFBF1" dark="#132A2E" />
-        <color name="brand-accent" light="#1D4ED8" dark="#60A5FA" />
-        <color name="brand-accent-soft" light="#DBEAFE" dark="#172542" />
-        <color name="status-urgent" light="#B91C1C" dark="#FCA5A5" category="Estados" />
-        <color name="status-urgent-bg" light="#FEE2E2" dark="#2E171E" category="Estados" />
-        <color name="status-warning" light="#B45309" dark="#FCD34D" category="Estados" />
-        <color name="status-warning-bg" light="#FEF3C7" dark="#2E2311" category="Estados" />
-        <color name="status-ok" light="#15803D" dark="#86EFAC" category="Estados" />
-        <color name="status-ok-bg" light="#DCFCE7" dark="#132B21" category="Estados" />
-        <color name="status-latent" light="#475569" dark="#94A3B8" category="Estados" />
-        <color name="status-latent-bg" light="#E2E8F0" dark="#1C2536" category="Estados" />
-        <color name="pro-accent" light="#6D28D9" dark="#C4B5FD" />
-        <color name="pro-accent-bg" light="#EDE9FE" dark="#241A3B" />
         <color name="bg-page" light="#F8FAFC" dark="#0B1120" category="Superficies" />
         <color name="bg-surface" light="#FFFFFF" dark="#111827" category="Superficies" />
         <color name="bg-surface-elevated" light="#FFFFFF" dark="#1E293B" category="Superficies" />
         <color name="bg-surface-subtle" light="#F1F5F9" dark="#172033" category="Superficies" />
         <color name="bg-latent-card" light="#F8FAFC" dark="#0F172A" category="Superficies" />
-        <color name="border-subtle" light="#CBD5E1" dark="#283548" category="Bordes" />
-        <color name="border-strong" light="#64748B" dark="#475569" category="Bordes" />
         <color name="text-primary" light="#0F172A" dark="#F8FAFC" category="Textos" />
         <color name="text-secondary" light="#334155" dark="#CBD5E1" category="Textos" />
         <color name="text-muted" light="#475569" dark="#94A3B8" category="Textos" />
         <color name="text-inverse" light="#FFFFFF" dark="#0B1120" category="Textos" />
-        <color name="text-error" light="#B91C1C" dark="#FCA5A5" category="Textos" />
-        <font-family name="font-sans" value="'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" />
+        <color name="border-subtle" light="#CBD5E1" dark="#283548" category="Bordes" />
+        <color name="border-strong" light="#64748B" dark="#475569" category="Bordes" />
+        <color name="brand-primary" light="#0F766E" dark="#2DD4BF" />
+        <color name="brand-primary-hover" light="#115E59" dark="#14B8A6" />
+        <color name="brand-primary-soft" light="#CCFBF1" dark="#132E2D" />
+        <color name="brand-accent" light="#1D4ED8" dark="#60A5FA" />
+        <color name="brand-accent-soft" light="#DBEAFE" dark="#172554" />
+        <color name="status-urgent" light="#B91C1C" dark="#FCA5A5" category="Estados" />
+        <color name="status-urgent-bg" light="#FEE2E2" dark="#3B1519" category="Estados" />
+        <color name="status-warning" light="#B45309" dark="#FCD34D" category="Estados" />
+        <color name="status-warning-bg" light="#FEF3C7" dark="#3B2910" category="Estados" />
+        <color name="status-ok" light="#15803D" dark="#86EFAC" category="Estados" />
+        <color name="status-ok-bg" light="#DCFCE7" dark="#113121" category="Estados" />
+        <color name="status-latent" light="#475569" dark="#94A3B8" category="Estados" />
+        <color name="status-latent-bg" light="#E2E8F0" dark="#1E293B" category="Estados" />
+        <color name="pro-accent" light="#6D28D9" dark="#C4B5FD" />
+        <color name="pro-accent-bg" light="#EDE9FE" dark="#261A45" />
         <font-family name="font-brand" value="'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif" />
-        <font-family name="font-mono" value="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" />
-        <font-size name="hero" value="34px" />
-        <font-size name="xl" value="21px" />
-        <font-size name="md" value="16px" />
+        <font-family name="font-sans" value="'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" />
+        <font-family name="font-mono" value="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace" />
+        <font-size name="xs" value="11px" />
+        <font-size name="sm" value="12px" />
+        <font-size name="md" value="13px" />
         <font-size name="base" value="14px" />
         <font-size name="num-md" value="15px" />
-        <font-size name="num-sm" value="13px" />
-        <font-size name="sm" value="12px" />
-        <font-size name="xs" value="11px" />
+        <font-size name="lg" value="16px" />
+        <font-size name="xl" value="18px" />
+        <font-size name="2xl" value="21px" />
+        <font-size name="hero" value="34px" />
         <font-weight name="regular" value="400" />
         <font-weight name="medium" value="500" />
         <font-weight name="semibold" value="600" />
         <font-weight name="bold" value="700" />
         <font-weight name="extrabold" value="800" />
-        <font name="display-hero" font-size="hero" font-family="font-mono" font-weight="extrabold" />
-        <font name="screen-title" font-size="xl" font-family="font-brand" font-weight="bold" />
-        <font name="modal-title" font-size="lg" font-family="font-sans" font-weight="bold" />
-        <font name="card-title" font-size="md" font-family="font-sans" font-weight="semibold" />
+        <font name="hero-num" font-size="hero" font-family="font-mono" font-weight="extrabold" />
+        <font name="screen-title" font-size="2xl" font-family="font-brand" font-weight="bold" />
+        <font name="modal-title" font-size="xl" font-family="font-sans" font-weight="bold" />
+        <font name="card-title" font-size="lg" font-family="font-sans" font-weight="semibold" />
         <font name="body" font-size="base" font-family="font-sans" font-weight="regular" />
-        <font name="label" font-size="base" font-family="font-sans" font-weight="semibold" />
-        <font name="num-medium" font-size="num-md" font-family="font-mono" font-weight="bold" />
-        <font name="num-row" font-size="num-sm" font-family="font-mono" font-weight="semibold" />
+        <font name="metric-md" font-size="num-md" font-family="font-mono" font-weight="bold" />
+        <font name="metric-sm" font-size="md" font-family="font-mono" font-weight="semibold" />
         <font name="caption" font-size="sm" font-family="font-sans" font-weight="medium" />
         <font name="badge" font-size="xs" font-family="font-sans" font-weight="semibold" />
         <spacing name="none" value="0px" />
-        <spacing name="xxs" value="4px" />
-        <spacing name="xs" value="8px" />
-        <spacing name="sm" value="12px" />
-        <spacing name="md" value="16px" />
-        <spacing name="lg" value="20px" />
-        <spacing name="xl" value="24px" />
+        <spacing name="2xs" value="4px" />
+        <spacing name="xs" value="6px" />
+        <spacing name="sm" value="8px" />
+        <spacing name="md" value="12px" />
+        <spacing name="lg" value="16px" />
+        <spacing name="xl" value="20px" />
+        <spacing name="2xl" value="24px" />
         <radius name="none" value="0px" />
         <radius name="sm" value="6px" />
-        <radius name="control" value="8px" />
         <radius name="md" value="12px" />
         <radius name="lg" value="16px" />
-        <radius name="sheet" value="20px" />
+        <radius name="xl" value="20px" />
         <radius name="pill" value="999px" />
-        <dimension name="topbar-height" value="56px" />
-        <dimension name="field-height" value="44px" />
         <dimension name="icon-sm" value="16px" />
         <dimension name="icon-md" value="20px" />
         <dimension name="icon-lg" value="24px" />
-        <border name="subtle" value="1px solid" />
+        <dimension name="topbar-height" value="56px" />
+        <dimension name="field-height" value="44px" />
+        <dimension name="textarea-height" value="88px" />
+        <dimension name="viewer-min-height" value="260px" />
+        <border name="hairline" value="1px solid" />
         <border name="strong" value="1.5px solid" />
+        <border name="focus" value="2px solid" />
+        <border name="accent-bar" value="4px solid" />
     </style-defs>
 
     <icon-defs>
-        <icon name="plus" viewBox="0 0 24 24" />
-        <icon name="copy-plus" viewBox="0 0 24 24" />
-        <icon name="alert-triangle" viewBox="0 0 24 24" />
-        <icon name="check-circle-2" viewBox="0 0 24 24" />
-        <icon name="hourglass" viewBox="0 0 24 24" />
-        <icon name="calendar-clock" viewBox="0 0 24 24" />
-        <icon name="list-plus" viewBox="0 0 24 24" />
-        <icon name="git-commit-vertical" viewBox="0 0 24 24" />
-        <icon name="arrow-up-down" viewBox="0 0 24 24" />
-        <icon name="pencil" viewBox="0 0 24 24" />
-        <icon name="trash-2" viewBox="0 0 24 24" />
-        <icon name="briefcase" viewBox="0 0 24 24" />
-        <icon name="check" viewBox="0 0 24 24" />
-        <icon name="paperclip" viewBox="0 0 24 24" />
-        <icon name="camera" viewBox="0 0 24 24" />
-        <icon name="file-text" viewBox="0 0 24 24" />
-        <icon name="eye" viewBox="0 0 24 24" />
-        <icon name="wifi-off" viewBox="0 0 24 24" />
-        <icon name="zoom-in" viewBox="0 0 24 24" />
-        <icon name="arrow-left" viewBox="0 0 24 24" />
-        <icon name="x" viewBox="0 0 24 24" />
-        <icon name="settings" viewBox="0 0 24 24" />
-        <icon name="download" viewBox="0 0 24 24" />
-        <icon name="rotate-ccw" viewBox="0 0 24 24" />
-        <icon name="crown" viewBox="0 0 24 24" />
-        <icon name="shield-check" viewBox="0 0 24 24" />
+        <icon name="plus" category="action" viewBox="0 0 24 24">
+        <path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12 5v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="copy-plus" category="action" viewBox="0 0 24 24">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M15.5 12.5v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12.5 15.5h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="alert-triangle" category="status" viewBox="0 0 24 24">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12 9v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12 17h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="check-circle-2" category="status" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="hourglass" category="status" viewBox="0 0 24 24">
+        <path d="M5 22h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 2h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="calendar-clock" category="time" viewBox="0 0 24 24">
+        <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16 2v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8 2v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M3 10h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="16" cy="16" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16 14v2l1.5 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="list-plus" category="action" viewBox="0 0 24 24">
+        <path d="M11 12H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16 6H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16 18H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M18 9v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M21 12h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="git-commit-vertical" category="workflow" viewBox="0 0 24 24">
+        <path d="M12 3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12 15v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="arrow-up-down" category="action" viewBox="0 0 24 24">
+        <path d="m21 16-4 4-4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M17 20V4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m3 8 4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M7 4v16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="pencil" category="action" viewBox="0 0 24 24">
+        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m15 5 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="trash-2" category="action" viewBox="0 0 24 24">
+        <path d="M3 6h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="10" x2="10" y1="11" y2="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="14" x2="14" y1="11" y2="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="briefcase" category="domain" viewBox="0 0 24 24">
+        <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <rect width="20" height="14" x="2" y="6" rx="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="check" category="status" viewBox="0 0 24 24">
+        <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="paperclip" category="document" viewBox="0 0 24 24">
+        <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="camera" category="document" viewBox="0 0 24 24">
+        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="12" cy="13" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="file-text" category="document" viewBox="0 0 24 24">
+        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M14 2v4a2 2 0 0 0 2 2h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M10 9H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16 13H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16 17H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="eye" category="document" viewBox="0 0 24 24">
+        <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="wifi-off" category="status" viewBox="0 0 24 24">
+        <path d="M12 20h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.5 16.429a5 5 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 12.859a10 10 0 0 1 5.17-2.68" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M10.714 5.012a10 10 0 0 1 9.952 2.69" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8.5 9.142a10 10 0 0 1 1.622-.77" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M2 8.82a15 15 0 0 1 4.178-2.646" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M22 8.82a15 15 0 0 0-11.288-3.764" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m2 2 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="zoom-in" category="document" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="21" x2="16.65" y1="21" y2="16.65" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="11" x2="11" y1="8" y2="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="8" x2="14" y1="11" y2="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="zoom-out" category="document" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="21" x2="16.65" y1="21" y2="16.65" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="8" x2="14" y1="11" y2="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="arrow-left" category="navigation" viewBox="0 0 24 24">
+        <path d="m12 19-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M19 12H5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="arrow-right" category="navigation" viewBox="0 0 24 24">
+        <path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m12 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="x" category="navigation" viewBox="0 0 24 24">
+        <path d="M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m6 6 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="chevron-down" category="navigation" viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="settings" category="navigation" viewBox="0 0 24 24">
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="download" category="action" viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <polyline points="7 10 12 15 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <line x1="12" x2="12" y1="15" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="rotate-ccw" category="action" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M3 3v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="crown" category="pro" viewBox="0 0 24 24">
+        <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M5 21h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
+        <icon name="shield-check" category="security" viewBox="0 0 24 24">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </icon>
     </icon-defs>
 
     <group name="Elementos" collapsed="true">
-        <component name="fila-tramite" role="element" design-width="360" design-height="96" description="Tarjeta o fila de trámite activo o latente en el panel principal">
+        <component name="barra-superior-navegacion" role="element" design-width="600" design-height="200" description="Barra superior estándar para pantallas principales y secundarias">
             <props>
-                <prop name="titulo" type="text" default="Seguro Vehicular" description="Título del trámite" />
-                <prop name="categoria" type="text" default="Vehículos" description="Categoría del trámite" />
-                <prop name="estado" type="enum" default="en-ventana" description="Estado del trámite" options="en-ventana,en-riesgo,completado,en-espera" />
-                <prop name="proximo-paso" type="text" default="Reunir póliza y cédula" description="Próximo paso crítico" />
-                <prop name="tiempo-restante" type="text" default="En 9 días" description="Cuenta regresiva o fecha" />
-                <prop name="es-latente" type="boolean" default="false" description="Atenúa la tarjeta cuando el trámite está en espera/latente" />
+                <prop name="titulo" type="text" default="Mis Trámites" description="Título principal de la barra" />
+                <prop name="mostrar-volver" type="boolean" default="false" description="Muestra botón de retroceso" />
+                <prop name="icono-accion-primaria" type="text" default="settings" description="Ícono de acción derecha" />
+                <prop name="etiqueta-accion-primaria" type="text" default="" description="Texto opcional en botón derecho" />
+                <prop name="mostrar-accion-secundaria" type="boolean" default="false" description="Muestra segunda acción derecha" />
+                <prop name="icono-accion-secundaria" type="text" default="pencil" description="Ícono de segunda acción derecha" />
+                <prop name="badge-texto" type="text" default="" description="Etiqueta de estado en cabecera (ej. Offline)" />
             </props>
             <events>
-                <event name="onSelect" description="Abre el detalle del trámite (P02)" />
+                <event name="onBack" description="Volver a la pantalla anterior" />
+                <event name="onPrimaryAction" description="Acción principal de barra superior" />
+                <event name="onSecondaryAction" description="Acción secundaria de barra superior" />
             </events>
             <states>
-                <when prop="estado" is="en-riesgo">
-                <set target="badge-estado" bg="status-urgent-bg" />
-                <set target="ico-estado" name="alert-triangle" color="status-urgent" />
-                <set target="txt-estado" text="En riesgo" color="status-urgent" />
-                <set target="txt-tiempo" color="status-urgent" />
+                <when prop="mostrar-volver" is="true">
+                <set target="btn-back" visible="true" />
                 </when>
-                <when prop="estado" is="completado">
-                <set target="badge-estado" bg="status-ok-bg" />
-                <set target="ico-estado" name="check-circle-2" color="status-ok" />
-                <set target="txt-estado" text="Completado" color="status-ok" />
-                <set target="txt-tiempo" color="status-ok" />
+                <when prop="mostrar-accion-secundaria" is="true">
+                <set target="btn-secondary-action" visible="true" />
                 </when>
-                <when prop="estado" is="en-espera">
-                <set target="badge-estado" bg="status-latent-bg" />
-                <set target="ico-estado" name="hourglass" color="status-latent" />
-                <set target="txt-estado" text="En espera / latente" color="status-latent" />
-                <set target="txt-tiempo" color="text-muted" />
+                <when prop="etiqueta-accion-primaria" is-not="">
+                <set target="btn-primary-label" visible="true" />
                 </when>
-                <when prop="es-latente" is="true">
-                <set target="card-tramite" bg="bg-latent-card" opacity="0.78" />
-                <set target="txt-titulo" color="text-muted" />
+                <when prop="badge-texto" is-not="">
+                <set target="topbar-badge" visible="true" />
                 </when>
             </states>
-            <layout id="card-tramite" direction="vertical" width="fill" height="hug" padding="sm" gap="xs" bg="bg-surface" border="subtle" border-color="border-subtle" radius="md" action="onSelect" hover-bg="bg-surface-subtle" cursor="pointer">
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="xs">
-                    <ui-text id="txt-titulo" text="${titulo}" font="card-title" color="text-primary" multiline="true"></ui-text>
-                    <ui-frame id="badge-estado" direction="horizontal" align="center" padding-x="xs" padding-y="xxs" gap="xxs" bg="status-warning-bg" radius="pill">
-                        <ui-icon id="ico-estado" name="calendar-clock" color="status-warning" size="icon-sm" />
-                        <ui-text id="txt-estado" text="En ventana de acción" font="badge" color="status-warning"></ui-text>
+            <layout id="topbar-root" direction="horizontal" align="center" justify="space-between" width="fill" height="topbar-height" padding-x="lg" padding-y="sm" gap="sm" bg="bg-surface" border-bottom="border-subtle">
+                <ui-frame id="topbar-left" direction="horizontal" align="center" flex="1" clip="true" gap="sm">
+                    <ui-frame id="btn-back" direction="horizontal" align="center" justify="center" padding="xs" radius="sm" action="onBack" hover-bg="bg-surface-subtle" cursor="pointer" visible="false">
+                        <ui-icon name="arrow-left" color="text-primary" size="md" />
+                    </ui-frame>
+                    <ui-text id="topbar-title" text="${titulo}" flex="1" font="screen-title" color="text-primary" max-lines="1"></ui-text>
+                </ui-frame>
+                <ui-frame id="topbar-right" direction="horizontal" align="center" gap="xs">
+                    <ui-frame id="topbar-badge" direction="horizontal" align="center" padding-x="sm" padding-y="2xs" gap="2xs" bg="status-ok-bg" radius="pill" visible="false">
+                        <ui-icon name="wifi-off" color="status-ok" size="sm" />
+                        <ui-text id="topbar-badge-text" text="${badge-texto}" font="badge" color="status-ok"></ui-text>
+                    </ui-frame>
+                    <ui-frame id="btn-secondary-action" direction="horizontal" align="center" justify="center" padding="xs" radius="sm" action="onSecondaryAction" hover-bg="bg-surface-subtle" cursor="pointer" visible="false">
+                        <ui-icon name="${icono-accion-secundaria}" color="text-secondary" size="md" />
+                    </ui-frame>
+                    <ui-frame id="btn-primary-action" direction="horizontal" align="center" justify="center" padding-x="sm" padding-y="xs" gap="2xs" radius="sm" action="onPrimaryAction" hover-bg="bg-surface-subtle" cursor="pointer">
+                        <ui-icon name="${icono-accion-primaria}" color="text-primary" size="md" />
+                        <ui-text id="btn-primary-label" text="${etiqueta-accion-primaria}" font="caption" color="text-primary" visible="false"></ui-text>
                     </ui-frame>
                 </ui-frame>
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="xs">
-                    <ui-text id="txt-paso" text="Próx. paso: ${proximo-paso}" font="caption" color="text-secondary" multiline="true"></ui-text>
-                    <ui-text id="txt-tiempo" text="${tiempo-restante}" font="num-row" color="brand-accent"></ui-text>
-                </ui-frame>
-                <ui-text text="${categoria}" font="badge" color="text-muted"></ui-text>
             </layout>
         </component>
 
-        <component name="campo-entrada" role="element" design-width="360" design-height="76" description="Campo de texto o valor con etiqueta, validación y mensaje de error">
+        <component name="encabezado-modal" role="element" design-width="600" design-height="200" description="Cabecera de modal o bottom sheet con título, subtítulo opcional y cierre">
             <props>
-                <prop name="etiqueta" type="text" default="Título" description="Etiqueta del campo" />
-                <prop name="valor" type="text" default="" description="Valor actual del campo" />
-                <prop name="placeholder" type="text" default="Escribe aquí..." description="Texto guía" />
-                <prop name="requerido" type="boolean" default="false" description="Indica si es obligatorio" />
-                <prop name="estado-campo" type="enum" default="normal" description="Estado visual del campo" options="normal,focused,error" />
-                <prop name="texto-error" type="text" default="Este campo es obligatorio" description="Mensaje de error" />
+                <prop name="titulo" type="text" default="Nuevo Trámite" description="Título del modal" />
+                <prop name="subtitulo" type="text" default="" description="Subtítulo o contexto del modal" />
             </props>
             <events>
-                <event name="onChange" description="Disparado al cambiar el valor del campo" />
+                <event name="onClose" description="Cerrar o descartar modal" />
             </events>
             <states>
-                <when prop="estado-campo" is="focused">
-                <set target="box-campo" border-color="brand-primary" border-width="2px" />
-                </when>
-                <when prop="estado-campo" is="error">
-                <set target="lbl-campo" color="text-error" />
-                <set target="box-campo" border-color="text-error" border-width="2px" />
-                <set target="txt-error" visible="true" color="text-error" />
+                <when prop="subtitulo" is-not="">
+                <set target="modal-subtitle" visible="true" />
                 </when>
             </states>
-            <layout direction="vertical" width="fill" height="hug" gap="xxs">
-                <ui-frame direction="horizontal" align="center" gap="xxs">
-                    <ui-text id="lbl-campo" text="${etiqueta}" font="label" color="text-primary"></ui-text>
-                    <ui-text text="*" font="label" color="text-error" visible="${requerido}"></ui-text>
+            <layout id="modal-header-root" direction="vertical" width="fill" padding-x="lg" padding-y="md" gap="2xs" bg="bg-surface-elevated" border-bottom="border-subtle">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-text text="${titulo}" flex="1" font="modal-title" color="text-primary"></ui-text>
+                    <ui-frame direction="horizontal" align="center" justify="center" padding="xs" radius="sm" action="onClose" hover-bg="bg-surface-subtle" cursor="pointer">
+                        <ui-icon name="x" color="text-secondary" size="md" />
+                    </ui-frame>
                 </ui-frame>
-                <ui-frame id="box-campo" direction="horizontal" align="center" justify="space-between" width="fill" height="field-height" padding-x="sm" bg="bg-surface-elevated" border="strong" border-color="border-strong" radius="control" action="onChange" cursor="text">
-                    <ui-text text="${valor}" font="body" color="text-primary" visible="true"></ui-text>
-                </ui-frame>
-                <ui-text id="txt-error" text="${texto-error}" font="caption" color="text-error" visible="false"></ui-text>
+                <ui-text id="modal-subtitle" text="${subtitulo}" font="caption" color="text-secondary" multiline="true" visible="false"></ui-text>
             </layout>
         </component>
 
-        <component name="card-recaudo" role="element" design-width="360" design-height="92" description="Ítem de recaudo con alternancia Listo/Pendiente y acceso a adjuntos">
+        <component name="badge-estado" role="element" design-width="600" design-height="200" description="Badge semántico de estado de trámite o recaudo">
             <props>
-                <prop name="nombre" type="text" default="Copia de cédula de identidad" description="Nombre del recaudo" />
-                <prop name="estado" type="enum" default="pendiente" description="Estado del recaudo" options="pendiente,listo" />
-                <prop name="archivo-nombre" type="text" default="cedula_frente.jpg" description="Nombre del archivo adjunto" />
-                <prop name="tiene-adjunto" type="boolean" default="false" description="Indica si tiene archivo vinculado" />
+                <prop name="etiqueta" type="text" default="En ventana de acción" description="Texto del estado" />
+                <prop name="variante" type="enum" default="warning" description="Variante cromática semántica" options="urgent,warning,ok,latent,pro,accent" />
+                <prop name="icono" type="text" default="alert-triangle" description="Nombre del ícono en icon-defs" />
             </props>
-            <events>
-                <event name="onToggleEstado" description="Alterna entre Pendiente y Listo" />
-                <event name="onAdjuntar" description="Abre selector de origen de archivo (M04)" />
-                <event name="onVerArchivo" description="Abre visor integrado de documentos (P04)" />
-            </events>
             <states>
-                <when prop="estado" is="listo">
-                <set target="ico-check" name="check-circle-2" color="status-ok" />
-                <set target="badge-recaudo" bg="status-ok-bg" />
-                <set target="txt-recaudo" text="Listo" color="status-ok" />
+                <when prop="variante" is="urgent">
+                <set target="badge-root" bg="status-urgent-bg" />
+                <set target="badge-icon" color="status-urgent" />
+                <set target="badge-text" color="status-urgent" />
                 </when>
-                <when prop="tiene-adjunto" is="true">
-                <set target="btn-ver-adjunto" visible="true" />
-                <set target="txt-sin-adjunto" visible="false" />
+                <when prop="variante" is="warning">
+                <set target="badge-root" bg="status-warning-bg" />
+                <set target="badge-icon" color="status-warning" />
+                <set target="badge-text" color="status-warning" />
                 </when>
-            </states>
-            <layout direction="vertical" width="fill" height="hug" padding="sm" gap="xs" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="md">
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="xs">
-                    <ui-frame direction="horizontal" align="center" flex="1" gap="xs" action="onToggleEstado" cursor="pointer">
-                        <ui-icon id="ico-check" name="check" color="status-warning" size="icon-md" />
-                        <ui-text text="${nombre}" font="label" color="text-primary" multiline="true"></ui-text>
-                    </ui-frame>
-                    <ui-frame id="badge-recaudo" direction="horizontal" align="center" padding-x="xs" padding-y="xxs" bg="status-warning-bg" radius="pill" action="onToggleEstado" cursor="pointer">
-                        <ui-text id="txt-recaudo" text="Pendiente" font="badge" color="status-warning"></ui-text>
-                    </ui-frame>
-                </ui-frame>
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="xs">
-                    <ui-frame id="btn-ver-adjunto" direction="horizontal" align="center" padding-x="xs" padding-y="xxs" gap="xxs" bg="brand-accent-soft" radius="sm" action="onVerArchivo" cursor="pointer" visible="false">
-                        <ui-icon name="eye" color="brand-accent" size="icon-sm" />
-                        <ui-text text="${archivo-nombre}" font="num-row" color="brand-accent"></ui-text>
-                    </ui-frame>
-                    <ui-text id="txt-sin-adjunto" text="Sin archivos adjuntos" font="caption" color="text-muted"></ui-text>
-                    <ui-frame direction="horizontal" align="center" padding-x="xs" padding-y="xxs" gap="xxs" bg="bg-surface" border="subtle" border-color="border-strong" radius="sm" action="onAdjuntar" cursor="pointer">
-                        <ui-icon name="paperclip" color="brand-primary" size="icon-sm" />
-                        <ui-text text="Adjuntar" font="badge" color="brand-primary"></ui-text>
-                    </ui-frame>
-                </ui-frame>
-            </layout>
-        </component>
-
-        <component name="barra-superior" role="element" design-width="393" design-height="56" description="Barra superior de navegación para pantallas completas y vistas operativas">
-            <props>
-                <prop name="titulo" type="text" default="Mis Trámites" description="Título de la vista" />
-                <prop name="subtitulo" type="text" default="" description="Contexto o trámite activo" />
-                <prop name="mostrar-volver" type="boolean" default="false" description="Muestra botón volver" />
-                <prop name="mostrar-cerrar" type="boolean" default="false" description="Muestra botón cerrar" />
-                <prop name="mostrar-config" type="boolean" default="false" description="Muestra acceso a configuración (P07)" />
-                <prop name="mostrar-offline" type="boolean" default="false" description="Muestra indicador Offline listo" />
-            </props>
-            <events>
-                <event name="onVolver" description="Regresa a la vista anterior" />
-                <event name="onCerrar" description="Cierra modal o visor" />
-                <event name="onConfig" description="Abre Configuración y Respaldo (P07)" />
-            </events>
-            <layout direction="horizontal" align="center" justify="space-between" width="fill" height="topbar-height" padding-x="md" gap="xs" bg="bg-surface" border-color="border-subtle" border-bottom="subtle">
-                <ui-frame direction="horizontal" align="center" flex="1" gap="xs">
-                    <ui-frame direction="horizontal" align="center" justify="center" padding="xxs" radius="control" action="onVolver" cursor="pointer" visible="${mostrar-volver}">
-                        <ui-icon name="arrow-left" color="text-primary" size="icon-lg" />
-                    </ui-frame>
-                    <ui-frame direction="vertical" gap="none">
-                        <ui-text text="${titulo}" font="screen-title" color="text-primary"></ui-text>
-                        <ui-text text="${subtitulo}" font="caption" color="text-muted" visible="true"></ui-text>
-                    </ui-frame>
-                </ui-frame>
-                <ui-frame direction="horizontal" align="center" gap="xs">
-                    <ui-frame direction="horizontal" align="center" padding-x="xs" padding-y="xxs" gap="xxs" bg="status-ok-bg" radius="pill" visible="${mostrar-offline}">
-                        <ui-icon name="wifi-off" color="status-ok" size="icon-sm" />
-                        <ui-text text="Offline" font="badge" color="status-ok"></ui-text>
-                    </ui-frame>
-                    <ui-frame direction="horizontal" align="center" justify="center" padding="xs" bg="bg-surface-subtle" radius="control" action="onConfig" cursor="pointer" visible="${mostrar-config}">
-                        <ui-icon name="settings" color="text-primary" size="icon-md" />
-                    </ui-frame>
-                    <ui-frame direction="horizontal" align="center" justify="center" padding="xs" bg="bg-surface-subtle" radius="control" action="onCerrar" cursor="pointer" visible="${mostrar-cerrar}">
-                        <ui-icon name="x" color="text-primary" size="icon-md" />
-                    </ui-frame>
-                </ui-frame>
-            </layout>
-        </component>
-
-        <component name="tab-estado-recaudo" role="element" design-width="120" design-height="36" description="Pestaña o píldora seleccionable de estado o modalidad">
-            <props>
-                <prop name="etiqueta" type="text" default="Todos" description="Texto de la pestaña" />
-                <prop name="activo" type="boolean" default="false" description="Indica si está seleccionada" />
-                <prop name="variante" type="enum" default="primario" description="Variante cromática" options="primario,pro" />
-            </props>
-            <events>
-                <event name="onSelect" description="Selecciona la pestaña" />
-            </events>
-            <states>
-                <when prop="activo" is="true">
-                <set target="tab-pill" bg="brand-primary" border-color="brand-primary" />
-                <set target="txt-tab" color="text-inverse" />
+                <when prop="variante" is="ok">
+                <set target="badge-root" bg="status-ok-bg" />
+                <set target="badge-icon" color="status-ok" />
+                <set target="badge-text" color="status-ok" />
+                </when>
+                <when prop="variante" is="latent">
+                <set target="badge-root" bg="status-latent-bg" />
+                <set target="badge-icon" color="status-latent" />
+                <set target="badge-text" color="status-latent" />
                 </when>
                 <when prop="variante" is="pro">
-                <set target="tab-pill" bg="pro-accent-bg" border-color="pro-accent" />
-                <set target="txt-tab" color="pro-accent" />
+                <set target="badge-root" bg="pro-accent-bg" />
+                <set target="badge-icon" color="pro-accent" />
+                <set target="badge-text" color="pro-accent" />
+                </when>
+                <when prop="variante" is="accent">
+                <set target="badge-root" bg="brand-accent-soft" />
+                <set target="badge-icon" color="brand-accent" />
+                <set target="badge-text" color="brand-accent" />
                 </when>
             </states>
-            <layout id="tab-pill" direction="horizontal" align="center" justify="center" height="36px" padding-x="sm" bg="bg-surface" border="subtle" border-color="border-subtle" radius="pill" action="onSelect" cursor="pointer">
-                <ui-text id="txt-tab" text="${etiqueta}" font="badge" color="text-secondary"></ui-text>
+            <layout id="badge-root" direction="horizontal" align="center" width="hug" padding-x="sm" padding-y="2xs" gap="2xs" bg="status-warning-bg" radius="pill">
+                <ui-icon id="badge-icon" name="${icono}" color="status-warning" size="sm" />
+                <ui-text id="badge-text" text="${etiqueta}" font="badge" color="status-warning"></ui-text>
+            </layout>
+        </component>
+
+        <component name="bloque-ruta-critica" role="element" design-width="600" design-height="200" description="Tarjeta destacada del próximo paso crítico y cuenta regresiva en P01">
+            <props>
+                <prop name="estado-etiqueta" type="text" default="En riesgo" description="Etiqueta de urgencia o ventana" />
+                <prop name="variante-estado" type="enum" default="urgent" description="Variante urgente o ventana" options="urgent,warning" />
+                <prop name="tramite-titulo" type="text" default="Renovar Pasaporte" description="Nombre del trámite asociado" />
+                <prop name="paso-critico" type="text" default="Solicitar cita consular" description="Título del próximo paso crítico" />
+                <prop name="cuenta-paso" type="text" default="Vence paso en 4 días" description="Cuenta regresiva del paso crítico" />
+                <prop name="fecha-limite" type="text" default="Límite final: 15/05/2027" description="Fecha límite final del trámite" />
+                <prop name="etiqueta-accion" type="text" default="Ver" description="Texto de acción rápida" />
+            </props>
+            <events>
+                <event name="onOpenCritical" description="Abrir trámite o paso crítico" />
+            </events>
+            <states>
+                <when prop="variante-estado" is="warning">
+                <set target="critical-card-root" border-color="status-warning" />
+                <set target="critical-icon" color="status-warning" />
+                <set target="critical-countdown" color="status-warning" />
+                </when>
+            </states>
+            <layout id="critical-card-root" direction="vertical" width="fill" padding="lg" gap="sm" bg="bg-surface" border="strong" border-color="status-urgent" border-left="accent-bar" radius="md" action="onOpenCritical" hover-bg="bg-surface-subtle" cursor="pointer">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame direction="horizontal" align="center" gap="xs">
+                        <ui-icon id="critical-icon" name="alert-triangle" color="status-urgent" size="md" />
+                        <ui-text text="PRÓXIMO PASO CRÍTICO" font="badge" color="text-secondary"></ui-text>
+                    </ui-frame>
+                    <badge-estado id="critical-badge" etiqueta="${estado-etiqueta}" variante="${variante-estado}" icono="calendar-clock" />
+                </ui-frame>
+                <ui-frame direction="vertical" width="fill" gap="2xs">
+                    <ui-text text="${tramite-titulo}" font="caption" color="text-secondary" max-lines="1"></ui-text>
+                    <ui-text text="${paso-critico}" font="card-title" color="text-primary" multiline="true"></ui-text>
+                </ui-frame>
+                <ui-line direction="horizontal" width="fill" color="border-subtle" thickness="1px" />
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame direction="vertical" flex="1" gap="2xs">
+                        <ui-text id="critical-countdown" text="${cuenta-paso}" font="metric-md" color="status-urgent"></ui-text>
+                        <ui-text text="${fecha-limite}" font="metric-sm" color="text-secondary"></ui-text>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" padding-x="md" padding-y="sm" gap="2xs" bg="brand-primary" radius="sm" action="onOpenCritical" cursor="pointer">
+                        <ui-text text="${etiqueta-accion}" font="caption" color="text-inverse" font-weight="bold"></ui-text>
+                        <ui-icon name="arrow-right" color="text-inverse" size="sm" />
+                    </ui-frame>
+                </ui-frame>
+            </layout>
+        </component>
+
+        <component name="tarjeta-tramite" role="element" design-width="600" design-height="200" description="Tarjeta o fila repetible de trámite activo o latente en P01">
+            <props>
+                <prop name="titulo" type="text" default="Seguro Vehicular" description="Título del trámite" />
+                <prop name="categoria" type="text" default="Seguros y Vehículos" description="Categoría del trámite" />
+                <prop name="estado-texto" type="text" default="En ventana de acción" description="Estado del trámite" />
+                <prop name="variante-estado" type="enum" default="warning" description="Variante visual del estado" options="urgent,warning,ok,latent" />
+                <prop name="detalle-secundario" type="text" default="Próx. paso: Reunir póliza y cédula · En 9 días" description="Próximo paso o ventana de apertura" />
+                <prop name="progreso-texto" type="text" default="2/3 recaudos listos" description="Resumen de progreso" />
+                <prop name="latente" type="boolean" default="false" description="Atenúa la tarjeta para trámites en espera/latentes" />
+            </props>
+            <events>
+                <event name="onSelect" description="Seleccionar trámite para abrir Detalle P02" />
+            </events>
+            <states>
+                <when prop="latente" is="true">
+                <set target="tramite-card-root" bg="bg-latent-card" opacity="0.78" />
+                <set target="tramite-titulo" color="text-secondary" />
+                <set target="tramite-progreso" color="text-muted" />
+                </when>
+            </states>
+            <layout id="tramite-card-root" direction="vertical" width="fill" padding="md" gap="sm" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md" action="onSelect" hover-bg="bg-surface-subtle" cursor="pointer">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame direction="vertical" flex="1" clip="true" gap="2xs">
+                        <ui-text id="tramite-titulo" text="${titulo}" font="card-title" color="text-primary" max-lines="1"></ui-text>
+                        <ui-text text="${categoria}" font="caption" color="text-muted" max-lines="1"></ui-text>
+                    </ui-frame>
+                    <badge-estado etiqueta="${estado-texto}" variante="${variante-estado}" icono="calendar-clock" />
+                </ui-frame>
+                <ui-text id="tramite-detalle" text="${detalle-secundario}" font="body" color="text-secondary" multiline="true"></ui-text>
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
+                    <ui-text id="tramite-progreso" text="${progreso-texto}" font="metric-sm" color="brand-accent"></ui-text>
+                    <ui-icon name="arrow-right" color="text-muted" size="sm" />
+                </ui-frame>
+            </layout>
+        </component>
+
+        <component name="item-paso-previo" role="element" design-width="600" design-height="200" description="Ítem de paso previo en secuencia con anticipación, fecha calculada y recaudos">
+            <props>
+                <prop name="orden" type="text" default="1" description="Número de secuencia del paso" />
+                <prop name="nombre" type="text" default="Reunir recaudos base" description="Nombre del paso previo" />
+                <prop name="anticipacion" type="text" default="2 semanas antes" description="Anticipación configurada" />
+                <prop name="fecha-calculada" type="text" default="01/05/2027" description="Fecha límite o inicio calculada" />
+                <prop name="resumen-recaudos" type="text" default="2/2 listos · 2 adjuntos" description="Conteo de recaudos y adjuntos" />
+            </props>
+            <events>
+                <event name="onEditStep" description="Editar u ordenar el paso previo en M03" />
+                <event name="onOpenStep" description="Abrir detalle del paso y recaudos en P03" />
+            </events>
+            <layout direction="vertical" width="fill" padding="md" gap="sm" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame direction="horizontal" align="center" flex="1" clip="true" gap="sm">
+                        <ui-frame direction="horizontal" align="center" justify="center" width="28px" height="28px" bg="brand-accent-soft" radius="pill">
+                            <ui-text text="${orden}" font="metric-sm" color="brand-accent"></ui-text>
+                        </ui-frame>
+                        <ui-text text="${nombre}" flex="1" font="card-title" color="text-primary" multiline="true"></ui-text>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" padding-x="sm" padding-y="xs" gap="2xs" bg="bg-surface-subtle" border="hairline" border-color="border-subtle" radius="sm" action="onEditStep" cursor="pointer">
+                        <ui-icon name="pencil" color="text-secondary" size="sm" />
+                        <ui-text text="Editar" font="caption" color="text-secondary"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+                <ui-frame direction="horizontal" align="center" justify="space-between" wrap="true" width="fill" gap="sm">
+                    <ui-text text="${anticipacion}" font="caption" color="text-secondary"></ui-text>
+                    <ui-text text="Fecha: ${fecha-calculada}" font="metric-sm" color="text-primary"></ui-text>
+                </ui-frame>
+                <ui-line direction="horizontal" width="fill" color="border-subtle" thickness="1px" />
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-text text="${resumen-recaudos}" flex="1" font="metric-sm" color="brand-primary"></ui-text>
+                    <ui-frame direction="horizontal" align="center" padding-x="md" padding-y="xs" gap="2xs" bg="brand-primary" radius="sm" action="onOpenStep" cursor="pointer">
+                        <ui-text text="Abrir" font="caption" color="text-inverse" font-weight="bold"></ui-text>
+                        <ui-icon name="arrow-right" color="text-inverse" size="sm" />
+                    </ui-frame>
+                </ui-frame>
+            </layout>
+        </component>
+
+        <component name="item-recaudo" role="element" design-width="600" design-height="200" description="Ítem de recaudo con estado Pendiente/Listo, adjuntos vinculados y acción de adjuntar">
+            <props>
+                <prop name="denominacion" type="text" default="Copia de cédula de identidad" description="Nombre del recaudo" />
+                <prop name="listo" type="boolean" default="false" description="Indica si el recaudo está Listo o Pendiente" />
+                <prop name="estado-texto" type="text" default="Pendiente" description="Etiqueta de estado del recaudo" />
+                <prop name="archivo-nombre" type="text" default="" description="Nombre del archivo adjunto si existe" />
+            </props>
+            <events>
+                <event name="onToggleReady" description="Alternar estado Pendiente / Listo" />
+                <event name="onAttachFile" description="Abrir selector de origen M04 para adjuntar archivo" />
+                <event name="onOpenViewer" description="Abrir visor P04 para el archivo adjunto" />
+            </events>
+            <states>
+                <when prop="listo" is="true">
+                <set target="recaudo-checkbox" bg="status-ok" border-color="status-ok" />
+                <set target="recaudo-check-icon" visible="true" />
+                <set target="recaudo-badge" variante="ok" icono="check-circle-2" />
+                </when>
+                <when prop="archivo-nombre" is-not="">
+                <set target="recaudo-attachment-btn" visible="true" />
+                <set target="recaudo-no-attachment" visible="false" />
+                </when>
+            </states>
+            <layout id="recaudo-root" direction="vertical" width="fill" padding="md" gap="sm" bg="bg-surface-subtle" border="hairline" border-color="border-subtle" radius="md">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame id="recaudo-check-btn" direction="horizontal" align="center" flex="1" gap="sm" action="onToggleReady" cursor="pointer">
+                        <ui-frame id="recaudo-checkbox" direction="horizontal" align="center" justify="center" width="22px" height="22px" bg="bg-surface" border="strong" border-color="border-strong" radius="sm">
+                            <ui-icon id="recaudo-check-icon" name="check" color="text-inverse" size="sm" visible="false" />
+                        </ui-frame>
+                        <ui-text text="${denominacion}" flex="1" font="body" color="text-primary" multiline="true"></ui-text>
+                    </ui-frame>
+                    <badge-estado id="recaudo-badge" etiqueta="${estado-texto}" variante="warning" icono="alert-triangle" />
+                </ui-frame>
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame id="recaudo-attachment-btn" direction="horizontal" align="center" flex="1" gap="xs" action="onOpenViewer" cursor="pointer" visible="false">
+                        <ui-icon name="file-text" color="brand-accent" size="sm" />
+                        <ui-text text="${archivo-nombre}" flex="1" font="metric-sm" color="brand-accent" max-lines="1"></ui-text>
+                        <ui-icon name="eye" color="brand-accent" size="sm" />
+                    </ui-frame>
+                    <ui-text id="recaudo-no-attachment" text="Sin archivo adjunto" flex="1" font="caption" color="text-muted"></ui-text>
+                    <ui-frame direction="horizontal" align="center" padding-x="sm" padding-y="xs" gap="2xs" bg="bg-surface" border="hairline" border-color="border-strong" radius="sm" action="onAttachFile" cursor="pointer">
+                        <ui-icon name="paperclip" color="brand-primary" size="sm" />
+                        <ui-text text="Adjuntar" font="caption" color="brand-primary" font-weight="semibold"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+            </layout>
+        </component>
+
+        <component name="tarjeta-plantilla" role="element" design-width="600" design-height="200" description="Tarjeta de plantilla base en catálogo P06 con estado Gratuita o Plan Pro">
+            <props>
+                <prop name="nombre" type="text" default="Pasaporte" description="Nombre de la plantilla base" />
+                <prop name="categoria" type="text" default="Migración y Residencia" description="Categoría de la plantilla" />
+                <prop name="resumen" type="text" default="Incluye 3 pasos previos y 5 recaudos sugeridos." description="Resumen de pasos y recaudos" />
+                <prop name="bloqueada" type="boolean" default="false" description="Indica si requiere Plan Pro" />
+                <prop name="etiqueta-plan" type="text" default="Gratuita" description="Etiqueta de disponibilidad" />
+                <prop name="etiqueta-cta" type="text" default="Usar plantilla" description="Texto del botón de acción" />
+            </props>
+            <events>
+                <event name="onSelectTemplate" description="Instanciar plantilla (M05) o abrir Paywall (M06)" />
+            </events>
+            <states>
+                <when prop="bloqueada" is="true">
+                <set target="template-card-root" border-color="pro-accent" />
+                <set target="template-badge" variante="pro" icono="crown" />
+                <set target="template-cta" bg="pro-accent" />
+                <set target="template-cta-icon" name="crown" />
+                </when>
+            </states>
+            <layout id="template-card-root" direction="vertical" width="fill" padding="lg" gap="md" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame direction="vertical" flex="1" clip="true" gap="2xs">
+                        <ui-text text="${nombre}" font="card-title" color="text-primary" max-lines="1"></ui-text>
+                        <ui-text text="${categoria}" font="caption" color="text-muted" max-lines="1"></ui-text>
+                    </ui-frame>
+                    <badge-estado id="template-badge" etiqueta="${etiqueta-plan}" variante="ok" icono="check-circle-2" />
+                </ui-frame>
+                <ui-text text="${resumen}" font="body" color="text-secondary" multiline="true"></ui-text>
+                <ui-frame id="template-cta" direction="horizontal" align="center" justify="center" padding-x="lg" padding-y="sm" gap="xs" bg="brand-primary" radius="sm" action="onSelectTemplate" cursor="pointer">
+                    <ui-icon id="template-cta-icon" name="copy-plus" color="text-inverse" size="sm" />
+                    <ui-text id="template-cta-label" text="${etiqueta-cta}" font="body" color="text-inverse" font-weight="bold"></ui-text>
+                </ui-frame>
+            </layout>
+        </component>
+
+        <component name="campo-formulario" role="element" design-width="600" design-height="200" description="Campo de entrada o selector con etiqueta, indicador obligatorio y ayuda">
+            <props>
+                <prop name="etiqueta" type="text" default="Título" description="Etiqueta del campo" />
+                <prop name="obligatorio" type="boolean" default="false" description="Indica si es campo obligatorio" />
+                <prop name="valor" type="text" default="" description="Valor actual o marcador de posición" />
+                <prop name="ayuda" type="text" default="" description="Texto auxiliar o fecha calculada" />
+                <prop name="tipo-control" type="enum" default="input" description="Tipo visual del campo" options="input,select,date,textarea" />
+                <prop name="estado-campo" type="enum" default="normal" description="Estado del campo" options="normal,focused,error" />
+            </props>
+            <events>
+                <event name="onFieldPress" description="Interacción sobre el campo o selector" />
+            </events>
+            <states>
+                <when prop="obligatorio" is="true">
+                <set target="field-req" visible="true" />
+                </when>
+                <when prop="tipo-control" is="select">
+                <set target="field-trailing-icon" name="chevron-down" visible="true" />
+                </when>
+                <when prop="tipo-control" is="date">
+                <set target="field-trailing-icon" name="calendar-clock" visible="true" />
+                </when>
+                <when prop="tipo-control" is="textarea">
+                <set target="field-box" height="textarea-height" align="start" padding-y="md" />
+                </when>
+                <when prop="estado-campo" is="focused">
+                <set target="field-box" border="focus" border-color="brand-primary" />
+                </when>
+                <when prop="estado-campo" is="error">
+                <set target="field-label" color="status-urgent" />
+                <set target="field-box" border="focus" border-color="status-urgent" />
+                <set target="field-help" color="status-urgent" visible="true" />
+                </when>
+                <when prop="ayuda" is-not="">
+                <set target="field-help" visible="true" />
+                </when>
+            </states>
+            <layout direction="vertical" width="fill" gap="xs">
+                <ui-frame direction="horizontal" align="center" gap="2xs">
+                    <ui-text id="field-label" text="${etiqueta}" font="caption" color="text-primary" font-weight="semibold"></ui-text>
+                    <ui-text id="field-req" text="*" font="caption" color="status-urgent" font-weight="bold" visible="false"></ui-text>
+                </ui-frame>
+                <ui-frame id="field-box" direction="horizontal" align="center" justify="space-between" width="fill" height="field-height" padding-x="md" gap="sm" bg="bg-surface-elevated" border="strong" border-color="border-strong" radius="sm" action="onFieldPress" cursor="pointer">
+                    <ui-text text="${valor}" flex="1" font="body" color="text-primary" max-lines="1"></ui-text>
+                    <ui-icon id="field-trailing-icon" name="chevron-down" color="text-secondary" size="md" visible="false" />
+                </ui-frame>
+                <ui-text id="field-help" text="${ayuda}" font="caption" color="text-secondary" multiline="true" visible="false"></ui-text>
+            </layout>
+        </component>
+
+        <component name="barra-acciones-pie" role="element" design-width="600" design-height="200" description="Pie de acciones con botón secundario y botón principal">
+            <props>
+                <prop name="texto-cancelar" type="text" default="Cancelar" description="Etiqueta botón secundario" />
+                <prop name="texto-confirmar" type="text" default="Guardar" description="Etiqueta botón principal" />
+                <prop name="variante-confirmar" type="enum" default="primary" description="Estilo del botón principal" options="primary,danger,pro" />
+            </props>
+            <events>
+                <event name="onCancel" description="Cancelar o descartar acción" />
+                <event name="onConfirm" description="Confirmar o guardar acción" />
+            </events>
+            <states>
+                <when prop="variante-confirmar" is="danger">
+                <set target="btn-confirm" bg="status-urgent" />
+                </when>
+                <when prop="variante-confirmar" is="pro">
+                <set target="btn-confirm" bg="pro-accent" />
+                </when>
+            </states>
+            <layout direction="horizontal" align="center" justify="space-between" width="fill" gap="md">
+                <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="lg" bg="bg-surface-subtle" border="hairline" border-color="border-subtle" radius="sm" action="onCancel" hover-bg="bg-latent-card" cursor="pointer">
+                    <ui-text text="${texto-cancelar}" font="body" color="text-primary" font-weight="semibold"></ui-text>
+                </ui-frame>
+                <ui-frame id="btn-confirm" direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="lg" bg="brand-primary" radius="sm" action="onConfirm" hover-bg="brand-primary-hover" cursor="pointer">
+                    <ui-text text="${texto-confirmar}" font="body" color="text-inverse" font-weight="bold"></ui-text>
+                </ui-frame>
             </layout>
         </component>
     </group>
 
     <group name="Bloques" collapsed="false">
-        <component name="formulario-tramite" role="block" design-width="360" design-height="360" description="Bloque de formulario para crear o editar un trámite">
+        <component name="lista-tramites-activos" role="block" design-width="600" design-height="200" description="Colección de tarjetas de trámites activos en ventana de acción o en riesgo">
             <props>
-                <prop name="titulo-modal" type="text" default="Nuevo Trámite" description="Encabezado del formulario" />
-                <prop name="titulo-tramite" type="text" default="" description="Título del trámite" />
-                <prop name="categoria" type="text" default="Migración" description="Categoría seleccionada" />
-                <prop name="fecha-limite" type="text" default="15/05/2027" description="Fecha límite final" />
-                <prop name="notas" type="text" default="" description="Notas generales" />
+                <prop name="titulo-seccion" type="text" default="ACTIVOS" description="Encabezado de sección" />
+                <prop name="tramites" type="list" default="[]" description="Lista de trámites activos" />
             </props>
             <events>
-                <event name="onGuardar" description="Guarda los datos del trámite" />
-                <event name="onCancelar" description="Cancela la operación" />
+                <event name="onSelectTramite" description="Abrir detalle del trámite seleccionado" />
             </events>
-            <layout direction="vertical" width="fill" height="hug" gap="md">
-                <ui-frame direction="vertical" width="fill" gap="xs">
-                    <ui-text text="Título" font="label" color="text-primary"></ui-text>
-                    <ui-frame direction="horizontal" align="center" width="fill" height="field-height" padding-x="sm" bg="bg-surface-elevated" border="strong" border-color="border-strong" radius="control">
-                        <ui-text text="${titulo-tramite}" font="body" color="text-primary"></ui-text>
+            <layout direction="vertical" width="fill" gap="md">
+                <ui-text text="${titulo-seccion}" font="badge" color="text-secondary"></ui-text>
+                <ui-repeat items="${tramites}" as="item">
+                    <tarjeta-tramite action="onSelectTramite" titulo="${item.titulo}" categoria="${item.categoria}" estado-texto="${item.estado}" variante-estado="${item.variante}" detalle-secundario="${item.detalle}" progreso-texto="${item.progreso}" latente="false" />
+                </ui-repeat>
+            </layout>
+        </component>
+
+        <component name="seccion-tramites-latentes" role="block" design-width="600" design-height="200" description="Sección atenuada y colapsable de trámites en espera o latentes">
+            <props>
+                <prop name="contador" type="text" default="0" description="Cantidad de trámites latentes" />
+                <prop name="colapsado" type="boolean" default="false" description="Indica si la lista latente está oculta" />
+                <prop name="tramites-latentes" type="list" default="[]" description="Lista de trámites en espera o latentes" />
+            </props>
+            <events>
+                <event name="onToggleLatentes" description="Mostrar u ocultar trámites latentes" />
+                <event name="onSelectLatente" description="Abrir detalle de trámite latente" />
+            </events>
+            <states>
+                <when prop="colapsado" is="true">
+                <set target="latentes-list-wrap" visible="false" />
+                <set target="latentes-toggle-label" text="Mostrar" />
+                </when>
+            </states>
+            <layout direction="vertical" width="fill" padding="md" gap="sm" bg="bg-latent-card" border="hairline" border-color="border-subtle" radius="md">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm" action="onToggleLatentes" cursor="pointer">
+                    <ui-frame direction="horizontal" align="center" gap="xs">
+                        <ui-icon name="hourglass" color="status-latent" size="sm" />
+                        <ui-text text="EN ESPERA / LATENTES (${contador})" font="badge" color="status-latent"></ui-text>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" gap="2xs">
+                        <ui-text id="latentes-toggle-label" text="Ocultar" font="caption" color="text-secondary"></ui-text>
+                        <ui-icon id="latentes-chevron" name="chevron-down" color="text-secondary" size="sm" />
                     </ui-frame>
                 </ui-frame>
-                <ui-frame direction="horizontal" width="fill" gap="sm">
-                    <ui-frame direction="vertical" flex="1" gap="xs">
-                        <ui-text text="Categoría" font="label" color="text-primary"></ui-text>
-                        <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" height="field-height" padding-x="sm" bg="bg-surface-elevated" border="subtle" border-color="border-strong" radius="control">
-                            <ui-text text="${categoria}" font="body" color="text-primary"></ui-text>
-                        </ui-frame>
-                    </ui-frame>
-                    <ui-frame direction="vertical" flex="1" gap="xs">
-                        <ui-text text="Fecha límite final" font="label" color="text-primary"></ui-text>
-                        <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" height="field-height" padding-x="sm" bg="bg-surface-elevated" border="subtle" border-color="border-strong" radius="control">
-                            <ui-text text="${fecha-limite}" font="num-row" color="text-primary"></ui-text>
-                            <ui-icon name="calendar-clock" color="brand-primary" size="icon-sm" />
-                        </ui-frame>
-                    </ui-frame>
-                </ui-frame>
-                <ui-frame direction="vertical" width="fill" gap="xs">
-                    <ui-text text="Notas generales" font="label" color="text-primary"></ui-text>
-                    <ui-frame direction="vertical" width="fill" padding="sm" bg="bg-surface-elevated" border="subtle" border-color="border-subtle" radius="control">
-                        <ui-text text="${notas}" font="body" color="text-secondary" multiline="true"></ui-text>
-                    </ui-frame>
-                </ui-frame>
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
-                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="md" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="control" action="onCancelar" cursor="pointer">
-                        <ui-text text="Cancelar" font="label" color="text-primary"></ui-text>
-                    </ui-frame>
-                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="md" bg="brand-primary" radius="control" action="onGuardar" cursor="pointer">
-                        <ui-text text="Guardar" font="label" color="text-inverse"></ui-text>
-                    </ui-frame>
+                <ui-frame id="latentes-list-wrap" direction="vertical" width="fill" gap="sm">
+                    <ui-repeat items="${tramites-latentes}" as="item">
+                        <tarjeta-tramite action="onSelectLatente" titulo="${item.titulo}" categoria="${item.categoria}" estado-texto="${item.estado}" variante-estado="latent" detalle-secundario="${item.detalle}" progreso-texto="${item.progreso}" latente="true" />
+                    </ui-repeat>
                 </ui-frame>
             </layout>
         </component>
 
-        <component name="coleccion-recaudos" role="block" design-width="360" design-height="280" description="Colección iterativa de recaudos del paso previo o taquilla">
+        <component name="lista-pasos-previos" role="block" design-width="600" design-height="200" description="Sección y lista ordenada de pasos previos y dependencias del trámite">
             <props>
-                <prop name="recaudos" type="list" default="[]" description="Lista de recaudos del paso" />
-                <prop name="avance-texto" type="text" default="1/2 listos" description="Resumen de avance" />
+                <prop name="pasos" type="list" default="[]" description="Lista ordenada de pasos previos" />
             </props>
             <events>
-                <event name="onToggleRecaudo" description="Alterna estado de un recaudo" />
-                <event name="onAdjuntarRecaudo" description="Adjunta archivo a un recaudo" />
-                <event name="onVerAdjunto" description="Abre visor para el archivo del recaudo" />
+                <event name="onAddStep" description="Abrir modal M03 para agregar paso previo" />
+                <event name="onEditStep" description="Abrir modal M03 para editar paso previo" />
+                <event name="onOpenStep" description="Abrir pantalla P03 de detalle de paso y recaudos" />
             </events>
-            <layout direction="vertical" width="fill" height="hug" gap="sm">
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
-                    <ui-text text="RECAUDOS DEL PASO" font="badge" color="text-muted"></ui-text>
-                    <ui-text text="${avance-texto}" font="num-row" color="brand-primary"></ui-text>
-                </ui-frame>
-                <ui-repeat items="${recaudos}" as="item">
-                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding="sm" gap="xs" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="md">
-                        <ui-frame direction="vertical" flex="1" gap="xxs" action="onToggleRecaudo" cursor="pointer">
-                            <ui-text text="${item.nombre}" font="label" color="text-primary" multiline="true"></ui-text>
-                            <ui-text text="${item.archivo}" font="caption" color="brand-accent"></ui-text>
-                        </ui-frame>
-                        <ui-frame direction="horizontal" align="center" padding-x="xs" padding-y="xxs" bg="status-ok-bg" radius="pill" action="onToggleRecaudo" cursor="pointer">
-                            <ui-text text="${item.estado}" font="badge" color="status-ok"></ui-text>
-                        </ui-frame>
+            <layout direction="vertical" width="fill" gap="md">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                    <ui-frame direction="horizontal" align="center" gap="xs">
+                        <ui-icon name="git-commit-vertical" color="brand-accent" size="md" />
+                        <ui-text text="PASOS PREVIOS Y DEPENDENCIAS" font="badge" color="text-secondary"></ui-text>
                     </ui-frame>
+                    <ui-frame direction="horizontal" align="center" padding-x="md" padding-y="xs" gap="2xs" bg="brand-primary" radius="sm" action="onAddStep" cursor="pointer">
+                        <ui-icon name="list-plus" color="text-inverse" size="sm" />
+                        <ui-text text="Agregar paso previo" font="caption" color="text-inverse" font-weight="bold"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+                <ui-repeat items="${pasos}" as="item">
+                    <item-paso-previo action="onOpenStep" orden="${item.orden}" nombre="${item.nombre}" anticipacion="${item.anticipacion}" fecha-calculada="${item.fecha}" resumen-recaudos="${item.resumen}" />
+                </ui-repeat>
+            </layout>
+        </component>
+
+        <component name="lista-recaudos-paso" role="block" design-width="600" design-height="200" description="Listado de recaudos de un paso previo con formulario rápido para agregar">
+            <props>
+                <prop name="nuevo-recaudo-texto" type="text" default="" description="Nombre del nuevo recaudo a agregar" />
+                <prop name="recaudos" type="list" default="[]" description="Lista de recaudos del paso" />
+            </props>
+            <events>
+                <event name="onAddRecaudo" description="Agregar nuevo recaudo al paso" />
+                <event name="onToggleRecaudo" description="Alternar estado Pendiente / Listo" />
+                <event name="onAttachRecaudo" description="Abrir selector M04 para adjuntar al recaudo" />
+                <event name="onOpenViewer" description="Abrir visor P04 para archivo adjunto" />
+            </events>
+            <layout direction="vertical" width="fill" gap="md">
+                <ui-frame direction="horizontal" align="center" width="fill" gap="sm">
+                    <ui-frame direction="horizontal" align="center" height="field-height" flex="1" padding-x="md" bg="bg-surface-elevated" border="strong" border-color="border-strong" radius="sm">
+                        <ui-text text="${nuevo-recaudo-texto}" flex="1" font="body" color="text-secondary" max-lines="1"></ui-text>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" padding-x="md" gap="2xs" bg="brand-primary" radius="sm" action="onAddRecaudo" cursor="pointer">
+                        <ui-icon name="plus" color="text-inverse" size="sm" />
+                        <ui-text text="Agregar recaudo" font="caption" color="text-inverse" font-weight="bold"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+                <ui-text text="RECAUDOS DEL PASO" font="badge" color="text-secondary"></ui-text>
+                <ui-repeat items="${recaudos}" as="item">
+                    <item-recaudo action="onToggleRecaudo" denominacion="${item.denominacion}" listo="${item.listo}" estado-texto="${item.estado}" archivo-nombre="${item.archivo}" />
                 </ui-repeat>
             </layout>
         </component>
     </group>
 
-    <scene name="panel-principal" target="window" description="P01 - Panel Principal de Trámites con ruta crítica, activos y latentes">
-        <props>
-            <prop name="ruta-critica-titulo" type="text" default="Renovar Pasaporte" description="Trámite en ruta crítica" />
-            <prop name="ruta-critica-paso" type="text" default="Solicitar cita consular" description="Próximo paso crítico" />
-            <prop name="ruta-critica-plazo" type="text" default="Vence paso en 4 días · Límite: 15/05/2027" description="Plazo de ruta crítica" />
-            <prop name="tramites-activos" type="list" default="[]" description="Lista de trámites activos" />
-            <prop name="tramites-latentes" type="list" default="[]" description="Lista de trámites en espera/latentes" />
-            <prop name="latentes-visibles" type="boolean" default="true" description="Expande o colapsa trámites latentes" />
-        </props>
-        <events>
-            <event name="onAbrirDetalle" description="Abre P02" />
-            <event name="onNuevoTramite" description="Abre M01" />
-            <event name="onDesdePlantilla" description="Abre P06" />
-            <event name="onAbrirConfig" description="Abre P07" />
-            <event name="onToggleLatentes" description="Alterna visibilidad de trámites latentes" />
-        </events>
-        <states>
-            <when prop="latentes-visibles" is="false">
-            <set target="lista-latentes" visible="false" />
-            </when>
-        </states>
-        <layout direction="vertical" width="fill" height="fill" bg="bg-page">
-            <barra-superior titulo="Mis Trámites" mostrar-config="true" onConfig="onAbrirConfig" />
-            <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="md" gap="md">
-                <ui-frame direction="vertical" width="fill" padding="md" gap="xs" bg="bg-surface" border="strong" border-color="status-urgent" radius="md" action="onAbrirDetalle" cursor="pointer">
-                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
-                        <ui-frame direction="horizontal" align="center" padding-x="xs" padding-y="xxs" gap="xxs" bg="status-urgent-bg" radius="pill">
-                            <ui-icon name="alert-triangle" color="status-urgent" size="icon-sm" />
-                            <ui-text text="PRÓXIMO PASO CRÍTICO" font="badge" color="status-urgent"></ui-text>
-                        </ui-frame>
-                        <ui-icon name="calendar-clock" color="status-urgent" size="icon-md" />
-                    </ui-frame>
-                    <ui-text text="${ruta-critica-titulo} → ${ruta-critica-paso}" font="card-title" color="text-primary" multiline="true"></ui-text>
-                    <ui-text text="${ruta-critica-plazo}" font="num-row" color="status-urgent"></ui-text>
+    <group name="Pantallas" parent="Escenas" collapsed="true">
+        <scene name="P01-panel-principal-tramites" target="window" description="Panel Principal de Trámites (CU-01, CU-06, CU-08, CU-09)">
+            <props>
+                <prop name="titulo-pantalla" type="text" default="Mis Trámites" />
+                <prop name="critico-estado" type="text" default="En riesgo" />
+                <prop name="critico-variante" type="enum" default="urgent" options="urgent,warning" />
+                <prop name="critico-tramite" type="text" default="Renovar Pasaporte" />
+                <prop name="critico-paso" type="text" default="Solicitar cita consular" />
+                <prop name="critico-cuenta" type="text" default="Vence paso en 4 días" />
+                <prop name="critico-limite" type="text" default="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" type="list" default="[]" />
+                <prop name="latentes-contador" type="text" default="0" />
+                <prop name="latentes-colapsado" type="boolean" default="false" />
+                <prop name="tramites-latentes" type="list" default="[]" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <barra-superior-navegacion titulo="${titulo-pantalla}" mostrar-volver="false" icono-accion-primaria="settings" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <bloque-ruta-critica estado-etiqueta="${critico-estado}" variante-estado="${critico-variante}" tramite-titulo="${critico-tramite}" paso-critico="${critico-paso}" cuenta-paso="${critico-cuenta}" fecha-limite="${critico-limite}" etiqueta-accion="Ver" />
+                    <lista-tramites-activos titulo-seccion="ACTIVOS" tramites="${tramites-activos}" />
+                    <seccion-tramites-latentes contador="${latentes-contador}" colapsado="${latentes-colapsado}" tramites-latentes="${tramites-latentes}" />
                 </ui-frame>
-                <ui-frame direction="vertical" width="fill" gap="xs">
-                    <ui-text text="ACTIVOS" font="badge" color="text-muted"></ui-text>
-                    <ui-repeat items="${tramites-activos}" as="item">
-                        <ui-frame direction="vertical" width="fill" padding="sm" gap="xxs" bg="bg-surface" border="subtle" border-color="border-subtle" radius="md" action="onAbrirDetalle" cursor="pointer">
-                            <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
-                                <ui-text text="${item.titulo}" font="label" color="text-primary"></ui-text>
-                                <ui-text text="${item.estado}" font="badge" color="status-warning"></ui-text>
-                            </ui-frame>
-                            <ui-text text="${item.paso} · ${item.plazo}" font="num-row" color="text-secondary"></ui-text>
-                        </ui-frame>
-                    </ui-repeat>
-                </ui-frame>
-                <ui-frame direction="vertical" width="fill" gap="xs">
-                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" action="onToggleLatentes" cursor="pointer">
-                        <ui-text text="EN ESPERA / LATENTES" font="badge" color="status-latent"></ui-text>
-                        <ui-icon name="hourglass" color="status-latent" size="icon-sm" />
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding-x="lg" padding-y="md" gap="md" bg="bg-surface" border-top="border-subtle">
+                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="lg" gap="xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                        <ui-icon name="copy-plus" color="text-primary" size="md" />
+                        <ui-text text="Desde plantilla" font="body" color="text-primary" font-weight="semibold"></ui-text>
                     </ui-frame>
-                    <ui-frame id="lista-latentes" direction="vertical" width="fill" gap="xs">
-                        <ui-repeat items="${tramites-latentes}" as="lat">
-                            <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding="sm" bg="bg-latent-card" border="subtle" border-color="border-subtle" radius="md" opacity="0.78" action="onAbrirDetalle" cursor="pointer">
-                                <ui-text text="${lat.titulo}" font="body" color="text-muted"></ui-text>
-                                <ui-text text="${lat.plazo}" font="num-row" color="text-muted"></ui-text>
-                            </ui-frame>
-                        </ui-repeat>
+                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="lg" gap="xs" bg="brand-primary" radius="sm" hover-bg="brand-primary-hover" cursor="pointer">
+                        <ui-icon name="plus" color="text-inverse" size="md" />
+                        <ui-text text="Nuevo Trámite" font="body" color="text-inverse" font-weight="bold"></ui-text>
                     </ui-frame>
                 </ui-frame>
-            </ui-frame>
-            <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding="md" gap="sm" bg="bg-surface" border-color="border-subtle" border-top="subtle">
-                <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="sm" gap="xxs" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="control" action="onDesdePlantilla" cursor="pointer">
-                    <ui-icon name="copy-plus" color="brand-primary" size="icon-md" />
-                    <ui-text text="Desde plantilla" font="label" color="text-primary"></ui-text>
-                </ui-frame>
-                <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="sm" gap="xxs" bg="brand-primary" radius="control" action="onNuevoTramite" cursor="pointer">
-                    <ui-icon name="plus" color="text-inverse" size="icon-md" />
-                    <ui-text text="Nuevo Trámite" font="label" color="text-inverse"></ui-text>
-                </ui-frame>
-            </ui-frame>
-        </layout>
-    </scene>
+            </layout>
+        </scene>
 
-    <scene name="detalle-tramite" target="window" description="P02 - Detalle del Trámite, cuenta regresiva, taquilla y cadena de pasos previos">
-        <props>
-            <prop name="titulo" type="text" default="Renovar Pasaporte" description="Nombre del trámite" />
-            <prop name="categoria" type="text" default="Migración" description="Categoría" />
-            <prop name="estado" type="text" default="En ventana de acción" description="Estado actual" />
-            <prop name="fecha-limite" type="text" default="15/05/2027" description="Fecha límite final" />
-            <prop name="dias-restantes" type="text" default="176d" description="Cuenta regresiva principal" />
-            <prop name="notas" type="text" default="Verificar vigencia mínima de 6 meses." description="Notas generales" />
-            <prop name="pasos" type="list" default="[]" description="Secuencia de pasos previos" />
-        </props>
-        <events>
-            <event name="onVolver" description="Vuelve a P01" />
-            <event name="onEditar" description="Abre M01 en modo edición" />
-            <event name="onEliminar" description="Abre M02 de confirmación" />
-            <event name="onAbrirTaquilla" description="Abre Vista Rápida de Taquilla (P05)" />
-            <event name="onAgregarPaso" description="Abre M03 para agregar paso previo" />
-            <event name="onAbrirPaso" description="Abre P03 para gestionar recaudos del paso" />
-        </events>
-        <layout direction="vertical" width="fill" height="fill" bg="bg-page">
-            <barra-superior titulo="${titulo}" subtitulo="${categoria} · ${estado}" mostrar-volver="true" onVolver="onVolver" />
-            <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="md" gap="md">
-                <ui-frame direction="vertical" width="fill" padding="md" gap="xs" bg="bg-surface" border="subtle" border-color="border-subtle" radius="md">
-                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
-                        <ui-text text="Límite: ${fecha-limite}" font="num-row" color="text-secondary"></ui-text>
-                        <ui-text text="${dias-restantes}" font="display-hero" color="brand-accent"></ui-text>
-                    </ui-frame>
-                    <ui-text text="${notas}" font="body" color="text-secondary" multiline="true"></ui-text>
-                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="xs">
-                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" gap="xxs" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="control" action="onEditar" cursor="pointer">
-                            <ui-icon name="pencil" color="text-primary" size="icon-sm" />
-                            <ui-text text="Editar" font="label" color="text-primary"></ui-text>
+        <scene name="P02-detalle-tramite" target="window" description="Detalle del Trámite con cuenta regresiva, acceso a taquilla y pasos previos (CU-01, CU-02, CU-04, CU-05, CU-07)">
+            <props>
+                <prop name="tramite-titulo" type="text" default="Renovar Pasaporte" />
+                <prop name="categoria-texto" type="text" default="Migración y Residencia" />
+                <prop name="estado-texto" type="text" default="En ventana de acción" />
+                <prop name="estado-variante" type="enum" default="warning" options="urgent,warning,ok,latent" />
+                <prop name="fecha-limite-resumen" type="text" default="Fecha límite final: 15/05/2027 (Faltan 176 días)" />
+                <prop name="notas-generales" type="text" default="Verificar vigencia mínima de 6 meses." />
+                <prop name="pasos-previos" type="list" default="[]" />
+            </props>
+            <states>
+                <when prop="notas-generales" is-not="">
+                <set target="p02-notas" visible="true" />
+                </when>
+            </states>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <barra-superior-navegacion titulo="${tramite-titulo}" mostrar-volver="true" icono-accion-primaria="trash-2" mostrar-accion-secundaria="true" icono-accion-secundaria="pencil" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <ui-frame direction="vertical" width="fill" padding="lg" gap="md" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-frame direction="horizontal" align="center" wrap="true" gap="sm">
+                            <badge-estado etiqueta="${categoria-texto}" variante="accent" icono="file-text" />
+                            <badge-estado etiqueta="${estado-texto}" variante="${estado-variante}" icono="calendar-clock" />
                         </ui-frame>
-                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" gap="xxs" bg="status-urgent-bg" radius="control" action="onEliminar" cursor="pointer">
-                            <ui-icon name="trash-2" color="status-urgent" size="icon-sm" />
-                            <ui-text text="Eliminar" font="label" color="status-urgent"></ui-text>
+                        <ui-text text="${fecha-limite-resumen}" font="metric-md" color="text-primary" multiline="true"></ui-text>
+                        <ui-text id="p02-notas" text="${notas-generales}" font="body" color="text-secondary" multiline="true" visible="false"></ui-text>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding="md" gap="sm" bg="brand-accent-soft" border="hairline" border-color="brand-accent" radius="md" cursor="pointer">
+                        <ui-frame direction="horizontal" align="center" flex="1" gap="sm">
+                            <ui-icon name="briefcase" color="brand-accent" size="lg" />
+                            <ui-text text="Vista rápida / Taquilla (Listo para cita)" flex="1" font="body" color="brand-accent" font-weight="bold" multiline="true"></ui-text>
+                        </ui-frame>
+                        <ui-icon name="arrow-right" color="brand-accent" size="md" />
+                    </ui-frame>
+                    <lista-pasos-previos pasos="${pasos-previos}" />
+                </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="P03-detalle-paso-recaudos" target="window" description="Detalle de Paso Previo y Recaudos con estado, adjuntos y visor (CU-04, CU-05)">
+            <props>
+                <prop name="paso-selector-texto" type="text" default="Paso 1: Reunir recaudos base" />
+                <prop name="paso-nombre" type="text" default="Reunir recaudos base" />
+                <prop name="paso-meta" type="text" default="Vence: 01/05/2027 (2 sem. antes)" />
+                <prop name="avance-texto" type="text" default="Avance: 50% (1/2 listos)" />
+                <prop name="nuevo-recaudo" type="text" default="" />
+                <prop name="recaudos" type="list" default="[]" />
+                <prop name="adjunto-paso-nombre" type="text" default="planilla_solicitud.pdf" />
+            </props>
+            <states>
+                <when prop="adjunto-paso-nombre" is-not="">
+                <set target="step-attachment-row" visible="true" />
+                </when>
+            </states>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <barra-superior-navegacion titulo="${paso-selector-texto}" mostrar-volver="true" icono-accion-primaria="chevron-down" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <ui-frame direction="vertical" width="fill" padding="lg" gap="sm" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-text text="${paso-nombre}" font="card-title" color="text-primary" multiline="true"></ui-text>
+                        <ui-frame direction="horizontal" align="center" justify="space-between" wrap="true" width="fill" gap="sm">
+                            <ui-text text="${paso-meta}" font="metric-sm" color="text-secondary"></ui-text>
+                            <ui-text text="${avance-texto}" font="metric-sm" color="brand-primary"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                    <lista-recaudos-paso nuevo-recaudo-texto="${nuevo-recaudo}" recaudos="${recaudos}" />
+                    <ui-frame direction="vertical" width="fill" padding="md" gap="sm" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                            <ui-text text="ADJUNTOS DEL PASO" font="badge" color="text-secondary"></ui-text>
+                            <ui-frame direction="horizontal" align="center" padding-x="sm" padding-y="xs" gap="2xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                                <ui-icon name="paperclip" color="brand-primary" size="sm" />
+                                <ui-text text="Adjuntar al paso" font="caption" color="brand-primary" font-weight="semibold"></ui-text>
+                            </ui-frame>
+                        </ui-frame>
+                        <ui-frame id="step-attachment-row" direction="horizontal" align="center" justify="space-between" width="fill" padding="sm" bg="bg-surface-subtle" radius="sm" cursor="pointer" visible="false">
+                            <ui-frame direction="horizontal" align="center" flex="1" gap="xs">
+                                <ui-icon name="file-text" color="brand-accent" size="sm" />
+                                <ui-text text="${adjunto-paso-nombre}" flex="1" font="metric-sm" color="brand-accent" max-lines="1"></ui-text>
+                            </ui-frame>
+                            <ui-frame direction="horizontal" align="center" gap="2xs">
+                                <ui-text text="Ver" font="caption" color="brand-accent" font-weight="bold"></ui-text>
+                                <ui-icon name="eye" color="brand-accent" size="sm" />
+                            </ui-frame>
                         </ui-frame>
                     </ui-frame>
                 </ui-frame>
-                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding="md" bg="brand-accent-soft" border="subtle" border-color="brand-accent" radius="md" action="onAbrirTaquilla" cursor="pointer">
+            </layout>
+        </scene>
+
+        <scene name="P04-visor-integrado-documentos" target="window" description="Visor Integrado de Documentos cifrados locales con soporte offline (CU-05, CU-07)">
+            <props>
+                <prop name="archivo-nombre" type="text" default="cedula_frente.jpg" />
+                <prop name="contexto-recaudo" type="text" default="Copia de cédula de identidad" />
+                <prop name="estado-offline" type="text" default="Offline OK" />
+                <prop name="pagina-texto" type="text" default="Página 1 / 1" />
+                <prop name="zoom-texto" type="text" default="100%" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" height="topbar-height" padding-x="lg" gap="sm" bg="bg-surface" border-bottom="border-subtle">
+                    <ui-frame direction="horizontal" align="center" flex="1" clip="true" gap="sm">
+                        <ui-frame direction="horizontal" align="center" justify="center" padding="xs" radius="sm" hover-bg="bg-surface-subtle" cursor="pointer">
+                            <ui-icon name="x" color="text-primary" size="md" />
+                        </ui-frame>
+                        <ui-frame direction="vertical" flex="1" clip="true" gap="2xs">
+                            <ui-text text="${archivo-nombre}" font="metric-sm" color="text-primary" max-lines="1"></ui-text>
+                            <ui-text text="${contexto-recaudo}" font="caption" color="text-muted" max-lines="1"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                    <badge-estado etiqueta="${estado-offline}" variante="ok" icono="wifi-off" />
+                </ui-frame>
+                <ui-frame direction="vertical" align="center" justify="center" width="fill" flex="1" scroll="both" padding="lg" gap="md" bg="bg-surface-subtle">
+                    <ui-frame direction="vertical" align="center" justify="center" width="fill" height="viewer-min-height" padding="xl" gap="sm" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-icon name="shield-check" color="status-ok" size="lg" />
+                        <ui-text text="${archivo-nombre}" font="card-title" color="text-primary"></ui-text>
+                        <ui-text text="Documento resguardado localmente en el dispositivo" font="caption" color="text-secondary"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+                <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" padding-x="lg" padding-y="md" gap="sm" bg="bg-surface" border-top="border-subtle">
                     <ui-frame direction="horizontal" align="center" gap="xs">
-                        <ui-icon name="briefcase" color="brand-accent" size="icon-md" />
-                        <ui-text text="Listo para cita / taquilla (Offline)" font="label" color="brand-accent"></ui-text>
+                        <ui-frame direction="horizontal" align="center" justify="center" padding="xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                            <ui-icon name="zoom-out" color="text-primary" size="md" />
+                        </ui-frame>
+                        <ui-text text="${zoom-texto}" font="metric-sm" color="text-primary"></ui-text>
+                        <ui-frame direction="horizontal" align="center" justify="center" padding="xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                            <ui-icon name="zoom-in" color="text-primary" size="md" />
+                        </ui-frame>
                     </ui-frame>
-                    <ui-icon name="wifi-off" color="brand-accent" size="icon-sm" />
+                    <ui-text text="${pagina-texto}" font="metric-sm" color="text-secondary"></ui-text>
+                    <ui-frame direction="horizontal" align="center" justify="center" padding-x="sm" padding-y="xs" bg="bg-surface-subtle" border="hairline" border-color="border-subtle" radius="sm" cursor="pointer">
+                        <ui-text text="Ajustar ancho" font="caption" color="text-primary" font-weight="semibold"></ui-text>
+                    </ui-frame>
                 </ui-frame>
-                <ui-frame direction="vertical" width="fill" gap="xs">
-                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
-                        <ui-text text="PASOS PREVIOS Y DEPENDENCIAS" font="badge" color="text-muted"></ui-text>
-                        <ui-frame direction="horizontal" align="center" padding-x="xs" padding-y="xxs" gap="xxs" bg="brand-primary" radius="control" action="onAgregarPaso" cursor="pointer">
-                            <ui-icon name="list-plus" color="text-inverse" size="icon-sm" />
-                            <ui-text text="Agregar paso" font="badge" color="text-inverse"></ui-text>
-                        </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="P05-vista-rapida-taquilla" target="window" description="Vista Rápida de Taquilla offline con recaudos consolidados y accesos directos a archivos (CU-07)">
+            <props>
+                <prop name="tramite-titulo" type="text" default="Renovar Pasaporte" />
+                <prop name="estado-offline" type="text" default="Offline Listo" />
+                <prop name="recaudos-consolidados" type="list" default="[]" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <barra-superior-navegacion titulo="Vista Rápida / Taquilla" mostrar-volver="true" icono-accion-primaria="shield-check" badge-texto="${estado-offline}" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <ui-frame direction="vertical" width="fill" padding="md" gap="2xs" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-text text="TRÁMITE ACTIVO" font="badge" color="text-muted"></ui-text>
+                        <ui-text text="${tramite-titulo}" font="card-title" color="text-primary" multiline="true"></ui-text>
                     </ui-frame>
-                    <ui-repeat items="${pasos}" as="paso">
-                        <ui-frame direction="vertical" width="fill" padding="sm" gap="xxs" bg="bg-surface" border="subtle" border-color="border-subtle" radius="md" action="onAbrirPaso" cursor="pointer">
-                            <ui-frame direction="horizontal" align="center" justify="space-between" width="fill">
-                                <ui-frame direction="horizontal" align="center" gap="xs">
-                                    <ui-icon name="git-commit-vertical" color="brand-accent" size="icon-md" />
-                                    <ui-text text="${paso.nombre}" font="label" color="text-primary"></ui-text>
-                                </ui-frame>
-                                <ui-text text="${paso.fecha}" font="num-row" color="brand-accent"></ui-text>
-                            </ui-frame>
-                            <ui-text text="Anticipación: ${paso.anticipacion} · Recaudos: ${paso.recaudos}" font="caption" color="text-secondary"></ui-text>
-                        </ui-frame>
+                    <ui-text text="RECAUDOS CONSOLIDADOS" font="badge" color="text-secondary"></ui-text>
+                    <ui-repeat items="${recaudos-consolidados}" as="item">
+                        <item-recaudo denominacion="${item.denominacion}" listo="${item.listo}" estado-texto="${item.estado}" archivo-nombre="${item.archivo}" />
                     </ui-repeat>
                 </ui-frame>
-            </ui-frame>
-        </layout>
-    </scene>
-
-    <scene name="modal-formulario-tramite" target="window" description="M01 - Modal / Bottom Sheet para crear o editar un trámite">
-        <props>
-            <prop name="titulo-modal" type="text" default="Nuevo Trámite" description="Título del modal" />
-            <prop name="titulo-tramite" type="text" default="" description="Nombre del trámite" />
-            <prop name="categoria" type="text" default="Migración" description="Categoría" />
-            <prop name="fecha-limite" type="text" default="15/05/2027" description="Fecha límite" />
-            <prop name="notas" type="text" default="" description="Notas" />
-        </props>
-        <events>
-            <event name="onCerrar" description="Cierra el modal" />
-            <event name="onGuardar" description="Guarda y cierra" />
-            <event name="onCancelar" description="Cancela y cierra" />
-        </events>
-        <layout direction="vertical" width="fill" height="hug" padding="lg" gap="md" bg="bg-surface-elevated" border="subtle" border-color="border-strong" radius="sheet">
-            <barra-superior titulo="${titulo-modal}" mostrar-cerrar="true" onCerrar="onCerrar" />
-            <formulario-tramite titulo-modal="${titulo-modal}" titulo-tramite="${titulo-tramite}" categoria="${categoria}" fecha-limite="${fecha-limite}" notas="${notas}" onGuardar="onGuardar" onCancelar="onCancelar" />
-        </layout>
-    </scene>
-
-    <scene name="modal-paywall-pro" target="window" description="M06 - Paywall contextual para desbloquear Personal Pro (Lifetime / Anual)">
-        <props>
-            <prop name="motivo" type="text" default="Amplía tus límites, accede a todas las plantillas y exporta respaldos completos." description="Motivo contextual de activación" />
-            <prop name="plan-seleccionado" type="enum" default="lifetime" description="Modalidad de plan seleccionada" options="lifetime,anual" />
-            <prop name="procesando" type="boolean" default="false" description="Estado de procesamiento de compra o restauración" />
-        </props>
-        <events>
-            <event name="onCerrar" description="Descarta el paywall" />
-            <event name="onSeleccionarPlan" description="Cambia entre Pago único Lifetime y Suscripción anual" />
-            <event name="onComprar" description="Inicia compra del plan seleccionado" />
-            <event name="onRestaurar" description="Restaura compras previas" />
-        </events>
-        <states>
-            <when prop="plan-seleccionado" is="anual">
-            <set target="tab-lifetime" activo="false" />
-            <set target="tab-anual" activo="true" variante="pro" />
-            </when>
-        </states>
-        <layout direction="vertical" width="fill" height="hug" padding="lg" gap="md" bg="bg-surface-elevated" border="strong" border-color="pro-accent" radius="sheet">
-            <barra-superior titulo="Desbloquea Personal Pro" mostrar-cerrar="true" onCerrar="onCerrar" />
-            <ui-frame direction="horizontal" align="center" padding="sm" gap="xs" bg="pro-accent-bg" radius="md">
-                <ui-icon name="crown" color="pro-accent" size="icon-md" />
-                <ui-text text="${motivo}" font="body" color="text-primary" multiline="true"></ui-text>
-            </ui-frame>
-            <ui-frame direction="horizontal" align="center" width="fill" gap="xs">
-                <tab-estado-recaudo id="tab-lifetime" flex="1" etiqueta="Pago único Lifetime" activo="true" variante="pro" onSelect="onSeleccionarPlan" />
-                <tab-estado-recaudo id="tab-anual" flex="1" etiqueta="Suscripción anual" activo="false" onSelect="onSeleccionarPlan" />
-            </ui-frame>
-            <ui-frame direction="horizontal" align="center" gap="xs">
-                <ui-icon name="shield-check" color="status-ok" size="icon-sm" />
-                <ui-text text="Respaldo cifrado local y restauración nativa incluidos" font="caption" color="text-secondary"></ui-text>
-            </ui-frame>
-            <ui-frame direction="horizontal" align="center" justify="center" width="fill" height="field-height" gap="xs" bg="pro-accent" radius="control" action="onComprar" cursor="pointer">
-                <ui-icon name="crown" color="text-inverse" size="icon-sm" />
-                <ui-text text="Continuar / Comprar" font="label" color="text-inverse"></ui-text>
-            </ui-frame>
-            <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
-                <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" gap="xxs" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="control" action="onRestaurar" cursor="pointer">
-                    <ui-icon name="rotate-ccw" color="text-primary" size="icon-sm" />
-                    <ui-text text="Restaurar compras" font="label" color="text-primary"></ui-text>
+                <ui-frame direction="horizontal" align="center" justify="center" width="fill" padding-x="lg" padding-y="md" bg="bg-surface" border-top="border-subtle">
+                    <ui-frame direction="horizontal" align="center" justify="center" width="fill" height="field-height" padding-x="lg" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                        <ui-text text="Salir de Vista Rápida" font="body" color="text-primary" font-weight="semibold"></ui-text>
+                    </ui-frame>
                 </ui-frame>
-                <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" bg="bg-surface-subtle" border="subtle" border-color="border-subtle" radius="control" action="onCerrar" cursor="pointer">
-                    <ui-text text="Ahora no" font="label" color="text-muted"></ui-text>
+            </layout>
+        </scene>
+
+        <scene name="P06-catalogo-plantillas-base" target="window" description="Catálogo de plantillas base gratuitas y Plan Pro (CU-08)">
+            <props>
+                <prop name="introduccion-texto" type="text" default="Elige una plantilla para calcular pasos y recaudos hacia atrás a partir de tu fecha límite objetivo." />
+                <prop name="plantillas" type="list" default="[]" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <barra-superior-navegacion titulo="Plantillas Base" mostrar-volver="true" icono-accion-primaria="crown" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <ui-frame direction="vertical" width="fill" padding="md" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-text text="${introduccion-texto}" font="body" color="text-secondary" multiline="true"></ui-text>
+                    </ui-frame>
+                    <ui-repeat items="${plantillas}" as="item">
+                        <tarjeta-plantilla nombre="${item.nombre}" categoria="${item.categoria}" resumen="${item.resumen}" bloqueada="${item.bloqueada}" etiqueta-plan="${item.plan}" etiqueta-cta="${item.cta}" />
+                    </ui-repeat>
                 </ui-frame>
-            </ui-frame>
-        </layout>
-    </scene>
+            </layout>
+        </scene>
+
+        <scene name="P07-configuracion-respaldo-datos" target="window" description="Configuración de plan, restauración de compras y respaldo de datos cifrados (CU-09, CU-12)">
+            <props>
+                <prop name="plan-estado" type="text" default="Plan Gratuito (Freemium)" />
+                <prop name="es-pro" type="boolean" default="false" />
+                <prop name="alcance-respaldo" type="text" default="Todos los trámites" />
+                <prop name="estado-operacion" type="text" default="" />
+                <prop name="nota-cifrado" type="text" default="Los documentos adjuntos se resguardan cifrados en el dispositivo y se incluyen en el paquete de exportación." />
+            </props>
+            <states>
+                <when prop="es-pro" is="true">
+                <set target="p07-plan-badge" variante="pro" icono="crown" />
+                </when>
+                <when prop="estado-operacion" is-not="">
+                <set target="p07-feedback" visible="true" />
+                </when>
+            </states>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-page">
+                <barra-superior-navegacion titulo="Configuración y Respaldo" mostrar-volver="true" icono-accion-primaria="shield-check" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <ui-frame direction="vertical" width="fill" padding="lg" gap="md" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                            <ui-text text="PLAN ACTUAL" font="badge" color="text-secondary"></ui-text>
+                            <badge-estado id="p07-plan-badge" etiqueta="${plan-estado}" variante="latent" icono="crown" />
+                        </ui-frame>
+                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" padding-x="lg" gap="xs" bg="pro-accent" radius="sm" cursor="pointer">
+                            <ui-icon name="crown" color="text-inverse" size="sm" />
+                            <ui-text text="Adquirir o gestionar Plan Pro" font="body" color="text-inverse" font-weight="bold"></ui-text>
+                        </ui-frame>
+                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" padding-x="lg" gap="xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                            <ui-icon name="rotate-ccw" color="text-primary" size="sm" />
+                            <ui-text text="Restaurar compras" font="body" color="text-primary" font-weight="semibold"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                    <ui-frame direction="vertical" width="fill" padding="lg" gap="md" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-text text="RESPALDO DE DATOS" font="badge" color="text-secondary"></ui-text>
+                        <campo-formulario etiqueta="Alcance de exportación" valor="${alcance-respaldo}" tipo-control="select" />
+                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" padding-x="lg" gap="xs" bg="brand-primary" radius="sm" hover-bg="brand-primary-hover" cursor="pointer">
+                            <ui-icon name="download" color="text-inverse" size="sm" />
+                            <ui-text text="Exportar respaldo" font="body" color="text-inverse" font-weight="bold"></ui-text>
+                        </ui-frame>
+                        <ui-frame direction="horizontal" align="start" padding="sm" gap="xs" bg="bg-surface-subtle" radius="sm">
+                            <ui-icon name="shield-check" color="status-ok" size="sm" />
+                            <ui-text text="${nota-cifrado}" flex="1" font="caption" color="text-secondary" multiline="true"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                    <ui-frame id="p07-feedback" direction="horizontal" align="center" padding="md" gap="xs" bg="brand-primary-soft" radius="md" visible="false">
+                        <ui-icon name="check-circle-2" color="brand-primary" size="sm" />
+                        <ui-text text="${estado-operacion}" flex="1" font="caption" color="brand-primary" font-weight="semibold" multiline="true"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+            </layout>
+        </scene>
+    </group>
+
+    <group name="Modales" parent="Escenas" collapsed="false">
+        <scene name="M01-formulario-tramite" target="window" description="Modal / Bottom Sheet para crear o editar un trámite (CU-01)">
+            <props>
+                <prop name="titulo-modal" type="text" default="Nuevo Trámite" />
+                <prop name="titulo-valor" type="text" default="" />
+                <prop name="categoria-valor" type="text" default="Seleccionar categoría" />
+                <prop name="fecha-limite-valor" type="text" default="DD/MM/AAAA" />
+                <prop name="notas-valor" type="text" default="" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-surface-elevated">
+                <encabezado-modal titulo="${titulo-modal}" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="md">
+                    <campo-formulario etiqueta="Título" obligatorio="true" valor="${titulo-valor}" tipo-control="input" />
+                    <campo-formulario etiqueta="Categoría" valor="${categoria-valor}" tipo-control="select" />
+                    <campo-formulario etiqueta="Fecha límite final" obligatorio="true" valor="${fecha-limite-valor}" tipo-control="date" />
+                    <campo-formulario etiqueta="Notas generales" valor="${notas-valor}" tipo-control="textarea" />
+                </ui-frame>
+                <ui-frame direction="vertical" width="fill" padding="lg" bg="bg-surface" border-top="border-subtle">
+                    <barra-acciones-pie texto-cancelar="Cancelar" texto-confirmar="Guardar" variante-confirmar="primary" />
+                </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="M02-confirmacion-eliminacion-tramite" target="window" description="Diálogo de confirmación antes de eliminar permanentemente un trámite (CU-01)">
+            <props>
+                <prop name="tramite-nombre" type="text" default="Renovar Pasaporte" />
+                <prop name="mensaje-advertencia" type="text" default="¿Deseas eliminar este trámite? Se borrarán sus pasos previos, recaudos, archivos adjuntos locales y alertas asociadas." />
+            </props>
+            <layout direction="vertical" align="center" justify="center" width="fill" height="fill" padding="xl" bg="bg-page">
+                <ui-frame direction="vertical" width="fill" padding="xl" gap="lg" bg="bg-surface-elevated" border="strong" border-color="status-urgent" radius="lg">
+                    <ui-frame direction="horizontal" align="center" gap="sm">
+                        <ui-icon name="trash-2" color="status-urgent" size="lg" />
+                        <ui-text text="Eliminar trámite" flex="1" font="modal-title" color="text-primary"></ui-text>
+                    </ui-frame>
+                    <ui-text text="${tramite-nombre}" font="card-title" color="status-urgent" multiline="true"></ui-text>
+                    <ui-text text="${mensaje-advertencia}" font="body" color="text-secondary" multiline="true"></ui-text>
+                    <barra-acciones-pie texto-cancelar="Cancelar" texto-confirmar="Eliminar" variante-confirmar="danger" />
+                </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="M03-configuracion-paso-previo" target="window" description="Modal / Bottom Sheet para crear, editar o reordenar un paso previo (CU-02)">
+            <props>
+                <prop name="titulo-modal" type="text" default="Agregar paso previo" />
+                <prop name="nombre-paso" type="text" default="" />
+                <prop name="orden-texto" type="text" default="Posición 1 de 2" />
+                <prop name="cantidad-anticipacion" type="text" default="2" />
+                <prop name="unidad-anticipacion" type="text" default="Semanas" />
+                <prop name="fecha-calculada" type="text" default="Fecha estimada calculada: 01/05/2027" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-surface-elevated">
+                <encabezado-modal titulo="${titulo-modal}" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="md">
+                    <campo-formulario etiqueta="Nombre del paso" obligatorio="true" valor="${nombre-paso}" tipo-control="input" />
+                    <ui-frame direction="vertical" width="fill" gap="xs">
+                        <ui-text text="Orden en la secuencia" font="caption" color="text-primary" font-weight="semibold"></ui-text>
+                        <ui-frame direction="horizontal" align="center" width="fill" gap="sm">
+                            <ui-frame direction="horizontal" align="center" justify="space-between" height="field-height" flex="1" padding-x="md" bg="bg-surface" border="strong" border-color="border-strong" radius="sm">
+                                <ui-text text="${orden-texto}" flex="1" font="metric-sm" color="text-primary" max-lines="1"></ui-text>
+                                <ui-icon name="chevron-down" color="text-secondary" size="md" />
+                            </ui-frame>
+                            <ui-frame direction="horizontal" align="center" justify="center" height="field-height" padding-x="md" gap="2xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                                <ui-icon name="arrow-up-down" color="text-primary" size="sm" />
+                                <ui-text text="Reordenar" font="caption" color="text-primary" font-weight="semibold"></ui-text>
+                            </ui-frame>
+                        </ui-frame>
+                    </ui-frame>
+                    <ui-frame direction="vertical" width="fill" gap="xs">
+                        <ui-text text="Anticipación requerida" font="caption" color="text-primary" font-weight="semibold"></ui-text>
+                        <ui-frame direction="horizontal" align="center" width="fill" gap="sm">
+                            <ui-frame direction="horizontal" align="center" justify="center" height="field-height" padding-x="lg" bg="bg-surface" border="strong" border-color="border-strong" radius="sm">
+                                <ui-text text="${cantidad-anticipacion}" font="hero-num" color="text-primary"></ui-text>
+                            </ui-frame>
+                            <ui-frame direction="horizontal" align="center" justify="space-between" height="field-height" flex="1" padding-x="md" bg="bg-surface" border="strong" border-color="border-strong" radius="sm">
+                                <ui-text text="${unidad-anticipacion}" flex="1" font="body" color="text-primary"></ui-text>
+                                <ui-icon name="chevron-down" color="text-secondary" size="md" />
+                            </ui-frame>
+                        </ui-frame>
+                        <ui-text text="${fecha-calculada}" font="metric-sm" color="brand-accent" multiline="true"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+                <ui-frame direction="vertical" width="fill" padding="lg" bg="bg-surface" border-top="border-subtle">
+                    <barra-acciones-pie texto-cancelar="Cancelar" texto-confirmar="Guardar" variante-confirmar="primary" />
+                </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="M04-selector-origen-archivo" target="window" description="Modal / Bottom Sheet para elegir cámara o archivos/galería al adjuntar documento (CU-05)">
+            <props>
+                <prop name="destino-nombre" type="text" default="Comprobante de pago de arancel" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-surface-elevated">
+                <encabezado-modal titulo="Adjuntar archivo" subtitulo="Destino: ${destino-nombre}" />
+                <ui-frame direction="vertical" width="fill" flex="1" padding="lg" gap="md">
+                    <ui-frame direction="horizontal" align="center" width="fill" padding="lg" gap="md" bg="bg-surface" border="strong" border-color="border-strong" radius="md" hover-bg="bg-surface-subtle" cursor="pointer">
+                        <ui-icon name="camera" color="brand-primary" size="lg" />
+                        <ui-frame direction="vertical" flex="1" gap="2xs">
+                            <ui-text text="Cámara" font="card-title" color="text-primary"></ui-text>
+                            <ui-text text="Capturar fotografía del documento o comprobante" font="caption" color="text-secondary" multiline="true"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" width="fill" padding="lg" gap="md" bg="bg-surface" border="strong" border-color="border-strong" radius="md" hover-bg="bg-surface-subtle" cursor="pointer">
+                        <ui-icon name="file-text" color="brand-accent" size="lg" />
+                        <ui-frame direction="vertical" flex="1" gap="2xs">
+                            <ui-text text="Archivos / Galería" font="card-title" color="text-primary"></ui-text>
+                            <ui-text text="Seleccionar imagen o PDF desde el dispositivo" font="caption" color="text-secondary" multiline="true"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                </ui-frame>
+                <ui-frame direction="vertical" width="fill" padding="lg" bg="bg-surface" border-top="border-subtle">
+                    <ui-frame direction="horizontal" align="center" justify="center" width="fill" height="field-height" padding-x="lg" bg="bg-surface-subtle" border="hairline" border-color="border-subtle" radius="sm" cursor="pointer">
+                        <ui-text text="Cancelar" font="body" color="text-primary" font-weight="semibold"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="M05-instanciar-tramite-plantilla" target="window" description="Modal / Bottom Sheet para ingresar fecha límite objetivo e instanciar trámite desde plantilla (CU-08)">
+            <props>
+                <prop name="plantilla-nombre" type="text" default="Pasaporte" />
+                <prop name="resumen-estructura" type="text" default="Se generarán 3 pasos previos y 5 recaudos sugeridos con fechas calculadas en cuenta regresiva." />
+                <prop name="fecha-objetivo" type="text" default="DD/MM/AAAA" />
+            </props>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-surface-elevated">
+                <encabezado-modal titulo="Crear desde plantilla" subtitulo="Plantilla: ${plantilla-nombre}" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="lg">
+                    <ui-frame direction="vertical" width="fill" padding="md" gap="xs" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-text text="ESTRUCTURA A GENERAR" font="badge" color="brand-accent"></ui-text>
+                        <ui-text text="${resumen-estructura}" font="body" color="text-secondary" multiline="true"></ui-text>
+                    </ui-frame>
+                    <campo-formulario etiqueta="Fecha límite objetivo" obligatorio="true" valor="${fecha-objetivo}" tipo-control="date" />
+                </ui-frame>
+                <ui-frame direction="vertical" width="fill" padding="lg" bg="bg-surface" border-top="border-subtle">
+                    <barra-acciones-pie texto-cancelar="Cancelar" texto-confirmar="Crear trámite" variante-confirmar="primary" />
+                </ui-frame>
+            </layout>
+        </scene>
+
+        <scene name="M06-paywall-contextual-personal-pro" target="window" description="Modal / Bottom Sheet de paywall contextual para Personal Pro (CU-01, CU-05, CU-08, CU-09, CU-12)">
+            <props>
+                <prop name="motivo-titulo" type="text" default="Desbloquea Personal Pro" />
+                <prop name="motivo-subtitulo" type="text" default="Amplía tus límites, accede a todas las plantillas base y exporta respaldos cifrados completos." />
+                <prop name="modalidad-seleccionada" type="enum" default="lifetime" options="lifetime,annual" />
+                <prop name="precio-lifetime" type="text" default="$29.00" />
+                <prop name="precio-anual" type="text" default="$12.00/a" />
+            </props>
+            <states>
+                <when prop="modalidad-seleccionada" is="annual">
+                <set target="plan-lifetime-card" bg="bg-surface" border="hairline" border-color="border-strong" />
+                <set target="plan-annual-card" bg="pro-accent-bg" border="focus" border-color="pro-accent" />
+                </when>
+            </states>
+            <layout direction="vertical" width="fill" height="fill" bg="bg-surface-elevated">
+                <encabezado-modal titulo="${motivo-titulo}" subtitulo="${motivo-subtitulo}" />
+                <ui-frame direction="vertical" width="fill" flex="1" scroll="vertical" padding="lg" gap="md">
+                    <ui-frame direction="vertical" width="fill" padding="md" gap="sm" bg="bg-surface" border="hairline" border-color="border-subtle" radius="md">
+                        <ui-frame direction="horizontal" align="center" gap="sm">
+                            <ui-icon name="check-circle-2" color="status-ok" size="sm" />
+                            <ui-text text="Trámites y adjuntos cifrados ampliados" flex="1" font="body" color="text-primary" multiline="true"></ui-text>
+                        </ui-frame>
+                        <ui-frame direction="horizontal" align="center" gap="sm">
+                            <ui-icon name="check-circle-2" color="status-ok" size="sm" />
+                            <ui-text text="Acceso completo a todas las plantillas base" flex="1" font="body" color="text-primary" multiline="true"></ui-text>
+                        </ui-frame>
+                        <ui-frame direction="horizontal" align="center" gap="sm">
+                            <ui-icon name="check-circle-2" color="status-ok" size="sm" />
+                            <ui-text text="Exportación de respaldo de datos y adjuntos" flex="1" font="body" color="text-primary" multiline="true"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                    <ui-text text="MODALIDAD DE PLAN" font="badge" color="text-secondary"></ui-text>
+                    <ui-frame id="plan-lifetime-card" direction="horizontal" align="center" justify="space-between" width="fill" padding="md" bg="pro-accent-bg" border="focus" border-color="pro-accent" radius="md" cursor="pointer">
+                        <ui-frame direction="vertical" flex="1" gap="2xs">
+                            <ui-text text="Pago único Lifetime" font="card-title" color="text-primary"></ui-text>
+                            <ui-text text="Sin suscripciones recurrentes" font="caption" color="text-secondary"></ui-text>
+                        </ui-frame>
+                        <ui-text text="${precio-lifetime}" font="metric-md" color="pro-accent"></ui-text>
+                    </ui-frame>
+                    <ui-frame id="plan-annual-card" direction="horizontal" align="center" justify="space-between" width="fill" padding="md" bg="bg-surface" border="hairline" border-color="border-strong" radius="md" cursor="pointer">
+                        <ui-frame direction="vertical" flex="1" gap="2xs">
+                            <ui-text text="Suscripción anual" font="card-title" color="text-primary"></ui-text>
+                            <ui-text text="Renovación anual flexible" font="caption" color="text-secondary"></ui-text>
+                        </ui-frame>
+                        <ui-text text="${precio-anual}" font="metric-md" color="text-primary"></ui-text>
+                    </ui-frame>
+                </ui-frame>
+                <ui-frame direction="vertical" width="fill" padding="lg" gap="sm" bg="bg-surface" border-top="border-subtle">
+                    <ui-frame direction="horizontal" align="center" justify="center" width="fill" height="field-height" padding-x="lg" gap="xs" bg="pro-accent" radius="sm" cursor="pointer">
+                        <ui-icon name="crown" color="text-inverse" size="sm" />
+                        <ui-text text="Continuar / Comprar" font="body" color="text-inverse" font-weight="bold"></ui-text>
+                    </ui-frame>
+                    <ui-frame direction="horizontal" align="center" justify="space-between" width="fill" gap="sm">
+                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="md" gap="2xs" bg="bg-surface-subtle" border="hairline" border-color="border-strong" radius="sm" cursor="pointer">
+                            <ui-icon name="rotate-ccw" color="text-primary" size="sm" />
+                            <ui-text text="Restaurar compras" font="caption" color="text-primary" font-weight="semibold"></ui-text>
+                        </ui-frame>
+                        <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="md" bg="bg-surface-subtle" border="hairline" border-color="border-subtle" radius="sm" cursor="pointer">
+                            <ui-text text="Ahora no / Cerrar" font="caption" color="text-secondary" font-weight="semibold"></ui-text>
+                        </ui-frame>
+                    </ui-frame>
+                </ui-frame>
+            </layout>
+        </scene>
+    </group>
+
+    <journeys>
+        <journey name="journey-cu01-crear-consultar-editar-mobile-portrait" title="CU-01 (Happy Path): Crear, Consultar y Editar Trámite" initial-preview="p-panel-inicial" width="393" height="852" description="Flujo principal completo de creación de un trámite nuevo desde P01 mediante M01, inspección en P02, edición de fecha límite/notas y retorno actualizado al panel.">
+            <preview id="p-panel-inicial" label="1. Panel Principal (Inicial)" scene="P01-panel-principal-tramites" x="5" y="143" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_happy_activos_inicial}" />
+                <prop name="latentes-contador" value="1" />
+                <prop name="latentes-colapsado" value="false" />
+                <prop name="tramites-latentes" value="${mocks.cu01_happy_latentes}" />
+            </preview>
+            <preview id="p-modal-nuevo" label="2. Nuevo Trámite (M01)" scene="M01-formulario-tramite" role="overlay" overlay="bottom-sheet" x="540" y="141" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-valor" value="Apostilla Título Universitario" />
+                <prop name="categoria-valor" value="Educación y Legalizaciones" />
+                <prop name="fecha-limite-valor" value="17/03/2027" />
+                <prop name="notas-valor" value="Llevar fondo negro autenticado y timbre fiscal." />
+            </preview>
+            <preview id="p-panel-creado" label="3. Panel con Trámite Creado" scene="P01-panel-principal-tramites" x="1030" y="67" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-pantalla" value="Mis Trámites" />
+                <prop name="critico-estado" value="En riesgo" />
+                <prop name="critico-variante" value="urgent" />
+                <prop name="critico-tramite" value="Renovar Pasaporte" />
+                <prop name="critico-paso" value="Solicitar cita consular" />
+                <prop name="critico-cuenta" value="Vence paso en 4 días" />
+                <prop name="critico-limite" value="Límite final: 15/05/2027" />
+                <prop name="tramites-activos" value="${mocks.cu01_happy_activos_creado}" />
+                <prop name="latentes-contador" value="1" />
+                <prop name="latentes-colapsado" value="false" />
+                <prop name="tramites-latentes" value="${mocks.cu01_happy_latentes}" />
+            </preview>
+            <preview id="p-detalle-tramite" label="4. Detalle del Trámite (P02)" scene="P02-detalle-tramite" x="1492" y="141" breakpoint="mobile" orientation="portrait">
+                <prop name="tramite-titulo" value="Apostilla Título Universitario" />
+                <prop name="categoria-texto" value="Educación y Legalizaciones" />
+                <prop name="estado-texto" value="En ventana de acción" />
+                <prop name="estado-variante" value="warning" />
+                <prop name="fecha-limite-resumen" value="Fecha límite final: 17/03/2027 (Faltan 116 días)" />
+                <prop name="notas-generales" value="Llevar fondo negro autenticado y timbre fiscal." />
+                <prop name="pasos-previos" value="${mocks.cu01_happy_pasos_nuevo}" />
+            </preview>
+            <preview id="p-modal-editar" label="5. Editar Trámite (M01)" scene="M01-formulario-tramite" role="overlay" overlay="bottom-sheet" x="1980" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Editar Trámite" />
+                <prop name="titulo-valor" value="Apostilla Título Universitario" />
+                <prop name="categoria-valor" value="Educación y Legalizaciones" />
+                <prop name="fecha-limite-valor" value="30/03/2027" />
+                <prop name="notas-valor" value="Llevar fondo negro autenticado, timbre fiscal y copia de cédula." />
+            </preview>
+            <preview id="p-detalle-editado" label="6. Detalle Actualizado (P02)" scene="P02-detalle-tramite" x="1489" y="801" breakpoint="mobile" orientation="portrait">
+                <prop name="tramite-titulo" value="Apostilla Título Universitario" />
+                <prop name="categoria-texto" value="Educación y Legalizaciones" />
+                <prop name="estado-texto" value="En ventana de acción" />
+                <prop name="estado-variante" value="warning" />
+                <prop name="fecha-limite-resumen" value="Fecha límite final: 30/03/2027 (Faltan 129 días)" />
+                <prop name="notas-generales" value="Llevar fondo negro autenticado, timbre fiscal y copia de cédula." />
+                <prop name="pasos-previos" value="${mocks.cu01_happy_pasos_nuevo}" />
+            </preview>
+            <segue from="p-panel-inicial" on="onNewTramite" to="p-modal-nuevo" />
+            <segue from="p-modal-nuevo" on="onClose" action="dismiss" />
+            <segue from="p-modal-nuevo" on="onCancel" action="dismiss" />
+            <segue from="p-modal-nuevo" on="onConfirm" to="p-panel-creado" toast="Trámite creado y cuenta regresiva calculada" />
+            <segue from="p-panel-creado" on="onSelectTramite" to="p-detalle-tramite" />
+            <segue from="p-detalle-tramite" on="onBack" to="p-panel-creado" />
+            <segue from="p-detalle-tramite" on="onSecondaryAction" to="p-modal-editar" />
+            <segue from="p-modal-editar" on="onClose" action="dismiss" />
+            <segue from="p-modal-editar" on="onCancel" action="dismiss" />
+            <segue from="p-modal-editar" on="onConfirm" to="p-detalle-editado" toast="Cambios guardados y fechas recalculadas" />
+            <segue from="p-detalle-editado" on="onBack" to="p-panel-creado" />
+        </journey>
+    </journeys>
 </soda>
