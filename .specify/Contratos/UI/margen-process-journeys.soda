@@ -1,0 +1,121 @@
+<soda version="2.0" name="margen-process-journeys">
+
+    <use src="margen-process.soda" />
+
+    <journeys>
+        <journey name="journey-cu01-happy-path-mobile-portrait" title="CU-01: Gestionar Trámites — Flujo Principal (Crear, Consultar, Editar y Eliminar)" initial-preview="p-panel-principal" width="393" height="852">
+            <preview id="p-panel-principal" label="1. Panel Principal (P01)" scene="panel-principal" x="64" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="ruta-critica-titulo" value="Renovar Pasaporte" />
+                <prop name="ruta-critica-paso" value="Solicitar cita consular" />
+                <prop name="ruta-critica-plazo" value="Vence paso en 4 días · Límite: 15/05/2027" />
+            </preview>
+            <preview id="p-modal-crear" label="2. Crear Trámite (M01)" scene="modal-formulario-tramite" role="overlay" overlay="bottom-sheet" backdrop="true" dismiss-on-backdrop="false" x="540" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-tramite" value="Apostilla de Título" />
+                <prop name="categoria" value="Legalización" />
+                <prop name="fecha-limite" value="20/08/2027" />
+                <prop name="notas" value="Verificar cita previa en ministerio" />
+            </preview>
+            <preview id="p-panel-actualizado" label="3. Panel con Nuevo Trámite (P01)" scene="panel-principal" x="1016" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="ruta-critica-titulo" value="Apostilla de Título" />
+                <prop name="ruta-critica-paso" value="Solicitar cita de apostilla" />
+                <prop name="ruta-critica-plazo" value="Vence paso en 5 días · Límite: 20/08/2027" />
+            </preview>
+            <preview id="p-detalle-tramite" label="4. Detalle del Trámite (P02)" scene="detalle-tramite" x="1492" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo" value="Apostilla de Título" />
+                <prop name="categoria" value="Legalización" />
+                <prop name="estado" value="En ventana de acción" />
+                <prop name="fecha-limite" value="20/08/2027" />
+                <prop name="dias-restantes" value="272d" />
+                <prop name="notas" value="Verificar cita previa en ministerio" />
+            </preview>
+            <preview id="p-modal-editar" label="5. Editar Trámite (M01)" scene="modal-formulario-tramite" role="overlay" overlay="bottom-sheet" backdrop="true" dismiss-on-backdrop="false" x="1968" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Editar Trámite" />
+                <prop name="titulo-tramite" value="Apostilla de Título" />
+                <prop name="categoria" value="Legalización" />
+                <prop name="fecha-limite" value="10/09/2027" />
+                <prop name="notas" value="Cita confirmada y arancel pagado" />
+            </preview>
+            <preview id="p-detalle-editado" label="6. Detalle Actualizado (P02)" scene="detalle-tramite" x="2444" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo" value="Apostilla de Título" />
+                <prop name="categoria" value="Legalización" />
+                <prop name="estado" value="En ventana de acción" />
+                <prop name="fecha-limite" value="10/09/2027" />
+                <prop name="dias-restantes" value="293d" />
+                <prop name="notas" value="Cita confirmada y arancel pagado" />
+            </preview>
+            <preview id="p-panel-tras-eliminar" label="7. Panel Tras Eliminar (P01)" scene="panel-principal" x="2920" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="ruta-critica-titulo" value="Renovar Pasaporte" />
+                <prop name="ruta-critica-paso" value="Solicitar cita consular" />
+                <prop name="ruta-critica-plazo" value="Vence paso en 4 días · Límite: 15/05/2027" />
+            </preview>
+
+            <segue from="p-panel-principal" on="onNuevoTramite" to="p-modal-crear" />
+            <segue from="p-modal-crear" on="onGuardar" to="p-panel-actualizado" toast="Trámite creado y alertas programadas" />
+            <segue from="p-panel-actualizado" on="onAbrirDetalle" to="p-detalle-tramite" />
+            <segue from="p-detalle-tramite" on="onEditar" to="p-modal-editar" />
+            <segue from="p-modal-editar" on="onGuardar" to="p-detalle-editado" toast="Trámite y fechas actualizados" />
+            <segue from="p-detalle-editado" on="onEliminar" to="p-panel-tras-eliminar" toast="Trámite eliminado" />
+            <segue from="p-detalle-editado" on="onVolver" to="p-panel-actualizado" />
+        </journey>
+
+        <journey name="journey-cu01-cancelar-y-descartar-mobile-portrait" title="CU-01: Variante Cancelar Creación o Edición y Regreso Desde Detalle" initial-preview="p-panel-principal" width="393" height="852">
+            <preview id="p-panel-principal" label="1. Panel Principal (P01)" scene="panel-principal" x="64" y="64" breakpoint="mobile" orientation="portrait" />
+            <preview id="p-modal-crear" label="2. Modal Nuevo Trámite (M01)" scene="modal-formulario-tramite" role="overlay" overlay="bottom-sheet" backdrop="true" dismiss-on-backdrop="true" x="540" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-tramite" value="Borrador sin guardar" />
+            </preview>
+            <preview id="p-detalle-tramite" label="3. Detalle de Trámite Existente (P02)" scene="detalle-tramite" x="1016" y="64" breakpoint="mobile" orientation="portrait" />
+            <preview id="p-modal-editar" label="4. Modal Editar Trámite (M01)" scene="modal-formulario-tramite" role="overlay" overlay="bottom-sheet" backdrop="true" dismiss-on-backdrop="true" x="1492" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Editar Trámite" />
+                <prop name="titulo-tramite" value="Renovar Pasaporte" />
+                <prop name="fecha-limite" value="15/05/2027" />
+            </preview>
+
+            <segue from="p-panel-principal" on="onNuevoTramite" to="p-modal-crear" />
+            <segue from="p-modal-crear" on="onCancelar" action="dismiss" toast="Creación cancelada" />
+            <segue from="p-modal-crear" on="onCerrar" action="dismiss" />
+            <segue from="p-panel-principal" on="onAbrirDetalle" to="p-detalle-tramite" />
+            <segue from="p-detalle-tramite" on="onEditar" to="p-modal-editar" />
+            <segue from="p-modal-editar" on="onCancelar" action="dismiss" toast="Cambios descartados" />
+            <segue from="p-modal-editar" on="onCerrar" action="dismiss" />
+            <segue from="p-detalle-tramite" on="onVolver" action="back" />
+        </journey>
+
+        <journey name="journey-cu01-error-limite-freemium-paywall-mobile-portrait" title="CU-01: Ruta con Límite Freemium Superado (Paywall Contextual M06)" initial-preview="p-panel-principal" width="393" height="852">
+            <preview id="p-panel-principal" label="1. Panel Principal (P01)" scene="panel-principal" x="64" y="64" breakpoint="mobile" orientation="portrait" />
+            <preview id="p-modal-crear" label="2. Formulario Nuevo Trámite (M01)" scene="modal-formulario-tramite" role="overlay" overlay="bottom-sheet" backdrop="true" dismiss-on-backdrop="false" x="540" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="titulo-modal" value="Nuevo Trámite" />
+                <prop name="titulo-tramite" value="Licencia de Conducir" />
+                <prop name="categoria" value="Vehículos" />
+                <prop name="fecha-limite" value="30/11/2027" />
+            </preview>
+            <preview id="p-paywall-pro" label="3. Paywall Contextual Personal Pro (M06)" scene="modal-paywall-pro" role="overlay" overlay="modal" backdrop="true" dismiss-on-backdrop="false" x="1016" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="motivo" value="Has alcanzado el límite de trámites activos del plan gratuito. Desbloquea Personal Pro para crear trámites ilimitados." />
+                <prop name="plan-seleccionado" value="lifetime" />
+                <prop name="procesando" value="false" />
+            </preview>
+            <preview id="p-paywall-anual" label="4. Paywall Plan Anual Seleccionado (M06)" scene="modal-paywall-pro" role="overlay" overlay="modal" backdrop="true" dismiss-on-backdrop="false" x="1492" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="motivo" value="Has alcanzado el límite de trámites activos del plan gratuito. Desbloquea Personal Pro para crear trámites ilimitados." />
+                <prop name="plan-seleccionado" value="anual" />
+                <prop name="procesando" value="false" />
+            </preview>
+            <preview id="p-panel-desbloqueado" label="5. Panel Tras Activar Personal Pro (P01)" scene="panel-principal" x="1968" y="64" breakpoint="mobile" orientation="portrait">
+                <prop name="ruta-critica-titulo" value="Licencia de Conducir" />
+                <prop name="ruta-critica-paso" value="Renovar certificado médico vial" />
+                <prop name="ruta-critica-plazo" value="Vence paso en 7 días · Límite: 30/11/2027" />
+            </preview>
+
+            <segue from="p-panel-principal" on="onNuevoTramite" to="p-modal-crear" />
+            <segue from="p-modal-crear" on="onGuardar" to="p-paywall-pro" toast="Límite del plan gratuito alcanzado" />
+            <segue from="p-paywall-pro" on="onSeleccionarPlan" to="p-paywall-anual" />
+            <segue from="p-paywall-anual" on="onSeleccionarPlan" to="p-paywall-pro" />
+            <segue from="p-paywall-pro" on="onComprar" to="p-panel-desbloqueado" toast="Personal Pro activado y trámite guardado" />
+            <segue from="p-paywall-anual" on="onComprar" to="p-panel-desbloqueado" toast="Personal Pro activado y trámite guardado" />
+            <segue from="p-paywall-pro" on="onRestaurar" to="p-panel-desbloqueado" toast="Compra restaurada · Personal Pro activo" />
+            <segue from="p-paywall-pro" on="onCerrar" action="dismiss" toast="Creación no completada" />
+            <segue from="p-paywall-anual" on="onCerrar" action="dismiss" toast="Creación no completada" />
+        </journey>
+</journeys>
+
+</soda>
