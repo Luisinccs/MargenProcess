@@ -1,4 +1,4 @@
-<soda version="2.0" name="gestor-tramites-dependencias">
+<soda version="2.0" name="margen-process">
     <!-- SODA-AGENT-HINT: Read <index> first, then read only the target line ranges -->
     <index>
         <entry kind="styles" name="style-defs" tokens="77" lines="44-122" />
@@ -808,7 +808,7 @@
                         <ui-icon name="copy-plus" color="text-primary" size="md" />
                         <ui-text text="Desde plantilla" font="body" color="text-primary" font-weight="semibold"></ui-text>
                     </ui-frame>
-                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="lg" gap="xs" bg="brand-primary" radius="sm" hover-bg="brand-primary-hover" cursor="pointer">
+                    <ui-frame direction="horizontal" align="center" justify="center" height="field-height" flex="1" padding-x="lg" gap="xs" bg="brand-primary" radius="sm" action="onNewTramite" hover-bg="brand-primary-hover" cursor="pointer">
                         <ui-icon name="plus" color="text-inverse" size="md" />
                         <ui-text text="Nuevo Trámite" font="body" color="text-inverse" font-weight="bold"></ui-text>
                     </ui-frame>

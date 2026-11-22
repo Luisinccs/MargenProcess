@@ -6,7 +6,7 @@
         <entry kind="journeys" name="journeys" lines="45-238" />
     </index>
 
-    <use src="gestor-tramites-dependencias.soda" />
+    <use src="../.specify/Contratos/UI/margen-process.soda" />
 
     <data-mocks>
         <cu01_happy_activos_inicial>
